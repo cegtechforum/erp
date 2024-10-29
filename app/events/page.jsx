@@ -56,7 +56,7 @@ export default function Events() {
         className="mb-6 w-4/5 rounded-lg border border-gray-300 p-2"
       />
 
-      {Array.isArray(filteredEvents) && filteredEvents.length > 0 ? (
+      {filteredEvents.length > 0 ? (
         <div className="flex flex-wrap justify-center gap-4">
           {filteredEvents.map((event) => (
             <div
