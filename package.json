@@ -12,7 +12,11 @@
     "db:migrate": "node ./app/_db/migrate.js"
   },
   "dependencies": {
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/material": "^6.1.5",
     "@neondatabase/serverless": "^0.10.1",
+    "antd": "^5.21.6",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.35.3",
     "next": "14.2.16",
