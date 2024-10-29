@@ -5,8 +5,8 @@ import { eq } from "drizzle-orm";
 
 export async function POST(req) {
   try {
-    const { email, password, domain } = await req.json();
-    if (!email || !password) {
+    const { email, password } = await req.json();
+    if (!email.trim() || !password.trim()) {
       return NextResponse.json(
         { error: "Email and password are required" },
         { status: 400 },
