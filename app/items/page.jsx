@@ -16,9 +16,15 @@ export default function Page() {
   const [editIndex, setEditIndex] = useState(null);
   const [search, setSearch] = useState("");
   const [filteredItems, setFilteredItems] = useState(items);
+  const [add, setAdd] = useState(false);
   const handleShowUpdate = (index) => {
     setEditIndex(index === editIndex ? null : index);
   };
+
+  const handleShowAdd = () => {
+    setAdd(!add);
+  };
+
   useEffect(() => {
     console.log(search);
     setFilteredItems(
@@ -138,6 +144,40 @@ export default function Page() {
             ))}
           </tbody>
         </table>
+        {!add && (
+          <button
+            className="my-4 w-[20%] self-center rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
+            onClick={handleShowAdd}
+          >
+            Add New Item
+          </button>
+        )}
+        {add && (
+          <div className="my-10 flex w-[40%] flex-col justify-center self-center border bg-gray-100">
+            <TextField
+              type="text"
+              label="Item Name"
+              variant="outlined"
+              size="small"
+              margin="normal"
+              className="self-center"
+            ></TextField>
+            <TextField
+              type="text"
+              label="Count"
+              variant="outlined"
+              size="small"
+              margin="normal"
+              className="self-center"
+            ></TextField>
+            <button
+              className="my-4 w-[20%] self-center rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
+              onClick={handleShowAdd}
+            >
+              Add
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
