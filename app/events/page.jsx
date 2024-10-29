@@ -5,8 +5,8 @@ import { Card, CardActions, CardContent, Typography, Button, CardMedia , Grid } 
 import Link from 'next/link';
 
 export default function Events() {
-    // const events = [
-    //     {
+     const events = []
+      // {
     //         eventId: 1,
     //         eventName: "Kurushetra",
     //         description: "A symposium on the latest tech trends and innovations.",
@@ -85,7 +85,7 @@ export default function Events() {
              async function fetchEvent()
         {
             try {
-                const response = await fetch('/api/events');
+                const response = await fetch('http://localhost:3000/api/events');
 
                 if(!response.ok){
                     throw new Error('Failed to fetch events');
