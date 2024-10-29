@@ -11,27 +11,29 @@ import Link from "next/link";
 
 export default function Events() {
   const [events, setEvents] = useState([]);
+  const [searchEvents, setSearchEvents] = useState("");
 
-    const [searchEvents, setSearchEvents] = useState("");
-    const filteredEvents = searchEvents!="" ? events.filter((event) => 
-    event.eventName.toLowerCase().includes(searchEvents.toLowerCase())) : events ;
-  
-    useEffect(() => {
+  const filteredEvents = Array.isArray(events) && searchEvents !== ""
+    ? events.filter((event) =>
+        event.eventName.toLowerCase().includes(searchEvents.toLowerCase())
+      )
+    : events;
 
-             async function fetchEvent()    
-        {
-            try {
-                const response = await fetch('http://localhost:3000/api/events');
+  useEffect(() => {
+    async function fetchEvent() {
+      try {
+        const response = await fetch("http://localhost:3000/api/events");
 
         if (!response.ok) {
           throw new Error("Failed to fetch events");
         }
 
-        const events = await response.json();
-
-        setEvents(events);
+        const eventsData = await response.json();
+        setEvents(eventsData.res);
+        console.log(events);    
       } catch (error) {
         console.error("Could not fetch events:", error);
+        setEvents([]); 
       }
     }
     fetchEvent();
@@ -53,7 +55,7 @@ export default function Events() {
         className="mb-6 w-full rounded-lg border border-gray-300 p-2"
       />
 
-      {filteredEvents.length > 0 ? (
+      {Array.isArray(filteredEvents) && filteredEvents.length > 0 ? (
         <div className="flex flex-wrap justify-center gap-4">
           {filteredEvents.map((event) => (
             <div
