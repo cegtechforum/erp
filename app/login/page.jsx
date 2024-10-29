@@ -11,11 +11,14 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setisLoading] = useState(false);
+  const isDisabled = !password.trim() || !email.trim();
 
+  console.log(isDisabled);
   const handleSubmit = async (event) => {
     event.preventDefault();
     setErrorMessage("");
-
+    setisLoading(true);
     try {
       const response = await axios.post("/api/login", {
         email,
@@ -37,6 +40,8 @@ const LoginPage = () => {
           "An unexpected error occurred. Please try again later.",
         );
       }
+    } finally {
+      setisLoading(false);
     }
   };
 
@@ -53,6 +58,7 @@ const LoginPage = () => {
             fullWidth
             required
             value={email}
+            autoComplete="off"
             onChange={(e) => setEmail(e.target.value)}
             className="bg-gray-50"
           />
@@ -61,6 +67,7 @@ const LoginPage = () => {
             type="password"
             variant="outlined"
             fullWidth
+            autoComplete="off"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -77,8 +84,9 @@ const LoginPage = () => {
             color="primary"
             fullWidth
             className="mt-4"
+            disabled={isDisabled || isLoading}
           >
-            Login
+            {isLoading ? "Loading..." : "Login"}
           </Button>
         </form>
       </div>
