@@ -5,73 +5,73 @@ import { Card, CardActions, CardContent, Typography, Button, CardMedia , Grid } 
 import Link from 'next/link';
 
 export default function Events() {
-    const events = [
-        {
-            eventId: 1,
-            eventName: "Kurushetra",
-            description: "A symposium on the latest tech trends and innovations.",
-            rollNo: "2022103012",
-            contact: "48611481",
-            organizerName: "Hariguru",
-            domain: "Tech-ops",
-            status: "upcoming",
-            date: "2024-11-10",
-            startTime: "10:00",
-            endTime: "14:00",
-        },
-        {
-            eventId: 2,
-            eventName: "Vyuha",
-            description: "Events for freshers",
-            rollNo: "2022103025",
-            contact: "846181154",
-            organizerName: "Serva Ganeshu",
-            domain: "Events",
-            status: "past",
-            date: "2024-10-29",
-            startTime: "12:00",
-            endTime: "16:00",
-        },
-        {
-            eventId: 3,
-            eventName: "Ctf projects",
-            description: "An expo showcasing the project ideas in campus.",
-            rollNo: "2022103013",
-            contact: "7418226598",
-            organizerName: "Visvesswar",
-            domain: "Projects",
-            status: "present",
-            date: "2024-10-20",
-            startTime: "09:00",
-            endTime: "17:00",
-        },
-        {
-            eventId: 4,
-            eventName: "Open call",
-            description: "Open call for juniors.",
-            rollNo: "2022103535",
-            contact: "9898745467",
-            organizerName: "Kyle",
-            domain: "HR",
-            status: "past",
-            date: "2024-12-05",
-            startTime: "09:00",
-            endTime: "15:00",
-        },
-        {
-            eventId: 5,
-            eventName: "Placeholder",
-            description: "Actual placeholder event.",
-            rollNo: "2022103502",
-            contact: "567-890-1234",
-            organizerName: "Dhino",
-            domain: "Logistics",
-            status: "upcoming",
-            date: "2024-11-20",
-            startTime: "10:00",
-            endTime: "13:00",
-        },
-    ];
+    // const events = [
+    //     {
+    //         eventId: 1,
+    //         eventName: "Kurushetra",
+    //         description: "A symposium on the latest tech trends and innovations.",
+    //         rollNo: "2022103012",
+    //         contact: "48611481",
+    //         organizerName: "Hariguru",
+    //         domain: "Tech-ops",
+    //         status: "upcoming",
+    //         date: "2024-11-10",
+    //         startTime: "10:00",
+    //         endTime: "14:00",
+    //     },
+    //     {
+    //         eventId: 2,
+    //         eventName: "Vyuha",
+    //         description: "Events for freshers",
+    //         rollNo: "2022103025",
+    //         contact: "846181154",
+    //         organizerName: "Serva Ganeshu",
+    //         domain: "Events",
+    //         status: "past",
+    //         date: "2024-10-29",
+    //         startTime: "12:00",
+    //         endTime: "16:00",
+    //     },
+    //     {
+    //         eventId: 3,
+    //         eventName: "Ctf projects",
+    //         description: "An expo showcasing the project ideas in campus.",
+    //         rollNo: "2022103013",
+    //         contact: "7418226598",
+    //         organizerName: "Visvesswar",
+    //         domain: "Projects",
+    //         status: "present",
+    //         date: "2024-10-20",
+    //         startTime: "09:00",
+    //         endTime: "17:00",
+    //     },
+    //     {
+    //         eventId: 4,
+    //         eventName: "Open call",
+    //         description: "Open call for juniors.",
+    //         rollNo: "2022103535",
+    //         contact: "9898745467",
+    //         organizerName: "Kyle",
+    //         domain: "HR",
+    //         status: "past",
+    //         date: "2024-12-05",
+    //         startTime: "09:00",
+    //         endTime: "15:00",
+    //     },
+    //     {
+    //         eventId: 5,
+    //         eventName: "Placeholder",
+    //         description: "Actual placeholder event.",
+    //         rollNo: "2022103502",
+    //         contact: "567-890-1234",
+    //         organizerName: "Dhino",
+    //         domain: "Logistics",
+    //         status: "upcoming",
+    //         date: "2024-11-20",
+    //         startTime: "10:00",
+    //         endTime: "13:00",
+    //     },
+    // ];
 
     const [currentEvents, setCurrentEvents] = useState([]);
     const [pastEvents, setPastEvents] = useState([]);
@@ -82,17 +82,24 @@ export default function Events() {
 
     useEffect(() => {
 
-         //     async function fetchEvent()
-    //     {
-    //         try {
-    //             const response = await fetch('/api/getEvents');
-    //             const events = await response.json();
-    //             setEvents(events);
-    //         } catch (error) {
-    //             console.error('Could not fetch events dino:',error);      
-    //         }
-    //     }
-    //     fetchEvent();
+             async function fetchEvent()
+        {
+            try {
+                const response = await fetch('/api/events');
+
+                if(!response.ok){
+                    throw new Error('Failed to fetch events');
+                }
+
+                const events = await response.json();
+
+                setCurrentEvents(events);
+
+            } catch (error) {
+                console.error('Could not fetch events dino:',error);      
+            }
+        }
+        fetchEvent();
 
         const filteredEvents = events.filter((event) => 
             event.eventName.toLowerCase().includes(searchEvents.toLowerCase())
