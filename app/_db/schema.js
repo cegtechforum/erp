@@ -45,3 +45,5 @@ export const products = pgTable("products", {
   name: text().notNull(),
   count: integer().notNull().default(0),
 });
+
+
