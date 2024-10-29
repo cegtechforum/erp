@@ -9,7 +9,12 @@ import {
   time,
 } from "drizzle-orm/pg-core";
 
-export const statusEnum = pgEnum("status", ["pending", "accepted", "returned"]);
+export const statusEnum = pgEnum("status", [
+  "pending",
+  "accepted",
+  "rejected",
+  "returned",
+]);
 
 export const users = pgTable("users", {
   email: text().primaryKey(),
@@ -22,6 +27,7 @@ export const events = pgTable("events", {
   eventId: serial("event_id").primaryKey(),
   eventName: text("event_name").notNull(),
   description: text(),
+  comment: text(),
   rollNo: text("roll_no").notNull(),
   contact: text().notNull(),
   organizerName: text("organizer_name"),
@@ -36,12 +42,12 @@ export const lists = pgTable("lists", {
   eventId: integer("event_id")
     .notNull()
     .references(() => events.eventId),
-  product: text().notNull(),
-  count: integer().notNull().default(0),
+  itemName: text("item_name").notNull(),
+  count: integer().notNull().default(1),
   category: text().notNull(),
 });
 
-export const products = pgTable("products", {
-  name: text().notNull(),
-  count: integer().notNull().default(0),
+export const items = pgTable("items", {
+  name: text().notNull().primaryKey(),
+  count: integer().notNull().default(1),
 });
