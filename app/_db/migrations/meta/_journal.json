@@ -8,6 +8,20 @@
       "when": 1730144372578,
       "tag": "0000_gray_wolf_cub",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1730206014524,
+      "tag": "0001_common_talkback",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1730207372423,
+      "tag": "0002_majestic_green_goblin",
+      "breakpoints": true
     }
   ]
 }

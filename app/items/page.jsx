@@ -39,7 +39,7 @@ export default function Page() {
         item.name.toLowerCase().includes(search.toLowerCase()),
       ),
     );
-    console.log(filteredItems);
+    // console.log(filteredItems);
   }, [search]);
   return (
     <div className="font-sans">
