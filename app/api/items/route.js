@@ -19,7 +19,13 @@ export async function GET() {
 export async function POST(req) {
   try {
     const data = await req.json();
-    await db.insert(items).values(data);
+    const res = await db.insert(items).values(data);
+    if (res.rowCount === 0) {
+      return NextResponse.json({
+        status: 500,
+        error: "Insertion failed",
+      });
+    }
     return NextResponse.json({
       message: "Item inserted successfully",
       status: 200,
@@ -36,9 +42,18 @@ export async function POST(req) {
 export async function PATCH(req) {
   try {
     const { name, count } = await req.json();
-    await db.update(items).set({ count }).where(eq(items.name, name));
+    const res = await db
+      .update(items)
+      .set({ count })
+      .where(eq(items.name, name));
+    if (res.rowCount === 0) {
+      return NextResponse.json({
+        status: 404,
+        error: "Item not found",
+      });
+    }
     return NextResponse.json({
-      message: "Item Count Updated successfully",
+      message: "Item count updated successfully",
       status: 201,
     });
   } catch (error) {
@@ -53,7 +68,13 @@ export async function PATCH(req) {
 export async function DELETE(req) {
   try {
     const { name } = await req.json();
-    await db.delete(items).where(eq(items.name, name));
+    const res = await db.delete(items).where(eq(items.name, name));
+    if (res.rowCount === 0) {
+      return NextResponse.json({
+        status: 404,
+        error: "Item not found",
+      });
+    }
     return NextResponse.json({
       message: "Item deleted successfully",
       status: 200,
