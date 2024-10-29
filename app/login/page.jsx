@@ -13,7 +13,7 @@ function Page() {
           className="w-full rounded-lg border border-red-600 px-4 py-2 text-center text-red-600"
           placeholder="Password"
         />
-        <select className="w-full rounded-lg border border-red-600 px-4 py-2 text-center text-red-600">
+        <select className="w-full rounded-lg border border-red-500 px-4 py-2 text-center text-red-600">
           <option value="creativity & initiatives">
             Creativity & Initiatives
           </option>
