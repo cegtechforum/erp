@@ -14,16 +14,20 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.1.5",
     "@mui/material": "^6.1.5",
     "@neondatabase/serverless": "^0.10.1",
+    "@nextui-org/react": "^2.4.8",
     "antd": "^5.21.6",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.35.3",
+    "framer-motion": "^11.11.10",
     "next": "14.2.16",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/pg": "^8.11.10",
     "drizzle-kit": "^0.26.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.16",
