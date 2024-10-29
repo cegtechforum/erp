@@ -17,12 +17,19 @@ export default function Page() {
   const [search, setSearch] = useState("");
   const [filteredItems, setFilteredItems] = useState(items);
   const [add, setAdd] = useState(false);
+  const [newItem, setNewItem] = useState({ name: "", count: null });
   const handleShowUpdate = (index) => {
     setEditIndex(index === editIndex ? null : index);
   };
 
   const handleShowAdd = () => {
     setAdd(!add);
+  };
+
+  const handleAdd = () => {
+    try {
+    } catch {}
+    setNewItem({ name: "", count: null });
   };
 
   useEffect(() => {
@@ -161,6 +168,10 @@ export default function Page() {
               size="small"
               margin="normal"
               className="self-center"
+              value={newItem.name}
+              onChange={(e) => {
+                setNewItem((item) => ({ ...item, name: e.target.value }));
+              }}
             ></TextField>
             <TextField
               type="text"
@@ -169,10 +180,14 @@ export default function Page() {
               size="small"
               margin="normal"
               className="self-center"
+              value={newItem.count}
+              onChange={(e) => {
+                setNewItem((item) => ({ ...item, count: e.target.value }));
+              }}
             ></TextField>
             <button
               className="my-4 w-[20%] self-center rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
-              onClick={handleShowAdd}
+              onClick={handleAdd}
             >
               Add
             </button>
