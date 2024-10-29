@@ -7,6 +7,7 @@ import {
   pgEnum,
   date,
   time,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 
 export const statusEnum = pgEnum("status", [
@@ -38,14 +39,20 @@ export const events = pgTable("events", {
   endTime: time("end_time").notNull(),
 });
 
-export const lists = pgTable("lists", {
-  eventId: integer("event_id")
-    .notNull()
-    .references(() => events.eventId),
-  itemName: text("item_name").notNull(),
-  count: integer().notNull().default(1),
-  category: text().notNull(),
-});
+export const lists = pgTable(
+  "lists",
+  {
+    eventId: integer("event_id")
+      .notNull()
+      .references(() => events.eventId),
+    itemName: text("item_name").notNull(),
+    count: integer().notNull().default(1),
+    category: text().notNull(),
+  },
+  (table) => ({
+    pk: primaryKey(table.eventId, table.itemName),
+  }),
+);
 
 export const items = pgTable("items", {
   name: text().notNull().primaryKey(),
