@@ -5,11 +5,8 @@ import { db } from "@/app/_lib/db";
 export async function POST(req) {
   try {
     const data = await req.json();
-    console.log(data);
-
     const res = await db.insert(events).values(data);
     console.log(res);
-
     return NextResponse.json({
       message: "Event added successfully",
       status: 200,
