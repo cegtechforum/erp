@@ -1,23 +1,39 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Input } from "@nextui-org/react";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
-const items = [
-  { name: "pen", count: 50 },
-  { name: "chair", count: 15 },
-  { name: "table", count: 15 },
-  { name: "projectors", count: 3 },
-  { name: "paper", count: 15 },
-];
+import axios from "axios";
+// const items = [
+//   { name: "pen", count: 50 },
+//   { name: "chair", count: 15 },
+//   { name: "table", count: 15 },
+//   { name: "projectors", count: 3 },
+//   { name: "paper", count: 15 },
+// ];
 
 export default function Page() {
   const [editIndex, setEditIndex] = useState(null);
   const [search, setSearch] = useState("");
+  const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState(items);
   const [add, setAdd] = useState(false);
-  const [newItem, setNewItem] = useState({ name: "", count: null });
+  const [first, setFirst] = useState(true);
+  const [newItem, setNewItem] = useState({ name: "", count: "" });
+
+  const getItems = async () => {
+    try {
+      const response = await axios.get("/api/items");
+      console.log("item retrieved successfully", response.data.res);
+      setItems(response.data.res);
+      console.log(items);
+      setFirst(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleShowUpdate = (index) => {
     setEditIndex(index === editIndex ? null : index);
   };
@@ -26,21 +42,31 @@ export default function Page() {
     setAdd(!add);
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     try {
-    } catch {}
-    setNewItem({ name: "", count: null });
+      const response = await axios.post("/api/items", newItem);
+      console.log(response);
+      setNewItem({ name: "", count: "" });
+    } catch (err) {
+      console.log(err);
+    }
   };
-
   useEffect(() => {
     console.log(search);
+    if (first) {
+      getItems();
+      //console.log("first:", first);
+    }
+    //console.log("items:", items);
+  }, []);
+  useEffect(() => {
     setFilteredItems(
       items.filter((item) =>
         item.name.toLowerCase().includes(search.toLowerCase()),
       ),
     );
     // console.log(filteredItems);
-  }, [search]);
+  }, [search, items]);
   return (
     <div className="font-sans">
       <div>
@@ -86,69 +112,77 @@ export default function Page() {
             </tr>
           </thead>
           <tbody>
-            {filteredItems.map((item, index) => (
-              <tr
-                className="border border-slate-800 text-center font-semibold capitalize"
-                key={index}
-              >
-                <td className="border border-slate-800 px-4 py-2">
-                  {index + 1}
-                </td>
-                <td className="border border-slate-800 px-4 py-2">
-                  {item.name}
-                </td>
-                <td className="border border-slate-800 px-4 py-2">
-                  {item.count}
-                </td>
-                <td className="flex flex-row items-center justify-center px-4 py-2">
-                  {editIndex === index ? (
-                    <div className="align-center flex flex-row items-center">
-                      {/* <input
+            {filteredItems && filteredItems.length > 0 ? (
+              filteredItems.map((item, index) => (
+                <tr
+                  className="border border-slate-800 text-center font-semibold capitalize"
+                  key={index}
+                >
+                  <td className="border border-slate-800 px-4 py-2">
+                    {index + 1}
+                  </td>
+                  <td className="border border-slate-800 px-4 py-2">
+                    {item.name}
+                  </td>
+                  <td className="border border-slate-800 px-4 py-2">
+                    {item.count}
+                  </td>
+                  <td className="flex flex-row items-center justify-center px-4 py-2">
+                    {editIndex === index ? (
+                      <div className="align-center flex flex-row items-center">
+                        {/* <input
                         placeholder="Enter current count"
                         className="mr-2 rounded-lg p-2"
                       /> */}
 
-                      <TextField
-                        type="number"
-                        label="count"
-                        variant="outlined"
-                        fullWidth
-                        size="small"
-                        margin="normal"
-                        helperText="Enter current count"
-                      />
-                      <button
-                        className="mx-1 rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
-                        onClick={() => handleShowUpdate(index)}
-                      >
-                        Save
-                      </button>
-                      <button
-                        className="mx-1 rounded-lg bg-yellow-500 p-2 text-white hover:bg-yellow-400"
-                        onClick={() => handleShowUpdate(null)}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  ) : (
-                    <>
-                      <button
-                        className="mx-1 rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
-                        onClick={() => handleShowUpdate(index)}
-                      >
-                        Update
-                      </button>
-                      <button
-                        className="mx-1 rounded-lg bg-red-700 p-2 text-white hover:bg-red-600"
-                        onClick={() => console.log(`Delete item: ${item.name}`)}
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </td>
+                        <TextField
+                          type="number"
+                          label="count"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          margin="normal"
+                          helperText="Enter current count"
+                        />
+                        <button
+                          className="mx-1 rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
+                          onClick={() => handleShowUpdate(index)}
+                        >
+                          Save
+                        </button>
+                        <button
+                          className="mx-1 rounded-lg bg-yellow-500 p-2 text-white hover:bg-yellow-400"
+                          onClick={() => handleShowUpdate(null)}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <button
+                          className="mx-1 rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
+                          onClick={() => handleShowUpdate(index)}
+                        >
+                          Update
+                        </button>
+                        <button
+                          className="mx-1 rounded-lg bg-red-700 p-2 text-white hover:bg-red-600"
+                          onClick={() =>
+                            console.log(`Delete item: ${item.name}`)
+                          }
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr className="text-lg font-semibold">
+                <td colSpan="4" className=" text-center">No Item found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
         {!add && (
