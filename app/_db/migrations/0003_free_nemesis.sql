@@ -1,0 +1,1 @@
+ALTER TABLE "lists" ADD CONSTRAINT "lists_event_id_item_name_pk" PRIMARY KEY("event_id","item_name");

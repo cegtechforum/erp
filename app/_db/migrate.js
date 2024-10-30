@@ -2,9 +2,8 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { migrate } from "drizzle-orm/neon-http/migrator";
 import { neon } from "@neondatabase/serverless";
 import "dotenv/config";
-console.log("this is the db url:", process.env.DATABASE_URL);
-const sql = neon(process.env.DATABASE_URL);
 
+const sql = neon(process.env.DATABASE_URL);
 const db = drizzle(sql);
 
 const main = async () => {
@@ -12,7 +11,6 @@ const main = async () => {
     await migrate(db, {
       migrationsFolder: "app/_db/migrations",
     });
-
     console.log("Migration successful");
   } catch (error) {
     console.error(error);
