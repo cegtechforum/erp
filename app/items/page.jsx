@@ -4,6 +4,8 @@ import { Input } from "@nextui-org/react";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 import axios from "axios";
 import { count } from "drizzle-orm";
 // const items = [
@@ -23,6 +25,7 @@ export default function Page() {
   const [first, setFirst] = useState(true);
   const [newItem, setNewItem] = useState({ name: "", count: "" });
   const [curCount, setCurCount] = useState("");
+  const [currentPath, setCurrentPath] = useState("");
   const getItems = async () => {
     try {
       const response = await axios.get("/api/items");
@@ -93,6 +96,7 @@ export default function Page() {
       //console.log("first:", first);
     }
     //console.log("items:", items);
+    setCurrentPath(window.location.pathname);
   }, []);
   useEffect(() => {
     setFilteredItems(
@@ -103,7 +107,12 @@ export default function Page() {
     // console.log(filteredItems);
   }, [search, items]);
   return (
-    <div className="font-sans">
+    <div className="flex min-h-screen ">
+    <SidebarProvider>
+        <AppSidebar currentPath={currentPath} />
+        <main className="w-full">
+        <SidebarTrigger />
+    <div className="font-sans h-[calc(100vh-28px)]">
       <div>
         {/* search bar div */}
         <TextField
@@ -127,7 +136,7 @@ export default function Page() {
           }}
         />
       </div>
-      <div className="flex flex-col justify-center">
+      <div className="flex  flex-col justify-center">
         {/* items details */}
         <table className="text-md border-collapse border border-slate-700 bg-gray-200 p-5">
           <thead className="text-lg">
@@ -268,6 +277,9 @@ export default function Page() {
           </div>
         )}
       </div>
+    </div>
+    </main>
+    </SidebarProvider>
     </div>
   );
 }
