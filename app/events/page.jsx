@@ -10,10 +10,14 @@ import {
 import Link from "next/link";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+
 
 export default function Events() {
   const [events, setEvents] = useState([]);
   const [searchEvents, setSearchEvents] = useState("");
+  const [currentPath, setCurrentPath] = useState("");
   const [isLoading, setisLoading] = useState(true);
   const filteredEvents =
     searchEvents !== ""
@@ -36,6 +40,7 @@ export default function Events() {
       }
     }
     fetchEvent();
+    setCurrentPath(window.location.pathname);
   }, []);
 
   if (isLoading)
@@ -45,7 +50,12 @@ export default function Events() {
       </div>
     );
   return (
-    <div className="flex min-h-screen flex-col items-center bg-slate-100 p-6">
+    <div className="flex min-h-screen ">
+        <SidebarProvider>
+            <AppSidebar currentPath={currentPath} />
+            <main className="w-full">
+            <SidebarTrigger />
+    <div className="flex h-[calc(100vh-28px)] flex-col items-center bg-slate-100 p-6">
       <h1 className="mb-6 text-center text-2xl font-bold text-black">Events</h1>
       <input
         type="text"
@@ -86,10 +96,13 @@ export default function Events() {
           ))}
         </div>
       ) : (
-        <h1 className="text-center text-lg text-gray-600">
+        <h1 className="text-center text-lg text-gray-900">
           Nope... no events recorded, registered, or upcoming
         </h1>
       )}
+    </div>
+    </main>
+    </SidebarProvider>
     </div>
   );
 }
