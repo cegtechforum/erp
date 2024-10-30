@@ -27,7 +27,7 @@ const LoginPage = () => {
 
       if (response.data.status === 200) {
         console.log("Login successful:", response.data);
-        router.push("/");
+        router.push("/dashboard");
       } else {
         setErrorMessage(response.data.error);
       }
