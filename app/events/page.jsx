@@ -28,7 +28,6 @@ export default function Events() {
         if (response.status !== 200) {
           throw new Error("Failed to fetch events");
         }
-        console.log(response);
         setEvents(response.data.res);
       } catch (error) {
         console.error("Could not fetch events:", error);

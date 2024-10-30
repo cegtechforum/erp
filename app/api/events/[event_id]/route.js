@@ -1,21 +1,22 @@
-import { eq } from 'drizzle-orm';
-import { db } from '@/app/_lib/db'; 
-import { lists } from '../../../_db/schema';
-import { NextResponse } from 'next/server';
+import { eq } from "drizzle-orm";
+import { db } from "@/app/_lib/db";
+import { lists } from "../../../_db/schema";
+import { NextResponse } from "next/server";
 
 export async function GET(req) {
-    const { pathname } = new URL(req.url);
-    const id = pathname.split('/').pop();
-    console.log(id);
+  const { pathname } = new URL(req.url);
+  const id = pathname.split("/").pop();
   try {
-    const result = await db
+    const res = await db
       .select()
       .from(lists)
-      .where(eq(lists.eventId,Number(id)));
-      
-    return NextResponse.json(result, { status: 200 });
+      .where(eq(lists.eventId, Number(id)));
+    return NextResponse.json({ res, status: 200 });
   } catch (error) {
-    console.error('Error:', error);
-    return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({
+      error: error.detail || "Internal Server Error",
+      status: 500,
+    });
   }
 }
