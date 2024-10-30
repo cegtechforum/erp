@@ -58,3 +58,5 @@ export const items = pgTable("items", {
   name: text().notNull().primaryKey(),
   count: integer().notNull().default(1),
 });
+
+
