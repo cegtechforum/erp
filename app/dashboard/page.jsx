@@ -20,7 +20,7 @@ export default function Dashboard(){
             endTime: "14:00",
         },
         {
-            eventId: 1,
+            eventId: 2,
             eventName: "Kurushetra",
             description: "A symposium on the latest tech trends and innovations.",
             rollNo: "2022103012",
@@ -44,7 +44,7 @@ export default function Dashboard(){
     }, [])
 
     return(
-        <div className=" h-screen flex flex-col justify-center items-center text-center bg-[#A7A7A7]" >
+        <div className=" h-screen flex flex-col justify-center items-center text-center " >
             <h1 className="p-5 text-center text-3xl w-4/5 font-bold" >Dashboard</h1>
             <div className=" text-center mb-5 mt-5 w-4/5">
                 <input className="w-2/3 border border-sky-950 rounded-md text-center h-[2.25rem]"
@@ -54,10 +54,10 @@ export default function Dashboard(){
                 />
             </div>
             {/* this is the card component*/}
-            <div className=" flex flex-col flex-grow w-full justify-center items-center gap-4">
+            <div className=" flex md:flex-row flex-col flex-grow w-full justify-center items-center gap-4">
                 {events.map((event) => (
-                <div  key={event.eventId} className="flex flex-col border border-teal-700 rounded-lg shadow-lg" >
-                    <div className=" w2/3 p-2 flex flex-col items-center justify-center bg-white rounded-lg" >
+                <div  key={event.eventId} className="w-64 lg:w-80  group flex flex-col justify-center text-center border border-teal-700 rounded-lg shadow-lg " >
+                    <div className=" w-full p-2 flex flex-col items-center justify-center bg-white rounded-lg transform group-hover:scale-105 transition-transform duration-300 ease-in-out" >
                         <Image
                         className="rounded-lg"
                         src="/assets/placeholder.jpg"
