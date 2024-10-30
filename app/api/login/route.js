@@ -2,7 +2,7 @@ import { db } from "@/app/_lib/db";
 import { users } from "@/app/_db/schema";
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import bcryptjs from "bcryptjs";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export async function POST(req) {
@@ -26,8 +26,8 @@ export async function POST(req) {
         status: 404,
       });
     }
-    const isValidPassword = await bcryptjs.compare(user.password, password);
-
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    console.log(isValidPassword);
     if (!isValidPassword) {
       return NextResponse.json({
         error: "Wrong Password",
@@ -50,7 +50,7 @@ export async function POST(req) {
   } catch (error) {
     console.error("Error during login:", error);
     return NextResponse.json({
-      error: "An error occurred during login",
+      error: error.detail || "Internal Server Error",
       status: 500,
     });
   }

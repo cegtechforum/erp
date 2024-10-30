@@ -25,11 +25,11 @@ const LoginPage = () => {
         password,
       });
 
-      if (response.status === 200) {
+      if (response.data.status === 200) {
         console.log("Login successful:", response.data);
         router.push("/");
       } else {
-        setErrorMessage("Login failed. Please check your credentials.");
+        setErrorMessage(response.data.error);
       }
     } catch (error) {
       console.error("An error occurred during login:", error);

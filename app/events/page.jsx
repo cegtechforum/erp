@@ -8,51 +8,52 @@ import {
   CardMedia,
 } from "@mui/material";
 import Link from "next/link";
+import axios from "axios";
+import { CircularProgress } from "@mui/material";
 
 export default function Events() {
   const [events, setEvents] = useState([]);
-
   const [searchEvents, setSearchEvents] = useState("");
+  const [isLoading, setisLoading] = useState(true);
   const filteredEvents =
-    searchEvents != ""
+    searchEvents !== ""
       ? events.filter((event) =>
           event.eventName.toLowerCase().includes(searchEvents.toLowerCase()),
         )
       : events;
-
   useEffect(() => {
     async function fetchEvent() {
       try {
-        const response = await fetch("http://localhost:3000/api/events");
-
-        if (!response.ok) {
+        const response = await axios.get("/api/events");
+        if (response.status !== 200) {
           throw new Error("Failed to fetch events");
         }
-
-        const events = await response.json();
-
-        setEvents(events);
+        console.log(response);
+        setEvents(response.data.res);
       } catch (error) {
         console.error("Could not fetch events:", error);
+      } finally {
+        setisLoading(false);
       }
     }
     fetchEvent();
   }, []);
 
+  if (isLoading)
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-100">
+        <CircularProgress size={100} />
+      </div>
+    );
   return (
-    <div className="min-h-screen bg-gray-500 p-6">
-      <h1
-        className="mb-6 text-center text-2xl font-bold text-black"
-        style={{ fontFamily: "cursive" }}
-      >
-        Events
-      </h1>
+    <div className="flex min-h-screen flex-col items-center bg-slate-100 p-6">
+      <h1 className="mb-6 text-center text-2xl font-bold text-black">Events</h1>
       <input
         type="text"
         placeholder="Search Events"
         value={searchEvents}
         onChange={(e) => setSearchEvents(e.target.value)}
-        className="mb-6 w-full rounded-lg border border-gray-300 p-2"
+        className="mb-6 w-4/5 rounded-lg border border-gray-300 p-2"
       />
 
       {filteredEvents.length > 0 ? (
