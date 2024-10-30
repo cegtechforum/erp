@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
+import { count } from "drizzle-orm";
 // const items = [
 //   { name: "pen", count: 50 },
 //   { name: "chair", count: 15 },
@@ -14,14 +15,14 @@ import axios from "axios";
 // ];
 
 export default function Page() {
-  const [editIndex, setEditIndex] = useState(null);
+  const [editName, setEditName] = useState(null);
   const [search, setSearch] = useState("");
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState(items);
   const [add, setAdd] = useState(false);
   const [first, setFirst] = useState(true);
   const [newItem, setNewItem] = useState({ name: "", count: "" });
-
+  const [curCount, setCurCount] = useState("");
   const getItems = async () => {
     try {
       const response = await axios.get("/api/items");
@@ -34,12 +35,31 @@ export default function Page() {
     }
   };
 
-  const handleShowUpdate = (index) => {
-    setEditIndex(index === editIndex ? null : index);
+  const handleShowUpdate = (iname) => {
+    setEditName(iname === editName ? null : iname);
   };
 
   const handleShowAdd = () => {
     setAdd(!add);
+  };
+
+  const handleUpdate = async (name) => {
+    //console.log("handleadd");
+    try {
+      //console.log("handleadd1");
+      //setNewItem((item) => ({ ...item, name: name,count:curCount}));
+      const response = await axios.patch("/api/items", {
+        name: name,
+        count: curCount,
+      });
+      console.log(response.message);
+      getItems();
+      setNewItem({ name: "", count: "" });
+      setCurCount("");
+      handleShowUpdate();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleAdd = async () => {
@@ -47,10 +67,25 @@ export default function Page() {
       const response = await axios.post("/api/items", newItem);
       console.log(response);
       setNewItem({ name: "", count: "" });
+      getItems();
     } catch (err) {
       console.log(err);
     }
   };
+
+  const handleDelete = async (name) => {
+    try {
+      const response = await axios.delete("/api/items", {
+        data: { name: name },
+      });
+      console.log(`Delete item: ${name}`);
+      console.log(response.message);
+      getItems();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     console.log(search);
     if (first) {
@@ -128,7 +163,7 @@ export default function Page() {
                     {item.count}
                   </td>
                   <td className="flex flex-row items-center justify-center px-4 py-2">
-                    {editIndex === index ? (
+                    {editName === item.name ? (
                       <div className="align-center flex flex-row items-center">
                         {/* <input
                         placeholder="Enter current count"
@@ -143,10 +178,15 @@ export default function Page() {
                           size="small"
                           margin="normal"
                           helperText="Enter current count"
+                          value={curCount}
+                          onChange={(e) => {
+                            setCurCount(parseInt(e.target.value));
+                            //console.log(curCount);
+                          }}
                         />
                         <button
                           className="mx-1 rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
-                          onClick={() => handleShowUpdate(index)}
+                          onClick={() => handleUpdate(item.name)}
                         >
                           Save
                         </button>
@@ -161,15 +201,13 @@ export default function Page() {
                       <>
                         <button
                           className="mx-1 rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
-                          onClick={() => handleShowUpdate(index)}
+                          onClick={() => handleShowUpdate(item.name)}
                         >
                           Update
                         </button>
                         <button
                           className="mx-1 rounded-lg bg-red-700 p-2 text-white hover:bg-red-600"
-                          onClick={() =>
-                            console.log(`Delete item: ${item.name}`)
-                          }
+                          onClick={() => handleDelete(item.name)}
                         >
                           Delete
                         </button>
@@ -180,14 +218,16 @@ export default function Page() {
               ))
             ) : (
               <tr className="text-lg font-semibold">
-                <td colSpan="4" className=" text-center">No Item found</td>
+                <td colSpan="4" className="text-center">
+                  No Item found
+                </td>
               </tr>
             )}
           </tbody>
         </table>
         {!add && (
           <button
-            className="my-4 w-[20%] self-center rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
+            className="my-4 w-[20%] self-center rounded-lg bg-blue-700 p-2 text-white hover:bg-blue-600"
             onClick={handleShowAdd}
           >
             Add New Item
@@ -220,7 +260,7 @@ export default function Page() {
               }}
             ></TextField>
             <button
-              className="my-4 w-[20%] self-center rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
+              className="my-4 w-[20%] self-center rounded-lg bg-blue-700 p-2 text-white hover:bg-blue-600"
               onClick={handleAdd}
             >
               Add
