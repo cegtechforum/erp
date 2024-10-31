@@ -30,26 +30,26 @@ export default function Page() {
   let role2 = "admin";
   //let role2="user";
 
-  const [domain, setDomain] = useState("");
+  // const [domain, setDomain] = useState("");
 
-  useEffect(() => {
-    function getDomainFromToken() {
-      // Retrieve token from local storage
-      const token = localStorage.getItem("token");
+  // useEffect(() => {
+  //   function getDomainFromToken() {
+  //     // Retrieve token from local storage
+  //     const token = localStorage.getItem("token");
       
-      if (token) {
-        // Decode the JWT token
-        const decodedToken = jwt_decode(token);
-        console.log("token:",decodedToken);
-        // Assuming your user data contains a 'domain' property
-        const userDomain = decodedToken.super_user; // Adjust this based on your JWT structure
-        setDomain(userDomain);
-      }
-    }
+  //     if (token) {
+  //       // Decode the JWT token
+  //       const decodedToken = jwt_decode(token);
+  //       console.log("token:",decodedToken);
+  //       // Assuming your user data contains a 'domain' property
+  //       const userDomain = decodedToken.super_user; // Adjust this based on your JWT structure
+  //       setDomain(userDomain);
+  //     }
+  //   }
 
-    getDomainFromToken(); // Call the function to fetch domain
-    console.log("superUser:", domain);
-  }, []);
+  //   getDomainFromToken(); // Call the function to fetch domain
+  //   console.log("superUser:", domain);
+  // }, []);
   const getItems = async () => {
     try {
       const response = await axios.get("/api/items");
