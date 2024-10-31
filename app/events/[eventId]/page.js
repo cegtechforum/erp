@@ -1,42 +1,25 @@
-"use client";
-import {
-  Card,
-  CardContent,
-  Typography,
-  CardMedia,
-  CircularProgress,
-} from "@mui/material";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Card, CardContent, Typography, CardMedia } from "@mui/material";
+import { eq } from "drizzle-orm";
+import { db } from "@/app/_lib/db";
+import { events } from "@/app/_db/schema";
 
-const EventDetails = ({ params }) => {
-  const [event, setEvent] = useState({});
-  const [isLoading, setisLoading] = useState(false);
-  useEffect(() => {
-    const fetchEvent = async () => {
-      try {
-        setisLoading(true);
-        const response = await axios.get(`/api/events/${params.eventId}`);
-        if (response.data.status !== 200) {
-          throw new Error(response.data.error);
-        }
-        setEvent(response.data.res);
-      } catch (err) {
-        console.error("Error fetching events:", err);
-      } finally {
-        setisLoading(false);
-      }
-    };
+export async function EventDetails({ params }) {
+  const { eventId } = params;
 
-    fetchEvent();
-  }, [params.eventId]);
+  const res = await db
+    .select()
+    .from(events)
+    .where(eq(events.eventId, Number(eventId)));
 
-  if (isLoading)
+  const event = res[0];
+
+  if (!event) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-slate-100">
-        <CircularProgress size={100} />
+      <div className="flex h-screen items-center justify-center text-3xl font-medium capitalize text-red-600">
+        Event not found
       </div>
     );
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-200">
@@ -110,6 +93,6 @@ const EventDetails = ({ params }) => {
       </Card>
     </div>
   );
-};
+}
 
 export default EventDetails;

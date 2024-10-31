@@ -1,17 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Button } from "antd";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import axios from "axios";
 import Link from "next/link";
 import { CircularProgress } from "@mui/material";
+import { usePathname } from "next/navigation";
 
 export default function Dashboard() {
   const [events, setEvents] = useState([]);
   const [isLoading, setisLoading] = useState(true);
   const [query, setQuery] = useState("");
+  const currentPath = usePathname();
+
   const filteredEvents =
     query.trim() !== ""
       ? events.filter((event) =>
@@ -34,12 +36,6 @@ export default function Dashboard() {
     };
 
     fetchEvents();
-  }, []);
-
-  const [currentPath, setCurrentPath] = useState("");
-
-  useEffect(() => {
-    setCurrentPath(window.location.pathname);
   }, []);
 
   if (isLoading)
@@ -90,7 +86,7 @@ export default function Dashboard() {
                         {event.description.substring(0, 50) + "..."}
                       </p>
                       <div className="flex w-full items-center justify-around gap-4">
-                        <p className="rounded-lg bg-emerald-600 px-4 py-1 font-semibold capitalize text-white">
+                        <p className="rounded-lg px-4 py-1 font-semibold capitalize text-emerald-600">
                           {event.status}
                         </p>
                         <Link
