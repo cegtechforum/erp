@@ -7,15 +7,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
-import jwt_decode from "jwt-decode"; 
-
-// const items = [
-//   { name: "pen", count: 50 },
-//   { name: "chair", count: 15 },
-//   { name: "table", count: 15 },
-//   { name: "projectors", count: 3 },
-//   { name: "paper", count: 15 },
-// ];
+import { usePathname } from "next/navigation";
 
 export default function Page() {
   const [editName, setEditName] = useState(null);
@@ -25,7 +17,7 @@ export default function Page() {
   const [add, setAdd] = useState(false);
   const [newItem, setNewItem] = useState({ name: "", count: "" });
   const [curCount, setCurCount] = useState("");
-  const [currentPath, setCurrentPath] = useState("");
+  const currentPath = usePathname();
   const [loading, setLoading] = useState(true);
   let role2 = "admin";
   //let role2="user";
@@ -36,7 +28,7 @@ export default function Page() {
   //   function getDomainFromToken() {
   //     // Retrieve token from local storage
   //     const token = localStorage.getItem("token");
-      
+
   //     if (token) {
   //       // Decode the JWT token
   //       const decodedToken = jwt_decode(token);
@@ -50,18 +42,6 @@ export default function Page() {
   //   getDomainFromToken(); // Call the function to fetch domain
   //   console.log("superUser:", domain);
   // }, []);
-  const getItems = async () => {
-    try {
-      const response = await axios.get("/api/items");
-      console.log("item retrieved successfully", response.data.res);
-      setItems(response.data.res);
-      console.log(items);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleShowUpdate = (iname) => {
     setEditName(iname === editName ? null : iname);
@@ -119,19 +99,26 @@ export default function Page() {
   };
 
   useEffect(() => {
+    async function getItems() {
+      try {
+        const response = await axios.get("/api/items");
+        console.log("item retrieved successfully", response.data.res);
+        setItems(response.data.res);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    }
     getItems();
-    //console.log("first:", first);
-    //console.log("items:", items);
-
-    setCurrentPath(window.location.pathname);
   }, []);
+
   useEffect(() => {
     setFilteredItems(
       items.filter((item) =>
         item.name.toLowerCase().includes(search.toLowerCase()),
       ),
     );
-    // console.log(filteredItems);
   }, [search, items]);
 
   if (loading) {
