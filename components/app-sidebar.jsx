@@ -47,7 +47,10 @@ export function AppSidebar({ currentPath }) {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-2xl font-bold mb-4">ERP</SidebarGroupLabel> {/* Increased size */}
+          <SidebarGroupLabel className="mb-4 text-2xl font-bold">
+            ERP
+          </SidebarGroupLabel>{" "}
+          {/* Increased size */}
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item, index) => {
@@ -59,14 +62,16 @@ export function AppSidebar({ currentPath }) {
                       {item.url ? (
                         <Link href={item.url}>
                           <div
-                            className={`flex items-center p-4 transition-colors duration-200 ${
+                            className={`flex w-full items-center p-4 transition-colors duration-200 ${
                               isActive
-                                ? "bg-gray-300 text-black "
+                                ? "bg-gray-300 text-black"
                                 : "text-gray-700"
-                            } hover:bg-gray-200 rounded-lg`}
+                            } hover:bg-gray-500`}
                           >
                             <item.icon />
-                            <span className={`ml-2 text-lg`}>{item.title}</span> 
+                            <span className={`ml-2 w-full text-lg`}>
+                              {item.title}
+                            </span>
                           </div>
                         </Link>
                       ) : (
@@ -76,7 +81,7 @@ export function AppSidebar({ currentPath }) {
                             isActive
                               ? "bg-gray-300 text-black"
                               : "text-gray-700"
-                          } hover:bg-gray-200 rounded-lg`}
+                          } rounded-lg hover:bg-gray-200`}
                         >
                           <item.icon />
                           <span className={`ml-2 text-lg`}>{item.title}</span>

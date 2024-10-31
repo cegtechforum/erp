@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/app/_lib/db";
-import { lists } from "../../../_db/schema";
+import { events } from "../../../_db/schema";
 import { NextResponse } from "next/server";
 
 export async function GET(req) {
@@ -9,9 +9,9 @@ export async function GET(req) {
   try {
     const res = await db
       .select()
-      .from(lists)
-      .where(eq(lists.eventId, Number(id)));
-    return NextResponse.json({ res, status: 200 });
+      .from(events)
+      .where(eq(events.eventId, Number(id)));
+    return NextResponse.json({ res: res[0], status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({
