@@ -6,7 +6,16 @@ import SearchIcon from "@mui/icons-material/Search";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import axios from "axios";
-import { usePathname } from "next/navigation";
+import { CircularProgress } from "@mui/material";
+import jwt_decode from "jwt-decode"; 
+
+// const items = [
+//   { name: "pen", count: 50 },
+//   { name: "chair", count: 15 },
+//   { name: "table", count: 15 },
+//   { name: "projectors", count: 3 },
+//   { name: "paper", count: 15 },
+// ];
 
 export default function Page() {
   const [editName, setEditName] = useState(null);
@@ -14,19 +23,43 @@ export default function Page() {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState(items);
   const [add, setAdd] = useState(false);
-  const [first, setFirst] = useState(true);
   const [newItem, setNewItem] = useState({ name: "", count: "" });
   const [curCount, setCurCount] = useState("");
-  const currentPath = usePathname();
+  const [currentPath, setCurrentPath] = useState("");
+  const [loading, setLoading] = useState(true);
+  let role2 = "admin";
+  //let role2="user";
+
+  // const [domain, setDomain] = useState("");
+
+  // useEffect(() => {
+  //   function getDomainFromToken() {
+  //     // Retrieve token from local storage
+  //     const token = localStorage.getItem("token");
+      
+  //     if (token) {
+  //       // Decode the JWT token
+  //       const decodedToken = jwt_decode(token);
+  //       console.log("token:",decodedToken);
+  //       // Assuming your user data contains a 'domain' property
+  //       const userDomain = decodedToken.super_user; // Adjust this based on your JWT structure
+  //       setDomain(userDomain);
+  //     }
+  //   }
+
+  //   getDomainFromToken(); // Call the function to fetch domain
+  //   console.log("superUser:", domain);
+  // }, []);
   const getItems = async () => {
     try {
       const response = await axios.get("/api/items");
       console.log("item retrieved successfully", response.data.res);
       setItems(response.data.res);
       console.log(items);
-      setFirst(false);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,12 +92,16 @@ export default function Page() {
 
   const handleAdd = async () => {
     try {
-      const response = await axios.post("/api/items", newItem);
-      console.log(response);
-      setNewItem({ name: "", count: "" });
-      getItems();
+      if (newItem.name !== "" && newItem.count !== "") {
+        const response = await axios.post("/api/items", newItem);
+        console.log(response);
+        setNewItem({ name: "", count: "" });
+        getItems();
+      }
     } catch (err) {
       console.log(err);
+    } finally {
+      handleShowAdd();
     }
   };
 
@@ -82,11 +119,11 @@ export default function Page() {
   };
 
   useEffect(() => {
-    if (first) {
-      getItems();
-      //console.log("first:", first);
-    }
+    getItems();
+    //console.log("first:", first);
     //console.log("items:", items);
+
+    setCurrentPath(window.location.pathname);
   }, []);
   useEffect(() => {
     setFilteredItems(
@@ -96,13 +133,27 @@ export default function Page() {
     );
     // console.log(filteredItems);
   }, [search, items]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-100">
+        <CircularProgress size={100} />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex min-h-screen">
+    <div className="mx-auto flex min-h-screen w-[95%] flex-col">
       <SidebarProvider>
         <AppSidebar currentPath={currentPath} />
         <main className="w-full">
           <SidebarTrigger />
           <div className="h-[calc(100vh-28px)] font-sans">
+            <div>
+              <h1 className="flex flex-row justify-center text-3xl font-bold">
+                Available Logistics📃
+              </h1>
+            </div>
             <div>
               {/* search bar div */}
               <TextField
@@ -122,16 +173,16 @@ export default function Page() {
                 value={search}
                 onChange={(e) => {
                   setSearch(e.target.value);
-                  //console.log(search);
                 }}
+                className="mb-4"
               />
             </div>
-            <div className="flex flex-col justify-center">
+            <div className="overflow-auto rounded-xl">
               {/* items details */}
-              <table className="text-md border-collapse border border-slate-700 bg-gray-200 p-5">
-                <thead className="text-lg">
+              <table className="text-md w-full border-collapse border border-slate-700 bg-gray-200 shadow-lg">
+                <thead className="bg-gray-400 text-lg">
                   <tr>
-                    <th className="w-1/10 border border-slate-800 px-4 py-2 font-bold">
+                    <th className="w-1/6 border border-slate-800 px-4 py-2 font-bold">
                       S.No
                     </th>
                     <th className="w-1/3 border border-slate-800 px-4 py-2 font-bold">
@@ -140,9 +191,11 @@ export default function Page() {
                     <th className="w-1/5 border border-slate-800 px-4 py-2 font-bold">
                       Count
                     </th>
-                    <th className="w-1/3 border border-slate-800 px-4 py-2 font-bold">
-                      Options
-                    </th>
+                    {role2 == "admin" && (
+                      <th className="w-1/3 border border-slate-800 px-4 py-2 font-bold">
+                        Options
+                      </th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -161,58 +214,58 @@ export default function Page() {
                         <td className="border border-slate-800 px-4 py-2">
                           {item.count}
                         </td>
-                        <td className="flex flex-row items-center justify-center px-4 py-2">
-                          {editName === item.name ? (
-                            <div className="align-center flex flex-row items-center">
-                              {/* <input
-                        placeholder="Enter current count"
-                        className="mr-2 rounded-lg p-2"
-                      /> */}
-
-                              <TextField
-                                type="number"
-                                label="count"
-                                variant="outlined"
-                                fullWidth
-                                size="small"
-                                margin="normal"
-                                helperText="Enter current count"
-                                value={curCount}
-                                onChange={(e) => {
-                                  setCurCount(parseInt(e.target.value));
-                                  //console.log(curCount);
-                                }}
-                              />
-                              <button
-                                className="mx-1 rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
-                                onClick={() => handleUpdate(item.name)}
-                              >
-                                Save
-                              </button>
-                              <button
-                                className="mx-1 rounded-lg bg-yellow-500 p-2 text-white hover:bg-yellow-400"
-                                onClick={() => handleShowUpdate(null)}
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          ) : (
-                            <>
-                              <button
-                                className="mx-1 rounded-lg bg-green-700 p-2 text-white hover:bg-green-600"
-                                onClick={() => handleShowUpdate(item.name)}
-                              >
-                                Update
-                              </button>
-                              <button
-                                className="mx-1 rounded-lg bg-red-700 p-2 text-white hover:bg-red-600"
-                                onClick={() => handleDelete(item.name)}
-                              >
-                                Delete
-                              </button>
-                            </>
-                          )}
-                        </td>
+                        {role2 == "admin" && (
+                          <td className="flex flex-col items-center justify-center px-4 py-2 md:flex-row">
+                            {editName === item.name ? (
+                              <div className="flex flex-col items-center md:flex-row">
+                                <TextField
+                                  type="number"
+                                  label="count"
+                                  InputProps={{
+                                    inputProps: { min: 0 },
+                                  }}
+                                  variant="outlined"
+                                  fullWidth
+                                  size="small"
+                                  margin="normal"
+                                  helperText="Enter current count"
+                                  value={curCount}
+                                  onChange={(e) => {
+                                    setCurCount(parseInt(e.target.value));
+                                  }}
+                                  className="w-full md:w-auto"
+                                />
+                                <button
+                                  className="m-1 w-full rounded-lg bg-green-700 p-2 text-white hover:bg-green-600 md:w-auto"
+                                  onClick={() => handleUpdate(item.name)}
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  className="m-1 w-full rounded-lg bg-yellow-500 p-2 text-white hover:bg-yellow-400 md:w-auto"
+                                  onClick={() => handleShowUpdate(null)}
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            ) : (
+                              <>
+                                <button
+                                  className="m-1 w-full rounded-lg bg-green-700 p-2 text-white hover:bg-green-600 md:w-auto"
+                                  onClick={() => handleShowUpdate(item.name)}
+                                >
+                                  Update
+                                </button>
+                                <button
+                                  className="m-1 w-full rounded-lg bg-red-700 p-2 text-white hover:bg-red-600 md:w-auto"
+                                  onClick={() => handleDelete(item.name)}
+                                >
+                                  Delete
+                                </button>
+                              </>
+                            )}
+                          </td>
+                        )}
                       </tr>
                     ))
                   ) : (
@@ -224,16 +277,16 @@ export default function Page() {
                   )}
                 </tbody>
               </table>
-              {!add && (
+              {!add && role2 == "admin" && (
                 <button
-                  className="my-4 w-[20%] self-center rounded-lg bg-blue-700 p-2 text-white hover:bg-blue-600"
+                  className="mx-auto my-4 flex w-full items-center justify-center rounded-lg bg-blue-700 p-2 text-white hover:bg-blue-600 md:w-[20%]"
                   onClick={handleShowAdd}
                 >
                   Add New Item
                 </button>
               )}
               {add && (
-                <div className="my-10 flex w-[40%] flex-col justify-center self-center border bg-gray-100">
+                <div className="mx-auto my-10 flex w-full flex-col justify-center self-center border bg-gray-100 md:w-[40%]">
                   <TextField
                     type="text"
                     label="Item Name"
@@ -262,7 +315,7 @@ export default function Page() {
                     }}
                   ></TextField>
                   <button
-                    className="my-4 w-[20%] self-center rounded-lg bg-blue-700 p-2 text-white hover:bg-blue-600"
+                    className="my-4 w-full self-center rounded-lg bg-blue-700 p-2 text-white hover:bg-blue-600 md:w-[20%]"
                     onClick={handleAdd}
                   >
                     Add
