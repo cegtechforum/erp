@@ -6,40 +6,39 @@ import {
   Typography,
   Button,
   CardMedia,
+  CircularProgress,
 } from "@mui/material";
 import Link from "next/link";
 import axios from "axios";
-import { CircularProgress } from "@mui/material";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { usePathname } from "next/navigation";
 
 export default function Events() {
   const [events, setEvents] = useState([]);
-  const [searchEvents, setSearchEvents] = useState("");
-  const [currentPath, setCurrentPath] = useState("");
-  const [isLoading, setisLoading] = useState(true);
-  const filteredEvents =
-    searchEvents !== ""
-      ? events.filter((event) =>
-          event.eventName.toLowerCase().includes(searchEvents.toLowerCase()),
-        )
-      : events;
+  const [query, setQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const currentPath = usePathname();
+
+  const filteredEvents = query.trim()
+    ? events.filter((event) =>
+        event.eventName.toLowerCase().includes(query.trim().toLowerCase()),
+      )
+    : events;
+
   useEffect(() => {
     async function fetchEvent() {
       try {
         const response = await axios.get("/api/events");
-        if (response.status !== 200) {
-          throw new Error("Failed to fetch events");
-        }
+        if (response.status !== 200) throw new Error("Failed to fetch events");
         setEvents(response.data.res);
       } catch (error) {
         console.error("Could not fetch events:", error);
       } finally {
-        setisLoading(false);
+        setIsLoading(false);
       }
     }
     fetchEvent();
-    setCurrentPath(window.location.pathname);
   }, []);
 
   if (isLoading)
@@ -48,6 +47,7 @@ export default function Events() {
         <CircularProgress size={100} />
       </div>
     );
+
   return (
     <div className="flex h-full min-h-screen">
       <SidebarProvider>
@@ -61,11 +61,10 @@ export default function Events() {
             <input
               type="text"
               placeholder="Search Events"
-              value={searchEvents}
-              onChange={(e) => setSearchEvents(e.target.value)}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               className="mb-6 w-4/5 rounded-lg border border-slate-100 p-2"
             />
-
             {filteredEvents.length > 0 ? (
               <div className="flex flex-wrap justify-center gap-4">
                 {filteredEvents.map((event) => (
@@ -76,7 +75,7 @@ export default function Events() {
                     <CardMedia
                       component="img"
                       height="140"
-                      image="../assets/placeholder.jpg"
+                      image="./assets/placeholder.jpg"
                       alt={event.eventName}
                       className="rounded-t-lg"
                     />
