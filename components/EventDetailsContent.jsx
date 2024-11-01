@@ -81,10 +81,10 @@ const EventDetailRow = ({ label, value }) => {
   return (
     <div className="flex items-center justify-between capitalize">
       <Typography variant="body1">
-        <p className="font-black text-gray-700">{label}</p>
+        <span className="font-black text-gray-700">{label}</span>
       </Typography>
       <Typography variant="body1">
-        <p className="font-medium text-gray-500"> {value}</p>
+        <span className="font-medium text-gray-500"> {value}</span>
       </Typography>
     </div>
   );

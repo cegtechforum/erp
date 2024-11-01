@@ -14,7 +14,7 @@ import AppSidebar from "@/components/app-sidebar";
 import toast from "react-hot-toast";
 
 export default function AddEventForm() {
-  const [eventData, setEventData] = useState({
+  const initialState = {
     eventName: "",
     description: "",
     rollNo: "",
@@ -24,7 +24,8 @@ export default function AddEventForm() {
     date: "",
     startTime: "",
     endTime: "",
-  });
+  };
+  const [eventData, setEventData] = useState(initialState);
 
   const handleChange = (e) => {
     setEventData({ ...eventData, [e.target.name]: e.target.value });
@@ -33,11 +34,13 @@ export default function AddEventForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/events/add", eventData);
+      const response = await axios.post("/api/events", { events: eventData });
       if (response.data.status !== 200) {
         throw new Error(response.data.error);
       }
+      eventData;
       toast.success("Added Successfully");
+      setEventData(initialState);
     } catch (error) {
       toast.error(error.message || "Error occured");
     }
