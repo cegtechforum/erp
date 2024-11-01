@@ -7,7 +7,6 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
-import { usePathname } from "next/navigation";
 
 export default function Page() {
   const [editName, setEditName] = useState(null);
@@ -17,7 +16,6 @@ export default function Page() {
   const [add, setAdd] = useState(false);
   const [newItem, setNewItem] = useState({ name: "", count: "" });
   const [curCount, setCurCount] = useState("");
-  const currentPath = usePathname();
   const [loading, setLoading] = useState(true);
   let role2 = "admin";
   //let role2="user";
@@ -132,10 +130,10 @@ export default function Page() {
   return (
     <div className="mx-auto flex min-h-screen w-[95%] flex-col">
       <SidebarProvider>
-        <AppSidebar currentPath={currentPath} />
+        <AppSidebar />
         <main className="w-full">
           <SidebarTrigger />
-          <div className="h-[calc(100vh-28px)] font-sans">
+          <div className="h-[calc(100vh-28px)]">
             <div>
               <h1 className="flex flex-row justify-center text-3xl font-bold">
                 Available Logistics📃

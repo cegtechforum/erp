@@ -35,19 +35,6 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
-  try {
-    const res = await db.select().from(events);
-    return NextResponse.json({ res, status: 200 });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({
-      error: error.detail || "Internal Server error",
-      status: 500,
-    });
-  }
-}
-
 export async function PATCH(req) {
   try {
     const { eventId, status } = await req.json();

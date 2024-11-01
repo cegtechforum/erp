@@ -1,6 +1,9 @@
+"use client";
+
 import { Calendar, ShoppingCart, LogOut, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
+import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -42,15 +45,16 @@ const items = [
   },
 ];
 
-export function AppSidebar({ currentPath }) {
+export function AppSidebar() {
+  const currentPath = usePathname();
+
   return (
-    <Sidebar>
+    <Sidebar className>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="mb-4 text-2xl font-bold">
             ERP
-          </SidebarGroupLabel>{" "}
-          {/* Increased size */}
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item, index) => {
@@ -62,14 +66,14 @@ export function AppSidebar({ currentPath }) {
                       {item.url ? (
                         <Link href={item.url}>
                           <div
-                            className={`flex w-full items-center p-4 transition-colors duration-200 ${
+                            className={`flex w-full items-center p-4 transition-colors duration-100 ${
                               isActive
                                 ? "bg-gray-300 text-black"
-                                : "text-gray-700"
-                            } hover:bg-gray-500`}
+                                : "text-gray-400"
+                            } rounded-lg hover:bg-gray-100 hover:text-gray-700`}
                           >
                             <item.icon />
-                            <span className={`ml-2 w-full text-lg`}>
+                            <span className="ml-2 w-full text-lg">
                               {item.title}
                             </span>
                           </div>
@@ -80,11 +84,11 @@ export function AppSidebar({ currentPath }) {
                           className={`flex items-center p-4 transition-colors duration-200 ${
                             isActive
                               ? "bg-gray-300 text-black"
-                              : "text-gray-700"
-                          } rounded-lg hover:bg-gray-200`}
+                              : "text-gray-400"
+                          } rounded-lg hover:bg-gray-100 hover:text-gray-700`}
                         >
                           <item.icon />
-                          <span className={`ml-2 text-lg`}>{item.title}</span>
+                          <span className="ml-2 text-lg">{item.title}</span>
                         </button>
                       )}
                     </SidebarMenuButton>
@@ -98,3 +102,5 @@ export function AppSidebar({ currentPath }) {
     </Sidebar>
   );
 }
+
+export default AppSidebar;
