@@ -19,27 +19,29 @@ export default function EventDetailsContent({ event, isSuperUser }) {
           <CardMedia
             component="img"
             height="280"
-            image="../assets/kurukshetra.jpg"
+            image="/assets/thorfinn.jpg"
             alt={event.eventName}
             className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
           <Typography variant="h3">
-            <h3 className="absolute bottom-4 left-4 text-2xl font-bold text-white drop-shadow-lg sm:text-3xl md:text-4xl lg:text-5xl">
+            <p className="absolute bottom-4 left-4 text-2xl font-bold text-white drop-shadow-lg sm:text-3xl md:text-4xl lg:text-5xl">
               {event.eventName}
-            </h3>
+            </p>
           </Typography>
         </div>
         <CardContent className="bg-white p-8">
           <div className="mb-8 text-center">
             <Typography variant="body1" color="text.secondary">
-              <p className="mb-4 text-lg text-gray-600">{event.description}</p>
+              <span className="mb-4 text-lg text-gray-600">
+                {event.description}
+              </span>
             </Typography>
           </div>
           <hr className="my-6 border-gray-300" />
           <div className="mb-6 space-y-4">
             <Typography variant="h5">
-              <p className="font-semibold text-gray-800">Event Details</p>
+              <span className="font-semibold text-gray-800">Event Details</span>
             </Typography>
             <div className="flex items-center justify-between capitalize">
               <Typography variant="body1" className="text-gray-600">
@@ -60,9 +62,9 @@ export default function EventDetailsContent({ event, isSuperUser }) {
           <hr className="my-6 border-gray-300" />
           <div className="space-y-4">
             <Typography variant="h5">
-              <p className="font-semibold text-gray-800">
+              <span className="font-semibold text-gray-800">
                 Organizer Information
-              </p>
+              </span>
             </Typography>
             <EventDetailRow label="Name:" value={event.organizerName} />
             <EventDetailRow label="Roll No:" value={event.rollNo} />
@@ -75,7 +77,6 @@ export default function EventDetailsContent({ event, isSuperUser }) {
   );
 }
 
-// Helper function for each detail row
 const EventDetailRow = ({ label, value }) => {
   return (
     <div className="flex items-center justify-between capitalize">
