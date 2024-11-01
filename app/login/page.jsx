@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -14,7 +15,6 @@ const LoginPage = () => {
   const [isLoading, setisLoading] = useState(false);
   const isDisabled = !password.trim() || !email.trim();
 
-  console.log(isDisabled);
   const handleSubmit = async (event) => {
     event.preventDefault();
     setErrorMessage("");
@@ -27,19 +27,14 @@ const LoginPage = () => {
 
       if (response.data.status === 200) {
         console.log("Login successful:", response.data);
+        toast.success("Login Successful");
         router.push("/dashboard");
       } else {
         setErrorMessage(response.data.error);
       }
     } catch (error) {
       console.error("An error occurred during login:", error);
-      if (error.response) {
-        setErrorMessage("Invalid login credentials.");
-      } else {
-        setErrorMessage(
-          "An unexpected error occurred. Please try again later.",
-        );
-      }
+      setErrorMessage(error.message || "Error Occured");
     } finally {
       setisLoading(false);
     }

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Select, MenuItem, Typography } from "@mui/material";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function EventStatusUpdater({
   eventId,
@@ -20,13 +21,13 @@ export default function EventStatusUpdater({
       });
 
       if (response.status === 200) {
-        alert("Status updated successfully");
+        toast.success("Status updated successfully");
       } else {
-        alert(response.data.error || "Failed to update status");
+        toast.error(response.data.error || "Failed to update status");
       }
     } catch (error) {
       console.error("Error updating status:", error);
-      alert("An error occurred while updating the status.");
+      toast.error("An error occurred while updating the status.");
     }
   };
   console.log(isSuperUser);

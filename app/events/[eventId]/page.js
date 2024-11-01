@@ -18,6 +18,7 @@ export default async function EventDetailsPage(props) {
       isSuperUser = payload.isSuperUser;
     } catch (error) {
       console.error("Token verification failed:", error);
+      toast.error(error.message || "Error occured");
     }
   }
 

@@ -7,6 +7,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { cookies } from "next/headers";
 import EventsList from "@/components/EventsList";
 import { eq } from "drizzle-orm";
+import toast from "react-hot-toast";
 
 export default async function Dashboard() {
   const cookieStore = await cookies();
@@ -31,6 +32,7 @@ export default async function Dashboard() {
       .where(eq(events.domain, userDomain));
   } catch (error) {
     console.error("Error fetching events:", error);
+    toast.error(error.message || "Error Occured");
   }
 
   return (

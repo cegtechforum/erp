@@ -1,6 +1,12 @@
 "use client";
 
-import { Calendar, ShoppingCart, LogOut, LayoutDashboard } from "lucide-react";
+import {
+  Calendar,
+  ShoppingCart,
+  LogOut,
+  LayoutDashboard,
+  Plus,
+} from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
 import { usePathname } from "next/navigation";
@@ -14,6 +20,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import toast from "react-hot-toast";
 
 const items = [
   {
@@ -27,6 +34,11 @@ const items = [
     icon: Calendar,
   },
   {
+    title: "Add Event",
+    url: "/events/add",
+    icon: Plus,
+  },
+  {
     title: "Items",
     url: "/items",
     icon: ShoppingCart,
@@ -37,9 +49,11 @@ const items = [
     action: async () => {
       try {
         await axios.get("/api/logout");
+        toast.success("Logout Successful");
         window.location.href = "/";
       } catch (error) {
         console.error("Logout failed:", error);
+        toast.error(error.message || "Logout Failed");
       }
     },
   },
