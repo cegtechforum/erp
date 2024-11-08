@@ -1,68 +1,59 @@
+
 import { db } from '@/app/_lib/db';
 import { lists, users } from '../../_db/schema';
 import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
-import nodemailer from 'nodemailer';
+import { sendEmail } from './email';
 
 export async function POST(req) {
   try {
     const dt = await req.json();
     console.log(dt);
 
-    await db.insert(lists).values(dt);
+    const duplicateItems = [];
+
+    for (let i = 0; i < dt.items.length; i++) {
+      try {
+        await db.insert(lists).values(dt.items[i]);
+      } catch (err) {
+        if (err.message.includes("duplicate key value violates unique constraint")) {
+          duplicateItems.push(dt.items[i].itemName);
+          continue;
+        } else {
+          throw err;
+        }
+      }
+    }
 
     const superUsers = await db.select().from(users).where(eq(users.domain, 'logistics'));
     console.log(superUsers);
-    const transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
 
-    
-    const htmlContent = `
-      <h1>New Item Requested</h1>
-      <table style="border-collapse: collapse; width: 100%;">
-        <tr>
-          <th style="border: 1px solid #ddd; padding: 8px;">Item Name</th>
-          <th style="border: 1px solid #ddd; padding: 8px;">Count</th>
-          <th style="border: 1px solid #ddd; padding: 8px;">Category</th>
-        </tr>
-        <tr>
-          <td style="border: 1px solid #ddd; padding: 8px;">${dt.itemName}</td>
-          <td style="border: 1px solid #ddd; padding: 8px;">${dt.count}</td>
-          <td style="border: 1px solid #ddd; padding: 8px;">${dt.category}</td>
-        </tr>
-      </table>
-    `;
+    await sendEmail(dt, superUsers);
 
-    for (const user of superUsers) {
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
-        to: user.email,
-        subject: 'New Item Requested',
-        html: htmlContent,  // Use the HTML content here
-      });
+    if (duplicateItems.length > 0) {
+      return NextResponse.json(
+        { msg: `These Items already exist: ${duplicateItems.join(', ')}` },
+        { status: 403 }
+      );
     }
-    
 
-    return NextResponse.json({ msg: 'Requested item added successfully and emails sent to super users.' }, { status: 200 });
+    return NextResponse.json(
+      { msg: 'Requested items added successfully and emails sent to super users.' },
+      { status: 200 }
+    );
 
   } catch (err) {
     if (err.message.includes('violates foreign key constraint')) {
       return NextResponse.json({ msg: 'Event not found' }, { status: 404 });
-    }else if(err.message.includes("duplicate key value violates unique constraint")){
-      return NextResponse.json({ msg: 'item already exists' }, { status: 403 });
-
-    }else {
-      console.error('Insert err:', err);
+    } else if (err.message.includes("Invalid login: 535-5.7.8 Username and Password not accepted")) {
+      return NextResponse.json({ msg: 'An error in sending email to super users' }, { status: 401 });
+    } else {
+      console.error('Insert error:', err);
       return NextResponse.json({ msg: 'Server error' }, { status: 500 });
     }
   }
 }
-  
+
 
 export async function GET(req) {
   try {
@@ -73,7 +64,7 @@ export async function GET(req) {
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { messgae: "internal server error" },
+      { message: "Internal server error" },
       { status: 500 },
     );
   }
