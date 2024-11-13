@@ -48,6 +48,7 @@ export const lists = pgTable(
     itemName: text("item_name").notNull(),
     count: integer().notNull().default(1),
     category: text().notNull(),
+    approvedCount: integer("approved_count"),
   },
   (table) => ({
     pk: primaryKey(table.eventId, table.itemName),
@@ -58,5 +59,3 @@ export const items = pgTable("items", {
   name: text().notNull().primaryKey(),
   count: integer().notNull().default(1),
 });
-
-
