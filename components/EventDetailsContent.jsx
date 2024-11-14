@@ -1,6 +1,8 @@
+"use client";
 import { Card, CardContent, Typography, CardMedia } from "@mui/material";
 import EventStatusUpdater from "@/components/EventStatusUpdater";
 import GoBackButton from "./GoBackButton";
+import { useEffect, useState } from "react";
 
 export default function EventDetailsContent({ event, isSuperUser }) {
   if (!event) {
@@ -10,6 +12,24 @@ export default function EventDetailsContent({ event, isSuperUser }) {
       </div>
     );
   }
+
+  const [items,setItems] = useState([]);
+
+  useEffect(()=>{
+    const fetchItems = async ()=>{
+      const items = [
+        { id: 1, name: 'Pen', count :10 },
+        { id: 2, name: 'Pencil', count :10 },
+        { id: 3, name: 'Eraser', count :10 },
+        { id: 4, name: 'Notebook', count :10},
+        { id: 5, name: 'Marker', count :10 }
+      ];
+      setItems(items);
+    };
+    fetchItems();
+  },[]);
+  
+  
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6">
@@ -70,6 +90,21 @@ export default function EventDetailsContent({ event, isSuperUser }) {
             <EventDetailRow label="Roll No:" value={event.rollNo} />
             <EventDetailRow label="Domain:" value={event.domain} />
             <EventDetailRow label="Contact:" value={event.contact} />
+          </div>
+          <hr className="my-6 border-gray-300" />
+          <div className="space-y-4">
+            <Typography variant="h5">
+                <span className="font-semibold text-gray-800">
+                  Product List
+                </span>
+              </Typography>
+              <ul>
+                {items.map(item=>
+                (<li key={item.id}>
+                  {item.name} - {item.count}
+                </li>
+              ))}
+              </ul>
           </div>
         </CardContent>
       </Card>
