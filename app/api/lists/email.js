@@ -26,7 +26,7 @@ export async function sendEmail(dt, superUsers) {
         <tr>
           <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Item Name</th>
           <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Count</th>
-          <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Category</th>
+
         </tr>
       </thead>
       <tbody>
@@ -35,7 +35,7 @@ export async function sendEmail(dt, superUsers) {
     </table>
 
     <p style="text-align: center; margin-top: 20px;">
-      <a href="https://example.com/request-details" target="_blank" 
+      <a href="http://localhost:3000/events/${dt.items[0].eventId}" target="_blank" 
          style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
         Click to View More
       </a>
