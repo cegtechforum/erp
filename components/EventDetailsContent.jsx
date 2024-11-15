@@ -1,10 +1,10 @@
-"use client";
 import { Card, CardContent, Typography, CardMedia } from "@mui/material";
 import EventStatusUpdater from "@/components/EventStatusUpdater";
 import GoBackButton from "./GoBackButton";
-import { useEffect, useState } from "react";
+import AddRequestButton from './AddRequestButton'
 
-export default function EventDetailsContent({ event, isSuperUser }) {
+
+export default function EventDetailsContent({ event, items, isSuperUser }) {
   if (!event) {
     return (
       <div className="flex h-screen items-center justify-center text-3xl font-medium capitalize text-red-600">
@@ -13,22 +13,8 @@ export default function EventDetailsContent({ event, isSuperUser }) {
     );
   }
 
-  const [items,setItems] = useState([]);
+  console.log(items)
 
-  useEffect(()=>{
-    const fetchItems = async ()=>{
-      const items = [
-        { id: 1, name: 'Pen', count :10 },
-        { id: 2, name: 'Pencil', count :10 },
-        { id: 3, name: 'Eraser', count :10 },
-        { id: 4, name: 'Notebook', count :10},
-        { id: 5, name: 'Marker', count :10 }
-      ];
-      setItems(items);
-    };
-    fetchItems();
-  },[]);
-  
   
 
   return (
@@ -92,19 +78,20 @@ export default function EventDetailsContent({ event, isSuperUser }) {
             <EventDetailRow label="Contact:" value={event.contact} />
           </div>
           <hr className="my-6 border-gray-300" />
-          <div className="space-y-4">
-            <Typography variant="h5">
+          <div className="flex flex-col space-y-4">
+              <div className="space-y-4">
+              <Typography variant="h5">
                 <span className="font-semibold text-gray-800">
-                  Product List
+                Product List
                 </span>
               </Typography>
-              <ul>
-                {items.map(item=>
-                (<li key={item.id}>
-                  {item.name} - {item.count}
-                </li>
+              {items.map(item =>(
+                <EventDetailRow label={item.itemName} value={item.count} />
               ))}
-              </ul>
+            </div>
+              <div className="flex items-center justify-center" >  
+              <AddRequestButton />
+              </div>
           </div>
         </CardContent>
       </Card>
@@ -124,3 +111,4 @@ const EventDetailRow = ({ label, value }) => {
     </div>
   );
 };
+
