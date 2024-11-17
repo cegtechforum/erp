@@ -1,20 +1,12 @@
 "use client";
 import { useState } from "react";
-import {
-  TextField,
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  Grid,
-} from "@mui/material";
 import axios from "axios";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/app-sidebar";
 import toast from "react-hot-toast";
+import AppSidebar from "@/components/app-sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
-export default function AddEventForm() {
-  const initialState = {
+export default function EventForm() {
+  const [eventDetails, setEventDetails] = useState({
     eventName: "",
     description: "",
     rollNo: "",
@@ -24,149 +16,153 @@ export default function AddEventForm() {
     date: "",
     startTime: "",
     endTime: "",
-  };
-  const [eventData, setEventData] = useState(initialState);
+  });
 
-  const handleChange = (e) => {
-    setEventData({ ...eventData, [e.target.name]: e.target.value });
+  const [list, setList] = useState([
+    { itemName: "", count: "", category: "" },
+  ]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEventDetails((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleListChange = (index, e) => {
+    const { name, value } = e.target;
+    setList((prev) => {
+      const updatedList = [...prev];
+      updatedList[index][name] = value;
+      return updatedList;
+    });
+  };
+
+  const addListItem = () => {
+    setList((prev) => [...prev, { itemName: "", count: "", category: "" }]);
+  };
+
+  const removeListItem = (index) => {
+    setList((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await axios.post("/api/events", { events: eventData });
-      if (response.data.status !== 200) {
-        throw new Error(response.data.error);
+      const response = await axios.post("/api/events", {
+        events: eventDetails,
+        list,
+      });
+
+      if (response.status === 200) {
+        toast.success("Event created successfully!");
+        setEventDetails({
+          eventName: "",
+          description: "",
+          rollNo: "",
+          contact: "",
+          organizerName: "",
+          domain: "",
+          date: "",
+          startTime: "",
+          endTime: "",
+        });
+        setList([{ itemName: "", count: "", category: "" }]);
+      } else {
+        toast.error("Failed to create event.");
       }
-      eventData;
-      toast.success("Added Successfully");
-      setEventData(initialState);
     } catch (error) {
-      toast.error(error.message || "Error occured");
+      console.error("Error creating event:", error);
+      toast.error("An error occurred while creating the event.");
     }
   };
 
   return (
-    <div className="flex h-full min-h-screen">
-      <SidebarProvider>
-        <AppSidebar />
-        <main className="h-full w-full">
-          <SidebarTrigger />
-          <Card sx={{ maxWidth: 600, margin: "auto", mt: 4, p: 3 }}>
-            <CardContent>
-              <Typography variant="h5" component="div" gutterBottom>
-                Add New Event
-              </Typography>
-              <form onSubmit={handleSubmit}>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      name="eventName"
-                      label="Event Name"
-                      value={eventData.eventName}
-                      onChange={handleChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      name="description"
-                      label="Description"
-                      value={eventData.description}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      name="rollNo"
-                      label="Roll No"
-                      value={eventData.rollNo}
-                      onChange={handleChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      name="contact"
-                      label="Contact"
-                      value={eventData.contact}
-                      onChange={handleChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      name="organizerName"
-                      label="Organizer Name"
-                      value={eventData.organizerName}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      name="domain"
-                      label="Domain"
-                      value={eventData.domain}
-                      onChange={handleChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <TextField
-                      fullWidth
-                      type="date"
-                      name="date"
-                      label="Event Date"
-                      InputLabelProps={{ shrink: true }}
-                      value={eventData.date}
-                      onChange={handleChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      fullWidth
-                      type="time"
-                      name="startTime"
-                      label="Start Time"
-                      InputLabelProps={{ shrink: true }}
-                      value={eventData.startTime}
-                      onChange={handleChange}
-                      required
-                    />
-                  </Grid>
-                  <Grid item xs={3}>
-                    <TextField
-                      fullWidth
-                      type="time"
-                      name="endTime"
-                      label="End Time"
-                      InputLabelProps={{ shrink: true }}
-                      value={eventData.endTime}
-                      onChange={handleChange}
-                      required
-                    />
-                  </Grid>
-                </Grid>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  sx={{ mt: 2 }}
-                >
-                  Add Event
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </main>
-      </SidebarProvider>
+    <div className="overflow-hidden flex h-full min-h-screen" >
+    <SidebarProvider>
+    <AppSidebar />
+    <main className=" overflow-hidden  h-full w-full" >
+    <SidebarTrigger />
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6">
+
+    <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-4">
+      <h1 className="text-2xl font-bold text-center mb-4">Create an Event</h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {Object.keys(eventDetails).map((field) => (
+          <input
+            key={field}
+            type={field.includes("Time") ? "time" : field === "date" ? "date" : "text"}
+            name={field}
+            value={eventDetails[field]}
+            onChange={handleInputChange}
+            placeholder={field}
+            className="border border-gray-300 p-2 rounded-lg"
+            required
+          />
+        ))}
+      </div>
+
+      <div className="mt-4">
+        <h2 className="text-xl font-semibold mb-2">Items</h2>
+        {list.map((item, index) => (
+          <div key={index} className="flex gap-2 mb-2">
+            <input
+              type="text"
+              name="itemName"
+              placeholder="Item Name"
+              value={item.itemName}
+              onChange={(e) => handleListChange(index, e)}
+              className="border border-gray-300 p-2 rounded-lg w-1/3"
+              required
+            />
+            <input
+              type="number"
+              name="count"
+              placeholder="Count"
+              value={item.count}
+              onChange={(e) => handleListChange(index, e)}
+              className="border border-gray-300 p-2 rounded-lg w-1/3"
+              required
+            />
+            <input
+              type="text"
+              name="category"
+              placeholder="Category"
+              value={item.category}
+              onChange={(e) => handleListChange(index, e)}
+              className="border border-gray-300 p-2 rounded-lg w-1/3"
+              required
+            />
+            {list.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeListItem(index)}
+                className="bg-red-500 text-white px-4 py-2 rounded-lg"
+              >
+                Remove
+              </button>
+            )}
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={addListItem}
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+        >
+          Add Item
+        </button>
+      </div>
+
+      <button
+        type="submit"
+        className="bg-green-500 text-white px-6 py-3 rounded-lg font-bold"
+      >
+        Submit Event
+      </button>
+    </form>
+    </div>
+    </main>
+    </SidebarProvider>
     </div>
   );
 }
