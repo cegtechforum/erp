@@ -1,4 +1,4 @@
-GET http://localhost:3000/api/events HTTP/1.1
+GET HTTP/1.1
 Content-Type: application/json
 
 ###
@@ -46,7 +46,7 @@ Content-Type: application/json
 },
 {
     "eventId":1,
-    "itemName":"charger",
+    "itemName":"pencil",
     "count":5,
     "approvedCount":0,
     "category":"c1"
