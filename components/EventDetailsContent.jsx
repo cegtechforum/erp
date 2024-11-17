@@ -13,8 +13,6 @@ export default function EventDetailsContent({ event, items, isSuperUser }) {
     );
   }
 
-  console.log(items)
-
   
 
   return (
@@ -90,7 +88,8 @@ export default function EventDetailsContent({ event, items, isSuperUser }) {
               ))}
             </div>
               <div className="flex items-center justify-center" >  
-              <AddRequestButton />
+              <AddRequestButton 
+              event={event}/>
               </div>
           </div>
         </CardContent>
