@@ -84,7 +84,7 @@ export default function EventsList({ events, name }) {
 
         <button
   onClick={handleXl}
-  className={`flex items-center justify-center gap-2 bg-transparent text-white'} px-4 py-2 rounded-lg font-semibold shadow-md hover:bg-blue-600 transition`}
+  className={`flex items-center justify-center gap-2 bg-transparent text-white'} px-4 py-2 rounded-lg font-semibold shadow-md transition`}
   disabled={loading}
 >
   {loading ? (
