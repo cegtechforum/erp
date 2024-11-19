@@ -1,8 +1,10 @@
 import { Card, CardContent, Typography, CardMedia } from "@mui/material";
 import EventStatusUpdater from "@/components/EventStatusUpdater";
 import GoBackButton from "./GoBackButton";
+import AddRequestButton from './AddRequestButton'
 
-export default function EventDetailsContent({ event, isSuperUser }) {
+
+export default function EventDetailsContent({ event, items, isSuperUser }) {
   if (!event) {
     return (
       <div className="flex h-screen items-center justify-center text-3xl font-medium capitalize text-red-600">
@@ -10,6 +12,8 @@ export default function EventDetailsContent({ event, isSuperUser }) {
       </div>
     );
   }
+
+  
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6">
@@ -71,6 +75,23 @@ export default function EventDetailsContent({ event, isSuperUser }) {
             <EventDetailRow label="Domain:" value={event.domain} />
             <EventDetailRow label="Contact:" value={event.contact} />
           </div>
+          <hr className="my-6 border-gray-300" />
+          <div className="flex flex-col space-y-4">
+              <div className="space-y-4">
+              <Typography variant="h5">
+                <span className="font-semibold text-gray-800">
+                Product List
+                </span>
+              </Typography>
+              {items.map(item =>(
+                <EventDetailRow label={item.itemName} value={item.count} />
+              ))}
+            </div>
+              <div className="flex items-center justify-center" >  
+              <AddRequestButton 
+              event={event}/>
+              </div>
+          </div>
         </CardContent>
       </Card>
     </div>
@@ -89,3 +110,4 @@ const EventDetailRow = ({ label, value }) => {
     </div>
   );
 };
+
