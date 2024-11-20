@@ -13,7 +13,7 @@ export default function Card({ event }) {
       <CardMedia
         component="img"
         height="140"
-        image="./assets/placeholder.jpg"
+        image="/assets/placeholder.jpg"
         alt={event.eventName}
         className="rounded-t-lg"
       />

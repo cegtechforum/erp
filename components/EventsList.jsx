@@ -4,18 +4,23 @@ import toast from "react-hot-toast";
 
 import { useState } from "react";
 import Card from "./Card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import DownloadIcon from "@mui/icons-material/Download";
 import CircularProgress from "@mui/material/CircularProgress";
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
 import { Badge } from "@mui/material";
-import { AiOutlineCheck, AiOutlineClockCircle, AiOutlineCloseCircle, AiOutlineRollback } from "react-icons/ai";
+import {
+  AiOutlineCheck,
+  AiOutlineClockCircle,
+  AiOutlineCloseCircle,
+  AiOutlineRollback,
+} from "react-icons/ai";
 import { FaClipboardList } from "react-icons/fa";
-import MailIcon from "@mui/icons-material/Mail";
-
 
 export default function EventsList({ events, name }) {
   const [query, setQuery] = useState("");
@@ -27,14 +32,17 @@ export default function EventsList({ events, name }) {
       counts[event.status] = (counts[event.status] || 0) + 1;
       return counts;
     },
-    { pending: 0, accepted: 0, rejected: 0, returned: 0 }
+    { pending: 0, accepted: 0, rejected: 0, returned: 0 },
   );
 
   const filteredEvents = events.filter((event) => {
     const matchesQuery =
-      query.trim() === "" || event.eventName.toLowerCase().includes(query.trim().toLowerCase());
+      query.trim() === "" ||
+      event.eventName.toLowerCase().includes(query.trim().toLowerCase());
     const matchesStatus =
-      statusFilter === "all" || statusFilter === "" || event.status === statusFilter;
+      statusFilter === "all" ||
+      statusFilter === "" ||
+      event.status === statusFilter;
     return matchesQuery && matchesStatus;
   });
 
@@ -66,7 +74,6 @@ export default function EventsList({ events, name }) {
     }
   };
 
-
   return (
     <div className="flex flex-col items-center p-6">
       <h1 className="mb-6 text-center text-2xl font-bold text-black">{name}</h1>
@@ -78,73 +85,66 @@ export default function EventsList({ events, name }) {
         onChange={(e) => setQuery(e.target.value)}
         className="mb-6 w-4/5 rounded-lg border border-slate-100 p-2"
       />
-      <div className="w-4/5 flex items-center justify-between">
-      <Select onValueChange={(value) => setStatusFilter(value)}>
-  <SelectTrigger className="w-[150px] bg-white border-none shadow-none font-semibold">
-    <SelectValue placeholder="Status" />
-  </SelectTrigger>
-  <SelectContent className="bg-white">
-    <SelectItem value="all">
-      <Badge badgeContent={events.length} color="primary">
-        <FaClipboardList size={25} className="inline-block" />
-      </Badge>
-      <span style={{marginLeft : '25px'}}>
-      {`All Events`}
-      </span>
-    </SelectItem>
-    <SelectItem value="pending">
-      <Badge badgeContent={statusCounts.pending} color="secondary" >
-        <AiOutlineClockCircle size={25} className="inline-block " />
-      </Badge>
-      <span style={{marginLeft : '25px'}}>
-      {`Pending`}
-      </span>
-    </SelectItem>
-    <SelectItem value="accepted">
-      <Badge badgeContent={statusCounts.accepted} color="success">
-        <AiOutlineCheck size={25} className="inline-block" />
-      </Badge>
-      <span style={{marginLeft : '25px'}}>
-      {`Accepted`}
-      </span>
-    </SelectItem>
-    <SelectItem value="rejected">
-      <Badge badgeContent={statusCounts.rejected} color="error" showZero>
-        <AiOutlineCloseCircle size={25} className="inline-block" />
-      </Badge>
-      <span style={{marginLeft : '25px'}}>
-      {`Rejected`}
-      </span>
-    </SelectItem>
-    <SelectItem value="returned">
-      <Badge badgeContent={statusCounts.returned} color="info" showZero>
-        <AiOutlineRollback size={25} className="inline-block" />
-      </Badge>
-      <span style={{marginLeft : '25px'}}>
-      {`Returned`}
-      </span>
-    </SelectItem>
-  </SelectContent>
-</Select>
+      <div className="mb-4 flex w-4/5 items-center justify-between md:mb-2">
+        <Select onValueChange={(value) => setStatusFilter(value)}>
+          <SelectTrigger className="w-[150px] border-none bg-white font-semibold shadow-none">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            <SelectItem value="all">
+              <Badge badgeContent={events.length} color="primary">
+                <FaClipboardList size={25} className="inline-block" />
+              </Badge>
+              <span style={{ marginLeft: "25px" }}>{`All Events`}</span>
+            </SelectItem>
+            <SelectItem value="pending">
+              <Badge badgeContent={statusCounts.pending} color="secondary">
+                <AiOutlineClockCircle size={25} className="inline-block" />
+              </Badge>
+              <span style={{ marginLeft: "25px" }}>{`Pending`}</span>
+            </SelectItem>
+            <SelectItem value="accepted">
+              <Badge badgeContent={statusCounts.accepted} color="success">
+                <AiOutlineCheck size={25} className="inline-block" />
+              </Badge>
+              <span style={{ marginLeft: "25px" }}>{`Accepted`}</span>
+            </SelectItem>
+            <SelectItem value="rejected">
+              <Badge
+                badgeContent={statusCounts.rejected}
+                color="error"
+                showZero
+              >
+                <AiOutlineCloseCircle size={25} className="inline-block" />
+              </Badge>
+              <span style={{ marginLeft: "25px" }}>{`Rejected`}</span>
+            </SelectItem>
+            <SelectItem value="returned">
+              <Badge badgeContent={statusCounts.returned} color="info" showZero>
+                <AiOutlineRollback size={25} className="inline-block" />
+              </Badge>
+              <span style={{ marginLeft: "25px" }}>{`Returned`}</span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
 
         <button
-  onClick={handleXl}
-  className={`flex items-center justify-center gap-2 bg-transparent text-white'} px-4 py-2 rounded-lg font-semibold shadow-md transition`}
-  disabled={loading}
->
-  {loading ? (
-    <>
-      <CircularProgress size={20} sx={{ color: "#000" }} /> 
-      <span className="hidden md:block">Generating...</span>
-    </>
-  ) : (
-    <>
-      <DownloadIcon className={`block md:hidden text-black}`} />
-      <span className="hidden md:block">Generate Report</span>
-    </>
-  )}
-</button>
-
+          onClick={handleXl}
+          className={`mb-4 flex items-center justify-center gap-2 rounded-lg bg-transparent bg-white px-4 py-2 font-semibold text-black shadow-md transition hover:bg-orange-200 md:mb-2`}
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <CircularProgress size={20} sx={{ color: "#000" }} />
+              <span className="hidden md:block">Generating...</span>
+            </>
+          ) : (
+            <>
+              <DownloadIcon className={`block md:hidden`} />
+              <span className="hidden md:block">Generate Report</span>
+            </>
+          )}
+        </button>
       </div>
 
       {filteredEvents.length > 0 ? (

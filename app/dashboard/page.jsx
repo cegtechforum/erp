@@ -3,7 +3,7 @@ import { events } from "@/app/_db/schema";
 import { jwtVerify } from "jose";
 import { redirect } from "next/navigation";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import AppSidebar from "@/components/app-sidebar";
 import { cookies } from "next/headers";
 import EventsList from "@/components/EventsList";
 import { eq } from "drizzle-orm";
