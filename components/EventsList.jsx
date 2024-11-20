@@ -7,6 +7,15 @@ import Card from "./Card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import DownloadIcon from "@mui/icons-material/Download";
 import CircularProgress from "@mui/material/CircularProgress";
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import { Badge } from "@mui/material";
+import { AiOutlineCheck, AiOutlineClockCircle, AiOutlineCloseCircle, AiOutlineRollback } from "react-icons/ai";
+import { FaClipboardList } from "react-icons/fa";
+import MailIcon from "@mui/icons-material/Mail";
+
 
 export default function EventsList({ events, name }) {
   const [query, setQuery] = useState("");
@@ -57,6 +66,7 @@ export default function EventsList({ events, name }) {
     }
   };
 
+
   return (
     <div className="flex flex-col items-center p-6">
       <h1 className="mb-6 text-center text-2xl font-bold text-black">{name}</h1>
@@ -69,18 +79,53 @@ export default function EventsList({ events, name }) {
         className="mb-6 w-4/5 rounded-lg border border-slate-100 p-2"
       />
       <div className="w-4/5 flex items-center justify-between">
-        <Select onValueChange={(value) => setStatusFilter(value)}>
-          <SelectTrigger className="w-[150px] bg-white border-none shadow-none font-semibold">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent className="bg-white">
-            <SelectItem value="all">{`All Events: ${events.length}`}</SelectItem>
-            <SelectItem value="pending">{`Pending: ${statusCounts.pending}`}</SelectItem>
-            <SelectItem value="accepted">{`Accepted: ${statusCounts.accepted}`}</SelectItem>
-            <SelectItem value="rejected">{`Rejected: ${statusCounts.rejected}`}</SelectItem>
-            <SelectItem value="returned">{`Returned: ${statusCounts.returned}`}</SelectItem>
-          </SelectContent>
-        </Select>
+      <Select onValueChange={(value) => setStatusFilter(value)}>
+  <SelectTrigger className="w-[150px] bg-white border-none shadow-none font-semibold">
+    <SelectValue placeholder="Status" />
+  </SelectTrigger>
+  <SelectContent className="bg-white">
+    <SelectItem value="all">
+      <Badge badgeContent={events.length} color="primary">
+        <FaClipboardList size={25} className="inline-block" />
+      </Badge>
+      <span style={{marginLeft : '25px'}}>
+      {`All Events`}
+      </span>
+    </SelectItem>
+    <SelectItem value="pending">
+      <Badge badgeContent={statusCounts.pending} color="secondary" >
+        <AiOutlineClockCircle size={25} className="inline-block " />
+      </Badge>
+      <span style={{marginLeft : '25px'}}>
+      {`Pending`}
+      </span>
+    </SelectItem>
+    <SelectItem value="accepted">
+      <Badge badgeContent={statusCounts.accepted} color="success">
+        <AiOutlineCheck size={25} className="inline-block" />
+      </Badge>
+      <span style={{marginLeft : '25px'}}>
+      {`Accepted`}
+      </span>
+    </SelectItem>
+    <SelectItem value="rejected">
+      <Badge badgeContent={statusCounts.rejected} color="error" showZero>
+        <AiOutlineCloseCircle size={25} className="inline-block" />
+      </Badge>
+      <span style={{marginLeft : '25px'}}>
+      {`Rejected`}
+      </span>
+    </SelectItem>
+    <SelectItem value="returned">
+      <Badge badgeContent={statusCounts.returned} color="info" showZero>
+        <AiOutlineRollback size={25} className="inline-block" />
+      </Badge>
+      <span style={{marginLeft : '25px'}}>
+      {`Returned`}
+      </span>
+    </SelectItem>
+  </SelectContent>
+</Select>
 
         <button
   onClick={handleXl}

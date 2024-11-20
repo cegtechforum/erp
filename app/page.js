@@ -1,157 +1,97 @@
 'use client';
 import { Box, Typography, Button, Container, Grid, Icon } from "@mui/material";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import { Event, List, RequestPage, Report } from "@mui/icons-material";
 
 export default function HomePage() {
-  const raindropContainerRef = useRef(null);
-
-  useEffect(() => {
-    const numRaindrops = 50;
-    const raindropContainer = raindropContainerRef.current;
-
-    for (let i = 0; i < numRaindrops; i++) {
-      const raindrop = document.createElement('div');
-      raindrop.classList.add('raindrop');
-      raindrop.style.animationDuration = `${Math.random() * 2 + 1}s`;
-      raindrop.style.animationDelay = `${Math.random() * 2}s`;
-      raindrop.style.left = `${Math.random() * 100}%`;
-      raindropContainer.appendChild(raindrop);
-    }
-  }, []);
-
   return (
     <Container
-      maxWidth="lg"
+      maxWidth="100%"
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "flex-start",
-        minHeight: "100vh",
+        alignItems: "center", 
+        justifyContent: "center", 
+        minHeight: "100vh", 
         textAlign: "center",
         position: "relative",
-        overflowY: "auto",
-        background: "linear-gradient(135deg, #2c3e50, #34495e)",
+        overflow: "hidden",         
+        background: "linear-gradient(135deg, #0d47a1, #1976d2, #1565c0)", 
         color: "#fff",
-        pt: 5, // Added space at the top
+        fontFamily: "'Poppins', sans-serif",
+        padding: { xs: "2rem 1rem", sm: "4rem" },
       }}
     >
-      <Box
-        sx={{
-          position: "absolute",
-          top: "10%",
-          left: "5%",
-          width: "120px",
-          height: "120px",
-          backgroundColor: "#ffffff33",
-          borderRadius: "50%",
-          animation: "move1 8s infinite linear",
-        }}
-      />
-      <Box
-        sx={{
-          position: "absolute",
-          top: "20%",
-          left: "70%",
-          width: "150px",
-          height: "150px",
-          backgroundColor: "#ffffff33",
-          borderRadius: "50%",
-          animation: "move2 10s infinite linear",
-        }}
-      />
-      <Box
-        sx={{
-          position: "absolute",
-          top: "40%",
-          left: "40%",
-          width: "130px",
-          height: "130px",
-          backgroundColor: "#ffffff33",
-          borderRadius: "50%",
-          animation: "move3 12s infinite linear",
-        }}
-      />
-      <Box
-        sx={{
-          position: "absolute",
-          top: "60%",
-          left: "15%",
-          width: "100px",
-          height: "100px",
-          backgroundColor: "#ffffff33",
-          borderRadius: "50%",
-          animation: "move4 15s infinite linear",
-        }}
-      />
-      <Box
-        sx={{
-          position: "absolute",
-          top: "80%",
-          left: "60%",
-          width: "160px",
-          height: "160px",
-          backgroundColor: "#ffffff33",
-          borderRadius: "50%",
-          animation: "move5 20s infinite linear",
-        }}
-      />
+      {/* Moving Circles */}
+      {[1, 2, 3, 4, 5].map((circle, index) => (
+        <Box
+          key={index}
+          sx={{
+            position: "absolute",
+            width: `${100 + index * 20}px`,
+            height: `${100 + index * 20}px`,
+            backgroundColor: "#ffffff33",
+            borderRadius: "50%",
+            animation: `move${circle} ${6 + index * 2}s ease-in-out infinite`, // Smooth animation
+            top: `${10 + index * 15}%`,
+            left: `${5 + index * 20}%`,
+          }}
+        />
+      ))}
 
-      <Typography 
-      
-        variant="h3" 
-        component="h1" 
-        gutterBottom 
-        color="inherit"
+      {/* Heading */}
+      <Typography
+        variant="h3"
+        component="h1"
+        gutterBottom
         sx={{
           opacity: 0,
           animation: "fadeInText 2s forwards",
           color: "#ecf0f1",
+          fontSize: { xs: "2rem", sm: "3rem" }, // Adjust font size for mobile
         }}
       >
         Simplify Your Logistics Management
       </Typography>
       <Typography
         variant="h4"
-        sx={{ 
-          mb: 3, 
-          maxWidth: "600px", 
-          lineHeight: 1.6, 
+        sx={{
+          mb: 3,
+          maxWidth: "600px",
+          lineHeight: 1.6,
           opacity: 0,
           animation: "fadeUpAndIn 3s forwards 1s",
           color: "#bdc3c7",
+          fontSize: { xs: "1.5rem", sm: "2rem" }, // Adjust font size for mobile
         }}
       >
-       With a single platform
+        With a single platform
       </Typography>
       <Link href="/login" passHref>
         <Button
           variant="contained"
-          color="primary"
           size="large"
           sx={{
             px: 5,
             py: 1.5,
             textTransform: "none",
-            fontSize: "1.2rem",
-            backgroundColor: "#3498db",
-            color: "#fff",
+            fontSize: { xs: "1rem", sm: "1.2rem" }, // Adjust font size for mobile
+            backgroundColor: "#fff",
+            color: "#000",
             opacity: 0,
+            marginBottom: '90px',
             animation: "fadeInText 2s forwards 2s",
             '&:hover': {
               transform: "scale(1.1)",
-              backgroundColor: "#2980b9",
-            }
+              backgroundColor: "#fff000",
+            },
           }}
         >
           Get Started
         </Button>
       </Link>
 
-      <div className="raindrops" ref={raindropContainerRef}></div>
-
+      {/* Features Section */}
       <Box
         sx={{
           marginTop: 5,
@@ -161,89 +101,118 @@ export default function HomePage() {
           width: "80%",
           maxWidth: 800,
           opacity: 0,
-          animation: "fadeInFeatures 3s forwards 2s",
+          animation: "fadeInFeatures 3s forwards 3s", // Trigger animation after delay
+          marginBottom: { xs: "2rem", sm: "3rem" }, // Adjust bottom margin for mobile
         }}
       >
         <Typography variant="h4" component="h2" color="inherit" sx={{ mb: 3 }}>
           Features
         </Typography>
         <Grid container spacing={4} justifyContent="center">
-          <Grid item xs={12} sm={3} sx={{ display: "flex", flexDirection: "column", alignItems: "center", opacity: 0, animation: "fadeInFeature 2s forwards 3s" }}>
-            <Icon component={Event} sx={{ fontSize: 50, color: "#ecf0f1" }} />
-            <Typography variant="h6" sx={{ color: "#ecf0f1", marginTop: 2 }}>
-              Manage Events
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={3} sx={{ display: "flex", flexDirection: "column", alignItems: "center", opacity: 0, animation: "fadeInFeature 2s forwards 3.5s" }}>
-            <Icon component={List} sx={{ fontSize: 50, color: "#ecf0f1" }} />
-            <Typography variant="h6" sx={{ color: "#ecf0f1", marginTop: 2 }}>
-              Manage Items
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={3} sx={{ display: "flex", flexDirection: "column", alignItems: "center", opacity: 0, animation: "fadeInFeature 2s forwards 4s" }}>
-            <Icon component={RequestPage} sx={{ fontSize: 50, color: "#ecf0f1" }} />
-            <Typography variant="h6" sx={{ color: "#ecf0f1", marginTop: 2 }}>
-              Manage Requests
-            </Typography>
-          </Grid>
-          <Grid item xs={12} sm={3} sx={{ display: "flex", flexDirection: "column", alignItems: "center", opacity: 0, animation: "fadeInFeature 2s forwards 4.5s" }}>
-            <Icon component={Report} sx={{ fontSize: 50, color: "#ecf0f1" }} />
-            <Typography variant="h6" sx={{ color: "#ecf0f1", marginTop: 2 }}>
-              Generate Report
-            </Typography>
-          </Grid>
+          {[
+            { icon: Event, label: "Manage Events" },
+            { icon: List, label: "Manage Items" },
+            { icon: RequestPage, label: "Manage Requests" },
+            { icon: Report, label: "Generate Report" },
+          ].map((feature, index) => (
+            <Grid
+              key={index}
+              item
+              xs={12}
+              sm={3}
+              sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+            >
+              <Icon component={feature.icon} sx={{ fontSize: 50, color: "#ecf0f1" }} />
+              <Typography variant="h6" sx={{ color: "#ecf0f1", marginTop: 2 }}>
+                {feature.label}
+              </Typography>
+            </Grid>
+          ))}
         </Grid>
       </Box>
 
-      <style jsx>{`
-        @keyframes move1 {
-          0% { transform: translateX(0) translateY(0); }
-          50% { transform: translateX(100px) translateY(-100px); }
-          100% { transform: translateX(0) translateY(0); }
-        }
-
-        @keyframes move2 {
-          0% { transform: translateX(0) translateY(0); }
-          50% { transform: translateX(-150px) translateY(50px); }
-          100% { transform: translateX(0) translateY(0); }
-        }
-
-        @keyframes move3 {
-          0% { transform: translateX(0) translateY(0); }
-          50% { transform: translateX(200px) translateY(100px); }
-          100% { transform: translateX(0) translateY(0); }
-        }
-
-        @keyframes move4 {
-          0% { transform: translateX(0) translateY(0); }
-          50% { transform: translateX(-200px) translateY(150px); }
-          100% { transform: translateX(0) translateY(0); }
-        }
-
-        @keyframes move5 {
-          0% { transform: translateX(0) translateY(0); }
-          50% { transform: translateX(150px) translateY(-200px); }
-          100% { transform: translateX(0) translateY(0); }
-        }
-
+      {/* Animations */}
+      <style jsx global>{`
         @keyframes fadeInText {
-          0% { opacity: 0; }
-          100% { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
-
         @keyframes fadeUpAndIn {
-          0% { opacity: 0; transform: translateY(20px); }
-          100% { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
-
         @keyframes fadeInFeatures {
-          0% { opacity: 0; }
-          100% { opacity: 1; }
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
         }
-
-        @keyframes fadeInFeature {
-          0% { opacity: 0; }
-          100% { opacity: 1; }
+        @keyframes move1 {
+          0% {
+            transform: translate(0, 0);
+          }
+          50% {
+            transform: translate(100px, 100px);
+          }
+          100% {
+            transform: translate(0, 0); /* Make the movement loop back */
+          }
+        }
+        @keyframes move2 {
+          0% {
+            transform: translate(0, 0);
+          }
+          50% {
+            transform: translate(-100px, 100px);
+          }
+          100% {
+            transform: translate(0, 0);
+          }
+        }
+        @keyframes move3 {
+          0% {
+            transform: translate(0, 0);
+          }
+          50% {
+            transform: translate(100px, -100px);
+          }
+          100% {
+            transform: translate(0, 0);
+          }
+        }
+        @keyframes move4 {
+          0% {
+            transform: translate(0, 0);
+          }
+          50% {
+            transform: translate(-100px, -100px);
+          }
+          100% {
+            transform: translate(0, 0);
+          }
+        }
+        @keyframes move5 {
+          0% {
+            transform: translate(0, 0);
+          }
+          50% {
+            transform: translate(150px, 50px);
+          }
+          100% {
+            transform: translate(0, 0);
+          }
         }
       `}</style>
     </Container>
