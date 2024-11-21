@@ -83,7 +83,7 @@ const LoginPage = () => {
             type="submit"
             fullWidth
             disabled={isDisabled || isLoading}
-            className={`mt-4 rounded-lg text-white transition-all duration-300 ${
+            className={`mt-4 rounded-lg text-white transition-all duration-300 w-[100%] h-[50px] ${
               isDisabled
                 ? "cursor-not-allowed bg-black"
                 : "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-blue-500 hover:to-purple-500"
