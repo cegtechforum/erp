@@ -3,7 +3,7 @@ import { events } from "@/app/_db/schema";
 import { jwtVerify } from "jose";
 import { redirect } from "next/navigation";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/app-sidebar";
+import AppSidebar from "@/components/AppSidebar";
 import { cookies } from "next/headers";
 import EventsList from "@/components/EventsList";
 import { eq } from "drizzle-orm";
@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 export default async function Dashboard() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value || "";
+  let isSuperUser = false;
 
   if (!token) {
     redirect("/login");
@@ -25,7 +26,7 @@ export default async function Dashboard() {
       new TextEncoder().encode(process.env.JWT_SECRET),
     );
     const userDomain = payload.domain;
-
+    isSuperUser = payload.isSuperUser;
     userEvents = await db
       .select()
       .from(events)
@@ -38,7 +39,7 @@ export default async function Dashboard() {
   return (
     <div className="flex min-h-screen">
       <SidebarProvider>
-        <AppSidebar />
+        <AppSidebar isSuperUser={isSuperUser} />
         <main className="h-full w-full bg-gray-200">
           <SidebarTrigger />
           <EventsList name="Dashboard" events={userEvents} />

@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Calendar,
   ShoppingCart,
@@ -22,48 +21,53 @@ import {
 } from "@/components/ui/sidebar";
 import toast from "react-hot-toast";
 
-const items = [
-  {
-    title: "Dashboard",
-    url: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Events",
-    url: "/events",
-    icon: Calendar,
-  },
-  {
-    title: "Add Event",
-    url: "/events/add",
-    icon: Plus,
-  },
-  {
-    title: "Items",
-    url: "/items",
-    icon: ShoppingCart,
-  },
-  {
-    title: "Logout",
-    icon: LogOut,
-    action: async () => {
-      try {
-        await axios.get("/api/logout");
-        toast.success("Logout Successful");
-        window.location.href = "/";
-      } catch (error) {
-        console.error("Logout failed:", error);
-        toast.error(error.message || "Logout Failed");
-      }
-    },
-  },
-];
-
-export function AppSidebar() {
+export function AppSidebar({ isSuperUser }) {
   const currentPath = usePathname();
 
+  // Define the items dynamically based on isSuperUser
+  const items = [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: LayoutDashboard,
+    },
+    ...(isSuperUser
+      ? [
+          {
+            title: "Events",
+            url: "/events",
+            icon: Calendar,
+          },
+        ]
+      : []),
+    {
+      title: "Add Event",
+      url: "/events/add",
+      icon: Plus,
+    },
+    {
+      title: "Items",
+      url: "/items",
+      icon: ShoppingCart,
+    },
+    {
+      title: "Logout",
+      icon: LogOut,
+      action: async () => {
+        try {
+          await axios.get("/api/logout");
+          toast.success("Logout Successful");
+          window.location.href = "/";
+        } catch (error) {
+          console.error("Logout failed:", error);
+          toast.error(error.message || "Logout Failed");
+        }
+      },
+    },
+  ];
+
   return (
-    <Sidebar className>
+    <Sidebar>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="mb-4 text-2xl font-bold">
