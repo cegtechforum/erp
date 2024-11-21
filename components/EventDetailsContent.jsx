@@ -3,6 +3,27 @@ import EventStatusUpdater from "@/components/EventStatusUpdater";
 import GoBackButton from "./GoBackButton";
 import AddRequestButton from "./AddRequestButton";
 
+const EventDetailRow = ({ label, value, approvedCount }) => {
+  return (
+    <div className="flex items-center justify-between gap-4 capitalize">
+      <Typography variant="body1" className="flex-1">
+        <span className="font-black text-gray-700">{label}</span>
+      </Typography>
+      {approvedCount !== undefined && (
+        <Typography
+          variant="body1"
+          className="flex flex-1 items-center justify-center text-center"
+        >
+          <span className="font-medium text-gray-500">{approvedCount}</span>
+        </Typography>
+      )}
+      <Typography variant="body1" className="flex-1 text-right">
+        <span className="font-medium text-gray-500">{value}</span>
+      </Typography>
+    </div>
+  );
+};
+
 export default function EventDetailsContent({ event, items, isSuperUser }) {
   if (!event) {
     return (
@@ -13,7 +34,7 @@ export default function EventDetailsContent({ event, items, isSuperUser }) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-6">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 p-4">
       <GoBackButton />
       <Card className="hover:shadow-3xl my-6 w-full max-w-3xl overflow-hidden rounded-3xl border border-gray-200 shadow-2xl transition-transform duration-300">
         <div className="relative">
@@ -73,22 +94,41 @@ export default function EventDetailsContent({ event, items, isSuperUser }) {
             <EventDetailRow label="Contact:" value={event.contact} />
           </div>
           <hr className="my-6 border-gray-300" />
-          <div className="flex flex-col space-y-4">
-            <div className="space-y-4">
-              <Typography variant="h5">
-                <span className="font-semibold text-gray-800">
-                  Product List
-                </span>
-              </Typography>
-              {items.map((item, index) => (
-                <EventDetailRow
-                  key={index}
-                  label={item.itemName}
-                  value={item.count}
-                />
-              ))}
-            </div>
-            <div className="flex items-center justify-center">
+          <div className="flex w-full flex-col">
+            {items.length > 0 ? (
+              <>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 font-semibold capitalize text-gray-700">
+                    <Typography variant="h5" className="flex-1 text-left">
+                      <span className="font-semibold text-gray-800">Items</span>
+                    </Typography>
+                    <Typography variant="h5" className="flex-1 text-center">
+                      <span className="font-semibold text-gray-800">
+                        Accepted
+                      </span>
+                    </Typography>
+                    <Typography variant="h5" className="flex-1 text-right">
+                      <span className="font-semibold text-gray-800">
+                        Pending
+                      </span>
+                    </Typography>
+                  </div>
+                  {items.map((item, index) => (
+                    <EventDetailRow
+                      key={index}
+                      label={item.itemName}
+                      value={item.count}
+                      approvedCount={item.approvedCount}
+                    />
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="flex h-full items-center justify-center text-3xl font-medium capitalize text-gray-500">
+                No items found
+              </div>
+            )}
+            <div className="mt-6 flex items-center justify-center">
               <AddRequestButton event={event} />
             </div>
           </div>
@@ -97,16 +137,3 @@ export default function EventDetailsContent({ event, items, isSuperUser }) {
     </div>
   );
 }
-
-const EventDetailRow = ({ label, value }) => {
-  return (
-    <div className="flex items-center justify-between capitalize">
-      <Typography variant="body1">
-        <span className="font-black text-gray-700">{label}</span>
-      </Typography>
-      <Typography variant="body1">
-        <span className="font-medium text-gray-500"> {value}</span>
-      </Typography>
-    </div>
-  );
-};

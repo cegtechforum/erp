@@ -65,6 +65,9 @@ export const theme = {
       md: "calc(var(--radius) - 2px)",
       sm: "calc(var(--radius) - 4px)",
     },
+    fontFamily: {
+      pop: "'Poppins', serif",
+    },
   },
 };
 export const plugins = [require("tailwindcss-animate")];

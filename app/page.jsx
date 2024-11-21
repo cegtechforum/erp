@@ -83,7 +83,8 @@ export default function HomePage() {
             animation: "fadeInText 2s forwards 2s",
             "&:hover": {
               transform: "scale(1.05)",
-              backgroundColor: "#fff000",
+              backgroundColor: "#FF7F3E",
+              color: "#fff",
             },
           }}
         >

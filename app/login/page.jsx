@@ -44,11 +44,19 @@ const LoginPage = () => {
         <div className="text-center">
           <Typography
             variant="h4"
-            className="mb-4 font-bold text-gray-800 sm:text-2xl"
+            className="font-pop mb-4 font-bold text-gray-800 sm:text-2xl"
+            sx={{
+              fontFamily: "'Poppins', sans-serif",
+            }}
           >
             Welcome Back!
           </Typography>
-          <Typography className="text-sm text-gray-500">
+          <Typography
+            className="text-sm text-gray-500"
+            sx={{
+              fontFamily: "'Poppins', sans-serif",
+            }}
+          >
             Log in to your account to continue
           </Typography>
         </div>
@@ -81,12 +89,13 @@ const LoginPage = () => {
           )}
           <button
             type="submit"
-            fullWidth
             disabled={isDisabled || isLoading}
-            className={`mt-4 rounded-lg text-white transition-all duration-300 w-[100%] h-[50px] ${
+            className={`font-pop mt-4 w-full rounded-lg py-2 font-bold text-white transition-all duration-300 ${
               isDisabled
-                ? "cursor-not-allowed bg-black"
-                : "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-blue-500 hover:to-purple-500"
+                ? "cursor-not-allowed bg-gray-400 text-gray-100"
+                : isLoading
+                  ? "cursor-not-allowed bg-green-600"
+                  : "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-blue-500 hover:to-purple-500"
             }`}
           >
             {isLoading ? "Logging in..." : "Login"}
