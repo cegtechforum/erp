@@ -2,6 +2,9 @@ import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button"
+
 
 const ItemRow = ({ item, isSuperUser, getItems }) => {
   const [editName, setEditName] = useState(null);
@@ -86,12 +89,23 @@ const ItemRow = ({ item, isSuperUser, getItems }) => {
               >
                 Update
               </button>
-              <button
-                className="m-1 w-full rounded-lg bg-red-700 p-2 text-white hover:bg-red-600 md:w-auto"
-                onClick={handleDelete}
-              >
-                Delete
-              </button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" className="m-1 w-full rounded-lg bg-red-700  text-white hover:bg-red-600 md:w-auto" >Delete</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="bg-white" >
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Confirm?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This will permanently delete the Item.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete} >Continue</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </>
           )}
         </td>
