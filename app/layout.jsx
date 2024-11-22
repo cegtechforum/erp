@@ -12,6 +12,7 @@ export default function RootLayoutServer({ children }) {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="manifest" href="/manifest.json" />
       </head>
       <body className="bg-gray-200">
         <Toaster position="top-right" reverseOrder={false} />
