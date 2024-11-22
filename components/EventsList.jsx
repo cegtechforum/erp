@@ -22,6 +22,7 @@ import {
 } from "react-icons/ai";
 import { FaClipboardList } from "react-icons/fa";
 
+
 export default function EventsList({ events, name }) {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -87,7 +88,7 @@ export default function EventsList({ events, name }) {
       />
       <div className="mb-4 flex w-4/5 items-center justify-between md:mb-2">
         <Select onValueChange={(value) => setStatusFilter(value)}>
-          <SelectTrigger className="w-[150px] border-none bg-white font-semibold shadow-none">
+          <SelectTrigger className="w-[150px] border-none bg-white font-semibold shadow-lg">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent className="bg-white">

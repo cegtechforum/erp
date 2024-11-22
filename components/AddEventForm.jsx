@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { RxCrossCircled   } from "react-icons/rx";
 
 export default function AddEventForm() {
   const [eventDetails, setEventDetails] = useState({
@@ -102,10 +103,23 @@ export default function AddEventForm() {
                   <SelectValue placeholder="Domain" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  <SelectItem value="creativity & initiatives">
-                    Creativity & Initiatives
-                  </SelectItem>
-                  {/* Add remaining options */}
+                  <SelectItem value="creativity & initiatives">Creativity & Initiatives</SelectItem>
+                  <SelectItem value="contents">Contents</SelectItem>
+                  <SelectItem value="design">Design</SelectItem>
+                  <SelectItem value="events">Events</SelectItem>
+                  <SelectItem value="finance">Finance</SelectItem>
+                  <SelectItem value="guest lectures">Guest Lectures</SelectItem>
+                  <SelectItem value="hospitality">Hospitality</SelectItem>
+                  <SelectItem value="human resources">Human Resources</SelectItem>
+                  <SelectItem value="industry relations">Industry Relations</SelectItem>
+                  <SelectItem value="internal auditing">Internal Auditing</SelectItem>
+                  <SelectItem value="logistics">Logistics</SelectItem>
+                  <SelectItem value="marketing & media">Marketing & Media</SelectItem>
+                  <SelectItem value="projects & research">Projects & Research</SelectItem>
+                  <SelectItem value="quality assurance & control">Quality Assurance & Control</SelectItem>
+                  <SelectItem value="techops">Techops</SelectItem>
+                  <SelectItem value="workshops">Workshops</SelectItem>
+                  <SelectItem value="xceed & karnival">Xceed & Karnival</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -135,13 +149,12 @@ export default function AddEventForm() {
           ),
         )}
       </div>
-
       <div className="mt-4">
         <h2 className="mb-2 text-xl font-semibold">Items</h2>
         {list.map((item, index) => (
           <div
             key={index}
-            className="mb-4 flex flex-col gap-4 rounded-lg border border-gray-300 p-4 lg:flex-row lg:gap-2"
+            className="mb-4 flex flex-col gap-4 rounded-lg border border-gray-300 p-4 relative lg:flex-row lg:gap-2 items-center"
           >
             <div className="flex w-full flex-col">
               <label htmlFor="itemName" className="flex">
@@ -184,13 +197,12 @@ export default function AddEventForm() {
               />
             </div>
             {list.length > 1 && (
-              <button
-                type="button"
-                onClick={() => removeListItem(index)}
-                className="mt-4 rounded-lg bg-red-500 px-4 py-2 text-white lg:mt-0"
-              >
-                Remove
-              </button>
+              <div>
+                  <RxCrossCircled   
+                    onClick={() => removeListItem(index)} 
+                    className="w-6 h-6 hover:cursor-pointer absolute top-1 right-2 "  
+                  />
+              </div>
             )}
           </div>
         ))}
