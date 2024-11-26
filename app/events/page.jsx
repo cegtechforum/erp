@@ -28,7 +28,7 @@ export default async function EventsPage() {
         <AppSidebar isSuperUser={isSuperUser} />
         <main className="h-full w-full">
           <SidebarTrigger />
-          <EventsList name="Events" events={eventsData} />
+          <EventsList name="Events" events={eventsData} isSuperUser={isSuperUser}/>
         </main>
       </SidebarProvider>
     </div>

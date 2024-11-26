@@ -26,8 +26,9 @@ const LoginPage = () => {
       });
 
       if (response.data.status === 200) {
-        toast.success("Login Successful");
         router.push("/dashboard");
+        toast.success("Login Successful");
+        
       } else {
         setErrorMessage(response.data.error);
       }

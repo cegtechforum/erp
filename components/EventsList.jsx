@@ -23,7 +23,7 @@ import {
 import { FaClipboardList } from "react-icons/fa";
 
 
-export default function EventsList({ events, name }) {
+export default function EventsList({ events, name, isSuperUser }) {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [loading, setLoading] = useState(false);
@@ -59,7 +59,7 @@ export default function EventsList({ events, name }) {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "events_report.xlsx");
+        link.setAttribute("download", "fu-%*ll_events_report.xlsx");
         document.body.appendChild(link);
         link.click();
         link.remove();
@@ -128,7 +128,7 @@ export default function EventsList({ events, name }) {
             </SelectItem>
           </SelectContent>
         </Select>
-
+        {isSuperUser && (
         <button
           onClick={handleXl}
           className={`mb-4 flex items-center justify-center gap-2 rounded-lg bg-transparent bg-white px-4 py-2 font-semibold text-black shadow-md transition hover:bg-orange-200 md:mb-2`}
@@ -142,10 +142,11 @@ export default function EventsList({ events, name }) {
           ) : (
             <>
               <DownloadIcon className={`block md:hidden`} />
-              <span className="hidden md:block">Generate Report</span>
+              <span className="hidden md:block">All Events Report</span>
             </>
           )}
         </button>
+        )}
       </div>
 
       {filteredEvents.length > 0 ? (

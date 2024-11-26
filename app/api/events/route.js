@@ -69,12 +69,25 @@ export async function PATCH(req) {
 }
 
 
-
-
-export async function GET() {
+export async function GET(request) {
   try {
-    const eventsData = await db.select().from(events); // Use schema references
-    const listsData = await db.select().from(lists);   // Use schema references
+    const url = new URL(request.url);
+    const eventId = url.searchParams.get('eventId');
+    console.log(`Received eventId: ${eventId}`);
+
+    // Fetch data conditionally based on eventId
+    const eventsQuery = eventId
+      ? db.select().from(events).where(eq(events.eventId, eventId)) // Use `eq` for condition
+      : db.select().from(events); // Fetch all events
+
+    const listsQuery = eventId
+      ? db.select().from(lists).where(eq(lists.eventId, eventId)) // Use `eq` for condition
+      : db.select().from(lists); // Fetch all lists
+
+    const eventsData = await eventsQuery;
+    const listsData = await listsQuery;
+
+    // Combine event and list data
     const combinedData = eventsData.map(event => {
       const eventLists = listsData.filter(list => list.eventId === event.eventId);
       return eventLists.map(list => ({
@@ -95,6 +108,7 @@ export async function GET() {
       }));
     }).flat();
 
+    // Generate Excel sheet
     const ws = XLSX.utils.json_to_sheet(combinedData);
 
     const wb = XLSX.utils.book_new();
@@ -106,12 +120,12 @@ export async function GET() {
       status: 200,
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'Content-Disposition': 'attachment; filename="event_list_data.xlsx"',
+        'Content-Disposition': `attachment; filename="event_list_data${eventId ? `_${eventId}` : ''}.xlsx"`,
       },
     });
   } catch (error) {
     console.error('Error while generating Excel file:', error);
-    
+
     return NextResponse.json(
       { error: 'Failed to generate Excel file. Please try again later.' },
       { status: 500 }

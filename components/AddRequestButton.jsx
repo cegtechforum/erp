@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import {
   Dialog,
@@ -17,6 +18,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const AddRequestButton = ({ event }) => {
+  const router = useRouter();
   const initialItemState = {
     eventId: event.eventId,
     itemName: "",
@@ -80,6 +82,7 @@ const AddRequestButton = ({ event }) => {
       toast.success("Request submitted successfully!");
       setNewItems(initialState);
       setIsDialogOpen(false);
+      router.replace("/events/" + event.eventId, undefined, { scroll: false });
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
