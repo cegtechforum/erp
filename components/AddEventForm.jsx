@@ -1,7 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import ItemSelectionDialog from "./selectDialog"; // Adjust the import path as needed
+
 import {
   Select,
   SelectContent,
@@ -12,6 +14,13 @@ import {
 import { RxCrossCircled   } from "react-icons/rx";
 
 export default function AddEventForm() {
+  const [items, setItems] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [customItem, setCustomItem] = useState(""); // For the "Others" option
+  const [isDropdownVisible, setDropdownVisible] = useState(false); // Track if the item list is visible
+  const dropdownRef = useRef(null);
+  const [selectedItem, setSelectedItem] = useState(""); // Track the selected item
+  
   const [eventDetails, setEventDetails] = useState({
     eventName: "",
     description: "",
@@ -25,6 +34,21 @@ export default function AddEventForm() {
   });
 
   const [list, setList] = useState([{ itemName: "", count: "", category: "" }]);
+
+  async function getItems() {
+    try {
+      const response = await axios.get("/api/items");
+      setItems(response.data.res);
+      console.log(response.data.res);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getItems();
+  }, []);
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -83,6 +107,11 @@ export default function AddEventForm() {
       toast.error("An error occurred while creating the event.");
     }
   };
+
+  const isAddButtonDisabled = list.some(
+    (item) => !item.itemName || !item.count || !item.category
+  );
+
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
@@ -160,16 +189,23 @@ export default function AddEventForm() {
               <label htmlFor="itemName" className="flex">
                 Item Name
               </label>
-              <input
-                type="text"
-                name="itemName"
-                placeholder="Item Name"
-                value={item.itemName}
-                onChange={(e) => handleListChange(index, e)}
-                className="w-full rounded-lg border border-gray-300 p-2"
-                required
-              />
+              <div
+                onClick={() => setDropdownVisible(!isDropdownVisible)}
+                className="cursor-pointer border rounded-lg p-2 bg-gray-100 text-gray-600"
+              >
+                {item.itemName || "Select Item"}
+              </div>
+              <ItemSelectionDialog
+                open={isDropdownVisible}
+                onClose={() => setDropdownVisible(false)}
+                items={items}
+                selectedItem={selectedItem}
+                setSelectedItem={setSelectedItem}
+                handleListChange={handleListChange}
+                index={index}
+            />
             </div>
+
             <div className="flex w-full flex-col">
               <label htmlFor="count" className="flex">
                 Count
@@ -209,6 +245,7 @@ export default function AddEventForm() {
         <button
           type="button"
           onClick={addListItem}
+          disabled={isAddButtonDisabled}
           className="mt-4 rounded-lg bg-blue-500 px-4 py-2 text-white"
         >
           Add Item

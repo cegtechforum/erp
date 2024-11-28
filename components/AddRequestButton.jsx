@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Trash2, PlusCircle } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import ItemSelectionDialog from "./selectDialog"; // Ensure correct path to your component
 
 const AddRequestButton = ({ event }) => {
   const router = useRouter();
@@ -35,6 +36,34 @@ const AddRequestButton = ({ event }) => {
 
   const [newItems, setNewItems] = useState(initialState);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isItemDialogOpen, setIsItemDialogOpen] = useState(false);
+  const [items, setItems] = useState([]);
+  const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(""); // Track the selected item
+
+  // Fetch items on component mount
+  async function getItems() {
+    try {
+      const response = await axios.get("/api/items");
+      setItems(response.data.res);
+      console.log(response.data.res);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getItems();
+  }, []);
+
+  const handleListChange = (index, e) => {
+    const { name, value } = e.target;
+    setNewItems((prev) => {
+      const updatedList = [...prev.items];
+      updatedList[index][name] = value;
+      return { ...prev, items: updatedList };
+    });
+  };
 
   const handleAddItem = () => {
     setNewItems((prev) => ({
@@ -64,7 +93,7 @@ const AddRequestButton = ({ event }) => {
     e.preventDefault();
 
     const isValid = newItems.items.every(
-      (item) => item.itemName.trim() && item.count && item.category.trim(),
+      (item) => item.itemName.trim() && item.count && item.category.trim()
     );
 
     if (!isValid) {
@@ -86,7 +115,7 @@ const AddRequestButton = ({ event }) => {
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "Error occurred while submitting request",
+          "Error occurred while submitting request"
       );
     }
   };
@@ -101,6 +130,7 @@ const AddRequestButton = ({ event }) => {
           <PlusCircle className="mr-2 h-4 w-4" /> Add Request
         </Button>
       </DialogTrigger>
+
       <DialogContent className="max-h-[90vh] overflow-y-auto bg-white sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
@@ -131,15 +161,17 @@ const AddRequestButton = ({ event }) => {
               <div className="space-y-2">
                 <Label htmlFor={`itemName-${index}`}>Item Name</Label>
                 <Input
-                  id={`itemName-${index}`}
-                  value={item.itemName}
-                  onChange={(e) =>
-                    handleChange(index, "itemName", e.target.value)
-                  }
-                  placeholder="Enter item name"
-                  className="w-full"
-                />
-              </div>
+    id={`itemName-${index}`}
+    value={item.itemName || ""}
+    onClick={() => {
+      setSelectedItemIndex(index); // Set the index of the item being edited
+      setIsItemDialogOpen(true); // Open the ItemSelectionDialog
+      setIsDialogOpen(false); // Close the AddRequestDialog
+    }}
+    placeholder="Select Item"
+    className="w-full"
+  />
+                </div>
 
               <div className="space-y-2">
                 <Label htmlFor={`count-${index}`}>Count</Label>
@@ -191,6 +223,19 @@ const AddRequestButton = ({ event }) => {
           </div>
         </div>
       </DialogContent>
+
+      <ItemSelectionDialog
+        open={isItemDialogOpen}
+        onClose={() => {
+          setIsItemDialogOpen(false);
+          setIsDialogOpen(true); // Reopen the AddRequestDialog when ItemSelectionDialog is closed
+        }}
+        items={items}
+        selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
+        handleListChange={handleListChange}
+        index={selectedItemIndex} // Pass the selected index to the ItemSelectionDialog
+      />
     </Dialog>
   );
 };
