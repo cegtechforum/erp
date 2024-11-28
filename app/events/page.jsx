@@ -10,12 +10,18 @@ export default async function EventsPage() {
   const eventsData = await getEventsFromDb();
   const token = (await cookies()).get("token")?.value;
   let isSuperUser = false;
-
+  let domain = "";
+  let email = "";
+  if (!token) {
+    redirect("/login");
+  }
   if (token) {
     try {
       const secret = new TextEncoder().encode(process.env.JWT_SECRET);
       const { payload } = await jwtVerify(token, secret);
       isSuperUser = payload.isSuperUser;
+      email = payload.email;
+      domain = payload.domain;
     } catch (error) {
       console.error("Token verification failed:", error);
       toast.error(error.message || "Error occured");
@@ -25,10 +31,14 @@ export default async function EventsPage() {
   return (
     <div className="flex h-full min-h-screen">
       <SidebarProvider>
-        <AppSidebar isSuperUser={isSuperUser} />
+        <AppSidebar isSuperUser={isSuperUser} domain={domain} email={email} />
         <main className="h-full w-full">
           <SidebarTrigger />
-          <EventsList name="Events" events={eventsData} isSuperUser={isSuperUser}/>
+          <EventsList
+            name="Events"
+            events={eventsData}
+            isSuperUser={isSuperUser}
+          />
         </main>
       </SidebarProvider>
     </div>

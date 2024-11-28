@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { RxCrossCircled   } from "react-icons/rx";
+import { RxCrossCircled } from "react-icons/rx";
 
 export default function AddEventForm() {
   const [items, setItems] = useState([]);
@@ -20,7 +20,7 @@ export default function AddEventForm() {
   const [isDropdownVisible, setDropdownVisible] = useState(false); // Track if the item list is visible
   const dropdownRef = useRef(null);
   const [selectedItem, setSelectedItem] = useState(""); // Track the selected item
-  
+
   const [eventDetails, setEventDetails] = useState({
     eventName: "",
     description: "",
@@ -48,7 +48,6 @@ export default function AddEventForm() {
   useEffect(() => {
     getItems();
   }, []);
-
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -109,9 +108,8 @@ export default function AddEventForm() {
   };
 
   const isAddButtonDisabled = list.some(
-    (item) => !item.itemName || !item.count || !item.category
+    (item) => !item.itemName || !item.count || !item.category,
   );
-
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
@@ -132,23 +130,39 @@ export default function AddEventForm() {
                   <SelectValue placeholder="Domain" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  <SelectItem value="creativity & initiatives">Creativity & Initiatives</SelectItem>
+                  <SelectItem value="creativity & initiatives">
+                    Creativity & Initiatives
+                  </SelectItem>
                   <SelectItem value="contents">Contents</SelectItem>
                   <SelectItem value="design">Design</SelectItem>
                   <SelectItem value="events">Events</SelectItem>
                   <SelectItem value="finance">Finance</SelectItem>
                   <SelectItem value="guest lectures">Guest Lectures</SelectItem>
                   <SelectItem value="hospitality">Hospitality</SelectItem>
-                  <SelectItem value="human resources">Human Resources</SelectItem>
-                  <SelectItem value="industry relations">Industry Relations</SelectItem>
-                  <SelectItem value="internal auditing">Internal Auditing</SelectItem>
+                  <SelectItem value="human resources">
+                    Human Resources
+                  </SelectItem>
+                  <SelectItem value="industry relations">
+                    Industry Relations
+                  </SelectItem>
+                  <SelectItem value="internal auditing">
+                    Internal Auditing
+                  </SelectItem>
                   <SelectItem value="logistics">Logistics</SelectItem>
-                  <SelectItem value="marketing & media">Marketing & Media</SelectItem>
-                  <SelectItem value="projects & research">Projects & Research</SelectItem>
-                  <SelectItem value="quality assurance & control">Quality Assurance & Control</SelectItem>
+                  <SelectItem value="marketing & media">
+                    Marketing & Media
+                  </SelectItem>
+                  <SelectItem value="projects & research">
+                    Projects & Research
+                  </SelectItem>
+                  <SelectItem value="quality assurance & control">
+                    Quality Assurance & Control
+                  </SelectItem>
                   <SelectItem value="techops">Techops</SelectItem>
                   <SelectItem value="workshops">Workshops</SelectItem>
-                  <SelectItem value="xceed & karnival">Xceed & Karnival</SelectItem>
+                  <SelectItem value="xceed & karnival">
+                    Xceed & Karnival
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -170,7 +184,9 @@ export default function AddEventForm() {
                 name={field}
                 value={eventDetails[field]}
                 onChange={handleInputChange}
-                placeholder={field}
+                placeholder={field
+                  .replace(/([A-Z])/g, " $1")
+                  .replace(/^./, (str) => str.toUpperCase())}
                 className="rounded-lg border border-gray-300 p-2"
                 required
               />
@@ -183,7 +199,7 @@ export default function AddEventForm() {
         {list.map((item, index) => (
           <div
             key={index}
-            className="mb-4 flex flex-col gap-4 rounded-lg border border-gray-300 p-4 relative lg:flex-row lg:gap-2 items-center"
+            className="relative mb-4 flex flex-col items-center gap-4 rounded-lg border border-gray-300 p-4 lg:flex-row lg:gap-2"
           >
             <div className="flex w-full flex-col">
               <label htmlFor="itemName" className="flex">
@@ -191,7 +207,7 @@ export default function AddEventForm() {
               </label>
               <div
                 onClick={() => setDropdownVisible(!isDropdownVisible)}
-                className="cursor-pointer border rounded-lg p-2 bg-gray-100 text-gray-600"
+                className="cursor-pointer rounded-lg border bg-gray-100 p-2 text-gray-600"
               >
                 {item.itemName || "Select Item"}
               </div>
@@ -203,7 +219,7 @@ export default function AddEventForm() {
                 setSelectedItem={setSelectedItem}
                 handleListChange={handleListChange}
                 index={index}
-            />
+              />
             </div>
 
             <div className="flex w-full flex-col">
@@ -234,10 +250,10 @@ export default function AddEventForm() {
             </div>
             {list.length > 1 && (
               <div>
-                  <RxCrossCircled   
-                    onClick={() => removeListItem(index)} 
-                    className="w-6 h-6 hover:cursor-pointer absolute top-1 right-2 "  
-                  />
+                <RxCrossCircled
+                  onClick={() => removeListItem(index)}
+                  className="absolute right-2 top-1 h-6 w-6 hover:cursor-pointer"
+                />
               </div>
             )}
           </div>

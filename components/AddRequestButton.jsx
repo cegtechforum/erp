@@ -93,7 +93,7 @@ const AddRequestButton = ({ event }) => {
     e.preventDefault();
 
     const isValid = newItems.items.every(
-      (item) => item.itemName.trim() && item.count && item.category.trim()
+      (item) => item.itemName.trim() && item.count && item.category.trim(),
     );
 
     if (!isValid) {
@@ -111,11 +111,11 @@ const AddRequestButton = ({ event }) => {
       toast.success("Request submitted successfully!");
       setNewItems(initialState);
       setIsDialogOpen(false);
-      router.replace("/events/" + event.eventId, undefined, { scroll: false });
+      router.refresh();
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "Error occurred while submitting request"
+          "Error occurred while submitting request",
       );
     }
   };
@@ -161,17 +161,17 @@ const AddRequestButton = ({ event }) => {
               <div className="space-y-2">
                 <Label htmlFor={`itemName-${index}`}>Item Name</Label>
                 <Input
-    id={`itemName-${index}`}
-    value={item.itemName || ""}
-    onClick={() => {
-      setSelectedItemIndex(index); // Set the index of the item being edited
-      setIsItemDialogOpen(true); // Open the ItemSelectionDialog
-      setIsDialogOpen(false); // Close the AddRequestDialog
-    }}
-    placeholder="Select Item"
-    className="w-full"
-  />
-                </div>
+                  id={`itemName-${index}`}
+                  value={item.itemName || ""}
+                  onClick={() => {
+                    setSelectedItemIndex(index); // Set the index of the item being edited
+                    setIsItemDialogOpen(true); // Open the ItemSelectionDialog
+                    setIsDialogOpen(false); // Close the AddRequestDialog
+                  }}
+                  placeholder="Select Item"
+                  className="w-full"
+                />
+              </div>
 
               <div className="space-y-2">
                 <Label htmlFor={`count-${index}`}>Count</Label>

@@ -6,7 +6,7 @@ import SearchBar from "./SearchBar";
 import ItemTable from "./ItemTable";
 import AddItemForm from "./AddItemForm";
 
-export default function Items({ isSuperUser }) {
+export default function Items() {
   const [query, setQuery] = useState("");
   const [items, setItems] = useState([]);
   const [add, setAdd] = useState(false);
@@ -41,14 +41,9 @@ export default function Items({ isSuperUser }) {
         Available Logistics📃
       </h1>
       <SearchBar query={query} setQuery={setQuery} />
-      <ItemTable
-        items={items}
-        query={query}
-        isSuperUser={isSuperUser}
-        getItems={getItems}
-      />
+      <ItemTable items={items} query={query} getItems={getItems} />
       {add && <AddItemForm setAdd={setAdd} getItems={getItems} />}
-      {!add && isSuperUser && (
+      {!add && (
         <button
           className="mx-auto my-4 flex w-full items-center justify-center rounded-lg bg-blue-700 p-2 text-white hover:bg-blue-600 md:w-[20%]"
           onClick={() => setAdd(true)}

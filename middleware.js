@@ -20,7 +20,7 @@ export async function middleware(req) {
       const { payload } = await jwtVerify(token, secret);
       const isSuperUser = payload.isSuperUser;
 
-      if (!isSuperUser && path === "/events") {
+      if (!isSuperUser && (path === "/events" || path === "/items")) {
         return NextResponse.redirect(new URL("/dashboard", req.url));
       }
     } catch (err) {
