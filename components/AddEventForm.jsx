@@ -230,6 +230,7 @@ export default function AddEventForm() {
                 type="number"
                 name="count"
                 placeholder="Count"
+                min={1}
                 value={item.count}
                 onChange={(e) => handleListChange(index, e)}
                 className="w-full rounded-lg border border-gray-300 p-2"
