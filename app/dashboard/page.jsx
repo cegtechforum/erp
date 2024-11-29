@@ -13,7 +13,8 @@ export default async function Dashboard() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value || "";
   let isSuperUser = false;
-
+  let domain = "";
+  let email = "";
   if (!token) {
     redirect("/login");
   }
@@ -27,6 +28,8 @@ export default async function Dashboard() {
     );
     const userDomain = payload.domain;
     isSuperUser = payload.isSuperUser;
+    email = payload.email;
+    domain = payload.domain;
     userEvents = await db
       .select()
       .from(events)
@@ -39,7 +42,7 @@ export default async function Dashboard() {
   return (
     <div className="flex min-h-screen">
       <SidebarProvider>
-        <AppSidebar isSuperUser={isSuperUser} />
+        <AppSidebar isSuperUser={isSuperUser} domain={domain} email={email} />
         <main className="h-full w-full bg-gray-200">
           <SidebarTrigger />
           <EventsList name="Dashboard" events={userEvents} />

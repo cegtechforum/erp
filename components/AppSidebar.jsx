@@ -21,10 +21,9 @@ import {
 } from "@/components/ui/sidebar";
 import toast from "react-hot-toast";
 
-export function AppSidebar({ isSuperUser }) {
+export function AppSidebar({ isSuperUser, domain, email }) {
   const currentPath = usePathname();
 
-  // Define the items dynamically based on isSuperUser
   const items = [
     {
       title: "Dashboard",
@@ -45,11 +44,16 @@ export function AppSidebar({ isSuperUser }) {
       url: "/events/add",
       icon: Plus,
     },
-    {
-      title: "Items",
-      url: "/items",
-      icon: ShoppingCart,
-    },
+    ...(isSuperUser
+      ? [
+          {
+            title: "Items",
+            url: "/items",
+            icon: ShoppingCart,
+          },
+        ]
+      : []),
+
     {
       title: "Logout",
       icon: LogOut,
@@ -68,11 +72,12 @@ export function AppSidebar({ isSuperUser }) {
 
   return (
     <Sidebar>
-      <SidebarContent>
+      <SidebarContent className="flex">
         <SidebarGroup>
-          <SidebarGroupLabel className="mb-4 text-2xl font-bold">
+          <SidebarGroupLabel className="mb-4 text-xl font-bold">
             ERP
           </SidebarGroupLabel>
+
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item, index) => {
@@ -82,14 +87,15 @@ export function AppSidebar({ isSuperUser }) {
                   <SidebarMenuItem key={`${item.title}-${index}`}>
                     <SidebarMenuButton asChild>
                       {item.url ? (
-                        <Link href={item.url}>
-                          <div
-                            className={`flex w-full items-center p-4 transition-colors duration-100 ${
-                              isActive
-                                ? "bg-gray-300 text-black"
-                                : "text-gray-400"
-                            } rounded-lg hover:bg-gray-100 hover:text-gray-700`}
-                          >
+                        <Link
+                          href={item.url}
+                          className={`!rounded-none transition-colors duration-100 hover:!rounded-md hover:bg-gray-100 hover:text-gray-800 ${
+                            isActive
+                              ? "bg-gray-400 text-black"
+                              : "text-gray-400"
+                          }`}
+                        >
+                          <div className={`flex w-full items-center p-4`}>
                             <item.icon />
                             <span className="ml-2 w-full text-lg">
                               {item.title}
@@ -99,13 +105,13 @@ export function AppSidebar({ isSuperUser }) {
                       ) : (
                         <button
                           onClick={item.action}
-                          className={`flex items-center p-4 transition-colors duration-200 ${
+                          className={`flex items-center transition-colors duration-200 ${
                             isActive
                               ? "bg-gray-300 text-black"
                               : "text-gray-400"
-                          } rounded-lg hover:bg-gray-100 hover:text-gray-700`}
+                          } hover:!bg-red-600 hover:text-red-100`}
                         >
-                          <item.icon />
+                          <item.icon className="ml-4" />
                           <span className="ml-2 text-lg">{item.title}</span>
                         </button>
                       )}
@@ -116,6 +122,12 @@ export function AppSidebar({ isSuperUser }) {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <p className="mt-auto px-2 text-base font-semibold text-gray-400">
+          {email}
+        </p>
+        <p className="mb-2 px-2 pb-2 text-base font-bold uppercase text-gray-400">
+          {domain}
+        </p>
       </SidebarContent>
     </Sidebar>
   );
