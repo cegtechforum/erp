@@ -23,6 +23,7 @@ export async function POST(req) {
           eventId: eid,
           itemName: data.list[i].itemName,
           count: data.list[i].count,
+          approvedCount: 0,
           category: data.list[i].category,
         });
       }
