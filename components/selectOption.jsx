@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -14,12 +14,12 @@ import {
   Radio,
 } from "@mui/material";
 
-const ItemSelectionDialog = ({
+const OptionSelectionDialog = ({
   open,
   onClose,
-  items,
-  selectedItem,
-  setSelectedItem,
+  options,
+  selectedOption,
+  setSelectedOption,
   handleListChange,
   index,
 }) => {
@@ -76,10 +76,10 @@ const ItemSelectionDialog = ({
         <RadioGroup
           aria-label="Item"
           name="itemName"
-          value={selectedItem}
+          value={selectedOption}
           onChange={(e) => {
             const selected = e.target.value;
-            setSelectedItem(selected);
+            setSelectedOption(selected);
             handleListChange(index, { target: { name: "itemName", value: selected } });
             if (selected === "others") {
               setCustomItem("");
@@ -94,7 +94,7 @@ const ItemSelectionDialog = ({
               "-ms-overflow-style": "none", // Hide scrollbar for Internet Explorer
             }}
           >
-            {items
+            {options
               .filter((itm) => itm.name.toLowerCase().includes(searchTerm.toLowerCase()))
               .map((itm) => (
                 <FormControlLabel
@@ -119,7 +119,7 @@ const ItemSelectionDialog = ({
                   label="Enter Custom Item"
                   value={customItem}
                   onChange={(e) => {
-                    setSelectedItem(e.target.value);
+                    setSelectedOption(e.target.value);
                     setCustomItem(e.target.value);
                     handleListChange(index, { target: { name: "itemName", value: e.target.value } });
                   }}
@@ -165,4 +165,4 @@ const ItemSelectionDialog = ({
   );
 };
 
-export default ItemSelectionDialog;
+export default OptionSelectionDialog;
