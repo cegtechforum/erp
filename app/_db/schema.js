@@ -1,3 +1,4 @@
+import { timestamp } from "drizzle-orm/mysql-core";
 import {
   serial,
   boolean,
@@ -24,6 +25,12 @@ export const users = pgTable("users", {
   isSuperUser: boolean("super_user").notNull().default(false),
 });
 
+export const megaevents = pgTable("megaevents", {
+  id: serial().primaryKey(),
+  name: text().notNull(),
+  description: text().notNull(),
+});
+
 export const events = pgTable("events", {
   eventId: serial("event_id").primaryKey(),
   eventName: text("event_name").notNull(),
@@ -32,7 +39,10 @@ export const events = pgTable("events", {
   rollNo: text("roll_no").notNull(),
   contact: text().notNull(),
   organizerName: text("organizer_name"),
+  megaeventId: integer("mega_event_id").references(() => megaevents.id),
   domain: text().notNull(),
+  acceptedTime: timestamp(),
+  returnedTime: timestamp(),
   status: statusEnum().default("pending"),
   date: date("event_date").notNull(),
   startTime: time("start_time").notNull(),

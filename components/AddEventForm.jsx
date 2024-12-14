@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import OptionSelectionDialog from "./selectOption";; // Adjust the import path as needed
+import OptionSelectionDialog from "./selectOption"; // Adjust the import path as needed
 
 import {
   Select,
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { RxCrossCircled } from "react-icons/rx";
 
-export default function AddEventForm({isSuperUser,domain}) {
+export default function AddEventForm({ isSuperUser, domain }) {
   const [items, setItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [customItem, setCustomItem] = useState(""); // For the "Others" option
@@ -33,7 +33,9 @@ export default function AddEventForm({isSuperUser,domain}) {
     endTime: "",
   });
 
-  const [list, setList] = useState([{ itemName: "", count: "", category: "" }]);
+  const [list, setList] = useState([
+    { itemName: "", count: "", description: "" },
+  ]);
 
   async function getItems() {
     try {
@@ -68,7 +70,7 @@ export default function AddEventForm({isSuperUser,domain}) {
   };
 
   const addListItem = () => {
-    setList((prev) => [...prev, { itemName: "", count: "", category: "" }]);
+    setList((prev) => [...prev, { itemName: "", count: "", description: "" }]);
   };
 
   const removeListItem = (index) => {
@@ -97,7 +99,7 @@ export default function AddEventForm({isSuperUser,domain}) {
           startTime: "",
           endTime: "",
         });
-        setList([{ itemName: "", count: "", category: "" }]);
+        setList([{ itemName: "", count: "", description: "" }]);
       } else {
         toast.error("Failed to create event.");
       }
@@ -108,7 +110,7 @@ export default function AddEventForm({isSuperUser,domain}) {
   };
 
   const isAddButtonDisabled = list.some(
-    (item) => !item.itemName || !item.count || !item.category,
+    (item) => !item.itemName || !item.count || !item.description,
   );
 
   return (
@@ -125,7 +127,11 @@ export default function AddEventForm({isSuperUser,domain}) {
               <label htmlFor="domain" className="w-full">
                 Domain
               </label>
-              <Select onValueChange={handleDomainChange} disabled={!isSuperUser} value={eventDetails.domain}>
+              <Select
+                onValueChange={handleDomainChange}
+                disabled={!isSuperUser}
+                value={eventDetails.domain}
+              >
                 <SelectTrigger className="w-full border border-gray-300 bg-white">
                   <SelectValue placeholder="Domain" />
                 </SelectTrigger>
@@ -238,12 +244,12 @@ export default function AddEventForm({isSuperUser,domain}) {
               />
             </div>
             <div className="flex w-full flex-col">
-              <label htmlFor="category">Category</label>
+              <label htmlFor="description">Description</label>
               <input
                 type="text"
-                name="category"
-                placeholder="Category"
-                value={item.category}
+                name="description"
+                placeholder="Description"
+                value={item.description}
                 onChange={(e) => handleListChange(index, e)}
                 className="w-full rounded-lg border border-gray-300 p-2"
                 required

@@ -25,7 +25,7 @@ const AddRequestButton = ({ event }) => {
     itemName: "",
     count: "",
     approvedCount: 0,
-    category: "",
+    description: "",
   };
 
   const initialState = {
@@ -93,7 +93,7 @@ const AddRequestButton = ({ event }) => {
     e.preventDefault();
 
     const isValid = newItems.items.every(
-      (item) => item.itemName.trim() && item.count && item.category.trim(),
+      (item) => item.itemName.trim() && item.count && item.description.trim(),
     );
 
     if (!isValid) {
@@ -187,14 +187,14 @@ const AddRequestButton = ({ event }) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor={`category-${index}`}>Category</Label>
+                <Label htmlFor={`description-${index}`}>Description</Label>
                 <Input
-                  id={`category-${index}`}
-                  value={item.category}
+                  id={`description-${index}`}
+                  value={item.description}
                   onChange={(e) =>
-                    handleChange(index, "category", e.target.value)
+                    handleChange(index, "description", e.target.value)
                   }
-                  placeholder="Enter category"
+                  placeholder="Enter description"
                   className="w-full"
                 />
               </div>

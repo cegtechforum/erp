@@ -2,18 +2,24 @@
 
 import { useState } from "react";
 import axios from "axios";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function EventsList({ events, name }) {
   const [query, setQuery] = useState("");
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [itemName, setItemName] = useState("");
   const [count, setCount] = useState("");
-  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
 
   // Filter events based on the search query
   const filteredEvents = events.filter((event) =>
-    event.eventName.toLowerCase().includes(query.toLowerCase())
+    event.eventName.toLowerCase().includes(query.toLowerCase()),
   );
 
   // Handle form submission using Axios
@@ -29,21 +35,25 @@ export default function EventsList({ events, name }) {
       eventId: selectedEventId,
       itemName,
       count: parseInt(count, 10),
-      category,
+      description,
     };
 
     try {
-      const response = await axios.post("http://localhost:3000/api/lists", formData, {
-        headers: {
-          "Content-Type": "application/json",
+      const response = await axios.post(
+        "http://localhost:3000/api/lists",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (response.status === 200) {
         alert("Form submitted successfully!");
         setItemName("");
         setCount("");
-        setCategory("");
+        setDescription("");
       } else {
         alert("Failed to submit form");
       }
@@ -59,7 +69,7 @@ export default function EventsList({ events, name }) {
 
       <div className="w-4/5 justify-start">
         <Select onValueChange={(value) => setSelectedEventId(value)}>
-          <SelectTrigger className="w-full bg-white border-none shadow-none font-semibold mb-4">
+          <SelectTrigger className="mb-4 w-full border-none bg-white font-semibold shadow-none">
             <SelectValue placeholder="Select an Event" />
           </SelectTrigger>
           <SelectContent className="bg-white">
@@ -79,16 +89,24 @@ export default function EventsList({ events, name }) {
                 </SelectItem>
               ))
             ) : (
-              <div className="p-2 text-center text-gray-500">No events found</div>
+              <div className="p-2 text-center text-gray-500">
+                No events found
+              </div>
             )}
           </SelectContent>
         </Select>
       </div>
 
       {selectedEventId && (
-        <form className="w-4/5 max-w-md p-4 border rounded-lg shadow-md" onSubmit={handleSubmit}>
+        <form
+          className="w-4/5 max-w-md rounded-lg border p-4 shadow-md"
+          onSubmit={handleSubmit}
+        >
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="itemName">
+            <label
+              className="mb-2 block font-semibold text-gray-700"
+              htmlFor="itemName"
+            >
               Item Name
             </label>
             <input
@@ -96,12 +114,15 @@ export default function EventsList({ events, name }) {
               id="itemName"
               value={itemName}
               onChange={(e) => setItemName(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              className="w-full rounded-lg border p-2 focus:border-blue-300 focus:outline-none focus:ring"
               placeholder="Enter item name"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="count">
+            <label
+              className="mb-2 block font-semibold text-gray-700"
+              htmlFor="count"
+            >
               Count
             </label>
             <input
@@ -109,24 +130,30 @@ export default function EventsList({ events, name }) {
               id="count"
               value={count}
               onChange={(e) => setCount(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+              className="w-full rounded-lg border p-2 focus:border-blue-300 focus:outline-none focus:ring"
               placeholder="Enter count"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-semibold mb-2" htmlFor="category">
-              Category
+            <label
+              className="mb-2 block font-semibold text-gray-700"
+              htmlFor="description"
+            >
+              Description
             </label>
             <input
               type="text"
-              id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              placeholder="Enter category"
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full rounded-lg border p-2 focus:border-blue-300 focus:outline-none focus:ring"
+              placeholder="Enter description"
             />
           </div>
-          <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600">
+          <button
+            type="submit"
+            className="w-full rounded-lg bg-blue-500 p-2 font-semibold text-white hover:bg-blue-600"
+          >
             Submit
           </button>
         </form>
