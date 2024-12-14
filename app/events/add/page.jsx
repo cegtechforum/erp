@@ -34,7 +34,7 @@ export default async function EventFormPage() {
         <main className="h-full w-full overflow-hidden">
           <SidebarTrigger />
           <div className="flex min-h-screen flex-col items-center justify-center bg-gray-200 px-6">
-            <AddEventForm />
+            <AddEventForm isSuperUser={isSuperUser} domain={domain} />
           </div>
         </main>
       </SidebarProvider>

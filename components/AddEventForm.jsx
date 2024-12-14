@@ -12,14 +12,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RxCrossCircled } from "react-icons/rx";
+import { domAnimation } from "framer-motion";
 
-export default function AddEventForm() {
+export default function AddEventForm({isSuperUser, domain}) {
   const [items, setItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [customItem, setCustomItem] = useState(""); // For the "Others" option
   const [isDropdownVisible, setDropdownVisible] = useState(false); // Track if the item list is visible
   const dropdownRef = useRef(null);
-  const [selectedItem, setSelectedItem] = useState(""); // Track the selected item
+  const [selectedItem, setSelectedItem] = useState("");
 
   const [eventDetails, setEventDetails] = useState({
     eventName: "",
@@ -27,7 +28,7 @@ export default function AddEventForm() {
     rollNo: "",
     contact: "",
     organizerName: "",
-    domain: "",
+    domain: domain,
     date: "",
     startTime: "",
     endTime: "",
@@ -40,6 +41,7 @@ export default function AddEventForm() {
       const response = await axios.get("/api/items");
       setItems(response.data.res);
       console.log(response.data.res);
+      console.log(domain,isSuperUser);
     } catch (err) {
       console.log(err);
     }
@@ -125,7 +127,7 @@ export default function AddEventForm() {
               <label htmlFor="domain" className="w-full">
                 Domain
               </label>
-              <Select onValueChange={handleDomainChange}>
+              <Select onValueChange={handleDomainChange} disabled={!isSuperUser} value={eventDetails.domain}>
                 <SelectTrigger className="w-full border border-gray-300 bg-white">
                   <SelectValue placeholder="Domain" />
                 </SelectTrigger>
