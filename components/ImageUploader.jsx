@@ -4,8 +4,8 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 
-function ImageUploader({ setEventDetails }) {
-  const [imagePreview, setImagePreview] = useState(null);
+function ImageUploader({ setEventDetails, posterUrl }) {
+  const [imagePreview, setImagePreview] = useState(() => posterUrl === "" ? null : "");
 
   return (
     <div className="flex flex-col items-center space-y-4">
