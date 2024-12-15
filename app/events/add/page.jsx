@@ -13,7 +13,6 @@ export default async function EventFormPage() {
   let isSuperUser = false;
   let domain = "";
   let email = "";
-
   if (!token) {
     redirect("/login");
   }
@@ -39,9 +38,8 @@ export default async function EventFormPage() {
         <AppSidebar isSuperUser={isSuperUser} domain={domain} email={email} />
         <main className="h-full w-full overflow-hidden">
           <SidebarTrigger />
-          <div className="flex flex-col items-center justify-center bg-gray-200 px-6">
+          <div className="flex flex-col items-center justify-center bg-white px-6">
           <TabPanel isSuperUser={isSuperUser} domain={domain} megaEvents={megaEvents} />
-            
           </div>
         </main>
       </SidebarProvider>

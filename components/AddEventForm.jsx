@@ -11,15 +11,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RxCrossCircled } from "react-icons/rx";
-import { domAnimation } from "framer-motion";
-import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
 import ImageUploader from "./ImageUploader";
 
 export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
   const [items, setItems] = useState([]);
   const [megaEventName, setMegaEventName] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [customItem, setCustomItem] = useState(""); // For the "Others" option
   const [isDropdownVisible, setDropdownVisible] = useState(false); // Track if the item list is visible
   const [selectedItem, setSelectedItem] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -44,6 +40,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
       description: "",
     },
   ]);
+  console.log(megaEvents);
 
   async function getItems() {
     try {
@@ -141,12 +138,12 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
       <h1 className="mb-4 text-center text-2xl font-bold">Create an Event</h1>
-      <ImageUploader setEventDetails={setEventDetails} />
+      <ImageUploader setEventDetails={setEventDetails}  posterUrl={eventDetails.posterUrl}/>
       <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
-        {Object.keys(eventDetails).map((field) =>
+        {Object.keys(eventDetails).map((field,index) =>
           field === "domain" ? (
             <div
-              key={field}
+              key={`${field}-${index}`}
               className="flex flex-col items-center justify-center"
             >
               <label htmlFor="domain" className="w-full">
@@ -197,7 +194,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
                 </SelectContent>
               </Select>
             </div>
-          ) : field === "megaeventId" ? (
+          ) : field === "posterUrl" ? null : field === "megaeventId" ? (
             <div className="flex flex-col">
               <label htmlFor="eventFamily" className="w-full">
                 Event Family
@@ -219,7 +216,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
               </Select>
             </div>
           ) : (
-            <div key={field} className="flex flex-col">
+            <div key={`${field}-${index}`} className="flex flex-col">
               <label htmlFor={field}>
                 {field
                   .replace(/([A-Z])/g, " $1")
@@ -250,7 +247,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
         <h2 className="mb-2 text-xl font-semibold">Items</h2>
         {list.map((item, index) => (
           <div
-            key={index}
+            key={`${item.name}-${index}`}
             className="relative mb-4 flex flex-col items-center gap-4 rounded-lg border border-gray-300 p-4 lg:flex-row lg:gap-2"
           >
             <div className="flex w-full flex-col">

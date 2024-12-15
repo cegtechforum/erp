@@ -1,11 +1,24 @@
 "use client";
-
 import { useState } from "react";
 import Card from "./Card";
 import CircularProgress from "@mui/material/CircularProgress";
-import { ChevronDown, ChevronUp, Filter, X, Search,Download } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Filter,
+  X,
+  Search,
+  Download,
+} from "lucide-react";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { megaevents } from "@/app/_db/schema";
 
-export default function EventsList({ events, name, isSuperUser }) {
+export default function EventsList({ events, name, isSuperUser, megaEvent }) {
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState({
     status: [],
@@ -42,6 +55,8 @@ export default function EventsList({ events, name, isSuperUser }) {
       query.trim() === "" ||
       event.eventName.toLowerCase().includes(query.trim().toLowerCase());
 
+      console.log("event:",event);
+
     const matchesStatus =
       filters.status.length === 0 || filters.status.includes(event.status);
 
@@ -49,7 +64,10 @@ export default function EventsList({ events, name, isSuperUser }) {
       filters.domain.length === 0 || filters.domain.includes(event.domain);
 
     return matchesQuery && matchesStatus && matchesDomain;
+
   });
+  console.log("fvdfg"+filteredEvents);
+  // console.log("dfgn"+megaEvent[0].name);
 
   const handleFilterChange = (filterType, value) => {
     setFilters((prevFilters) => {
@@ -63,7 +81,6 @@ export default function EventsList({ events, name, isSuperUser }) {
   const clearFilters = () => {
     setFilters({ status: [], domain: [] });
   };
-
   return (
     <div className="flex flex-col items-center p-6">
       <h1 className="mb-6 text-center text-2xl font-bold text-black">{name}</h1>
@@ -78,12 +95,11 @@ export default function EventsList({ events, name, isSuperUser }) {
         />
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400" />
       </div>
-      <div className="flex  my-4 w-4/5 gap-6">
+      <div className="my-4 flex w-4/5 gap-6">
         <button
           onClick={() => setIsFilterOpen(true)}
           className="flex w-1/2 items-center justify-between rounded-lg bg-gray-100 p-4 shadow-md transition-colors hover:bg-gray-200"
         >
-  
           <div className="flex items-center gap-2">
             <Filter className="text-gray-600" />
             <span className="font-semibold text-gray-800">
@@ -94,8 +110,10 @@ export default function EventsList({ events, name, isSuperUser }) {
           </div>
           <ChevronDown className="text-gray-600" />
         </button>
-        <div className="flex w-1/2 rounded-sm bg-green-500 items-center justify-center text-black">
-         <Download /><span className="px-4">Generate excel</span></div>
+        <div className="flex w-1/2 items-center justify-center rounded-sm bg-green-500 text-black">
+          <Download />
+          <span className="px-4">Generate excel</span>
+        </div>
       </div>
 
       {isFilterOpen && (
@@ -175,17 +193,50 @@ export default function EventsList({ events, name, isSuperUser }) {
         </div>
       )}
 
-       
-
-      {filteredEvents.length > 0 ? (
-        <div className="flex w-4/5 flex-wrap items-center justify-center gap-8 p-2">
-          {filteredEvents.map((event) => (
-            <Card event={event} key={event.eventId} />
+      {name === "Events" && megaEvent.length > 0 ? (
+        <div className="w-4/5">
+          {megaEvent.map((megaEventItem) => (
+            <Accordion key={megaEventItem.id}>
+              <AccordionSummary
+                expandIcon={<ArrowDownwardIcon />}
+                aria-controls="panel1-content"
+                id="panel1-header"
+              >
+                <Typography>{megaEventItem.name}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>
+                  {filteredEvents.length > 0 ? (
+                    <div className="flex w-full flex-wrap items-center justify-center gap-8 p-2">
+                      {filteredEvents
+                        .filter((event) => event.megaeventId === megaEventItem.id)
+                        .map((event) => (
+                          <Card event={event} key={event.eventId} />
+                        ))}
+                    </div>
+                  ) : (
+                    <div className="mt-10 text-center">
+                      <p className="text-xl text-gray-500">No events found</p>
+                    </div>
+                  )}
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
           ))}
         </div>
       ) : (
-        <div className="mt-10 text-center">
-          <p className="text-xl text-gray-500">No events found</p>
+        <div>
+          {filteredEvents.length > 0 ? (
+            <div className="flex w-full flex-wrap items-center justify-center gap-8 p-2">
+              {filteredEvents.map((event) => (
+                <Card event={event} key={event.eventId} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-10 text-center">
+              <p className="text-xl text-gray-500">No events found</p>
+            </div>
+          )}
         </div>
       )}
     </div>
