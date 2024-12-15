@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import OptionSelectionDialog from "./selectOption"; // Adjust the import path as needed
@@ -11,16 +11,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RxCrossCircled } from "react-icons/rx";
-import { domAnimation } from "framer-motion";
+
 
 export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
   
   const [items, setItems] = useState([]);
   const [megaEventName,setMegaEventName] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [customItem, setCustomItem] = useState(""); // For the "Others" option
   const [isDropdownVisible, setDropdownVisible] = useState(false); // Track if the item list is visible
-  const dropdownRef = useRef(null);
   const [selectedItem, setSelectedItem] = useState("");
   
   const [eventDetails, setEventDetails] = useState({
@@ -105,6 +102,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
           endTime: "",
         });
         setList([{ itemName: "", count: "", description: "" }]);
+        setMegaEventName(value);
       } else {
         toast.error("Failed to create event.");
       }
@@ -119,11 +117,14 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
   );
 
   const handleEventFamilyChange = (value) => {
-    setEventDetails((prev) => ({ ...prev, eventFamily: value.id }));
-    setMegaEventName(value.name);
+    const selectedEvent = megaEvents.find((event) => event.name === value);
+    setEventDetails((prev) => ({ ...prev, megaeventId: selectedEvent.id }));
+    setMegaEventName(value); // Update the displayed name
   };
+  
 
   return (
+    
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
       <h1 className="mb-4 text-center text-2xl font-bold">Create an Event</h1>
 
@@ -196,7 +197,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
           </SelectTrigger>
             <SelectContent className="bg-white">
               {megaEvents.map((event) => (
-              <SelectItem key={event.id} value={event}>
+              <SelectItem key={event.id} value={event.name}>
                 {event.name}
               </SelectItem>
               ))}
@@ -301,7 +302,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
           type="button"
           onClick={addListItem}
           disabled={isAddButtonDisabled}
-          className="mt-4 rounded-lg bg-blue-500 px-4 py-2 text-white"
+          className="w-full mt-4 rounded-lg bg-blue-500 px-4 py-2 text-white"
         >
           Add Item
         </button>
@@ -314,5 +315,6 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
         Submit Event
       </button>
     </form>
+    
   );
 }
