@@ -11,15 +11,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RxCrossCircled } from "react-icons/rx";
-
+import { domAnimation } from "framer-motion";
+import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
+import ImageUploader from "./ImageUploader";
 
 export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
-  
   const [items, setItems] = useState([]);
-  const [megaEventName,setMegaEventName] = useState("");
+  const [megaEventName, setMegaEventName] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [customItem, setCustomItem] = useState(""); // For the "Others" option
   const [isDropdownVisible, setDropdownVisible] = useState(false); // Track if the item list is visible
   const [selectedItem, setSelectedItem] = useState("");
-  
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventDetails, setEventDetails] = useState({
     eventName: "",
     description: "",
@@ -28,21 +31,26 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
     contact: "",
     organizerName: "",
     domain: domain,
+    posterUrl: "",
     date: "",
     startTime: "",
     endTime: "",
   });
 
   const [list, setList] = useState([
-    { itemName: "", count: "", description: "" },
+    {
+      itemName: "",
+      count: "",
+      description: "",
+    },
   ]);
 
   async function getItems() {
     try {
       const response = await axios.get("/api/items");
       setItems(response.data.res);
-      console.log("fgbnvhgnb",response.data.res);
-      console.log(domain,isSuperUser);
+      console.log("fgbnvhgnb", response.data.res);
+      console.log(domain, isSuperUser);
     } catch (err) {
       console.log(err);
     }
@@ -97,6 +105,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
           contact: "",
           organizerName: "",
           domain: "",
+          posterUrl: "",
           date: "",
           startTime: "",
           endTime: "",
@@ -118,16 +127,21 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
 
   const handleEventFamilyChange = (value) => {
     const selectedEvent = megaEvents.find((event) => event.name === value);
-    setEventDetails((prev) => ({ ...prev, megaeventId: selectedEvent.id }));
-    setMegaEventName(value); // Update the displayed name
+    if (selectedEvent) {
+      setSelectedEvent(selectedEvent);
+      setEventDetails((prev) => ({ ...prev, megaeventId: selectedEvent.id }));
+      setMegaEventName(value);
+    } else {
+      setSelectedEvent(null);
+      setEventDetails((prev) => ({ ...prev, megaeventId: "" }));
+      setMegaEventName("");
+    }
   };
-  
 
   return (
-    
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
       <h1 className="mb-4 text-center text-2xl font-bold">Create an Event</h1>
-
+      <ImageUploader setEventDetails={setEventDetails} />
       <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
         {Object.keys(eventDetails).map((field) =>
           field === "domain" ? (
@@ -183,29 +197,28 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
                 </SelectContent>
               </Select>
             </div>
-          ): field === "megaeventId" ? (
+          ) : field === "megaeventId" ? (
             <div className="flex flex-col">
-  <label htmlFor="eventFamily" className="w-full">
-    Event Family
-  </label>
-  <Select
-    onValueChange={handleEventFamilyChange}
-    value={megaEventName}
-  >
-    <SelectTrigger className="w-full border border-gray-300 bg-white">
-      <SelectValue placeholder="Select Event Family" />
-          </SelectTrigger>
-            <SelectContent className="bg-white">
-              {megaEvents.map((event) => (
-              <SelectItem key={event.id} value={event.name}>
-                {event.name}
-              </SelectItem>
-              ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          ): (
+              <label htmlFor="eventFamily" className="w-full">
+                Event Family
+              </label>
+              <Select
+                onValueChange={handleEventFamilyChange}
+                value={megaEventName}
+              >
+                <SelectTrigger className="w-full border border-gray-300 bg-white">
+                  <SelectValue placeholder="Select Event Family" />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {megaEvents.map((event) => (
+                    <SelectItem key={event.id} value={event.name}>
+                      {event.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          ) : (
             <div key={field} className="flex flex-col">
               <label htmlFor={field}>
                 {field
@@ -302,7 +315,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
           type="button"
           onClick={addListItem}
           disabled={isAddButtonDisabled}
-          className="w-full mt-4 rounded-lg bg-blue-500 px-4 py-2 text-white"
+          className="mt-4 w-full rounded-lg bg-blue-500 px-4 py-2 text-white"
         >
           Add Item
         </button>
@@ -315,6 +328,5 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
         Submit Event
       </button>
     </form>
-    
   );
 }
