@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import OptionSelectionDialog from "./selectOption"; // Adjust the import path as needed
@@ -21,7 +21,6 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [customItem, setCustomItem] = useState(""); // For the "Others" option
   const [isDropdownVisible, setDropdownVisible] = useState(false); // Track if the item list is visible
-  const dropdownRef = useRef(null);
   const [selectedItem, setSelectedItem] = useState("");
 
   const [eventDetails, setEventDetails] = useState({
@@ -108,6 +107,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
           endTime: "",
         });
         setList([{ itemName: "", count: "", description: "" }]);
+        setMegaEventName(value);
       } else {
         toast.error("Failed to create event.");
       }
@@ -122,8 +122,9 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
   );
 
   const handleEventFamilyChange = (value) => {
-    setEventDetails((prev) => ({ ...prev, eventFamily: value.id }));
-    setMegaEventName(value.name);
+    const selectedEvent = megaEvents.find((event) => event.name === value);
+    setEventDetails((prev) => ({ ...prev, megaeventId: selectedEvent.id }));
+    setMegaEventName(value); // Update the displayed name
   };
 
   return (
@@ -206,7 +207,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
                 </SelectContent>
               </Select>
             </div>
-          ) : field === "posterUrl" ? null : (
+          ) : (
             <div key={field} className="flex flex-col">
               <label htmlFor={field}>
                 {field
@@ -303,7 +304,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
           type="button"
           onClick={addListItem}
           disabled={isAddButtonDisabled}
-          className="mt-4 rounded-lg bg-blue-500 px-4 py-2 text-white"
+          className="mt-4 w-full rounded-lg bg-blue-500 px-4 py-2 text-white"
         >
           Add Item
         </button>
