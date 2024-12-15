@@ -5,8 +5,10 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import toast from "react-hot-toast";
+import { getMegaEventsFromDb } from "@/app/_lib/dataFetching";
 
 export default async function EventsPage() {
+  const megaEvent = await getMegaEventsFromDb();
   const eventsData = await getEventsFromDb();
   const token = (await cookies()).get("token")?.value;
   let isSuperUser = false;
@@ -28,8 +30,6 @@ export default async function EventsPage() {
     }
   }
 
-    
-
   return (
     <div className="flex h-full min-h-screen">
       <SidebarProvider>
@@ -40,6 +40,7 @@ export default async function EventsPage() {
             name="Events"
             events={eventsData}
             isSuperUser={isSuperUser}
+            megaEvent = {megaEvent}
           />
         </main>
       </SidebarProvider>

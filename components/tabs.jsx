@@ -57,8 +57,9 @@ export default function FullWidthTabs({ isSuperUser, domain, megaEvents }) {
   return (
     <Box
     sx={{
-      bgcolor: 'background.paper',
-      width: { xs: '100%', sm: 700, md: 900 }, // Responsive width
+      bgcolor: 'white',
+      width: { xs: '100%', sm: 700, md: 900 },
+      minHeight:"100vh", 
       mx: 'auto', // Center horizontally
       p: { xs: 2, sm: 3 }, // Responsive padding
     }}
