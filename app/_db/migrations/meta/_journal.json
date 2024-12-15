@@ -43,6 +43,13 @@
       "when": 1734191338176,
       "tag": "0005_curious_madelyne_pryor",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1734267410073,
+      "tag": "0006_fantastic_proteus",
+      "breakpoints": true
     }
   ]
 }

@@ -35,7 +35,7 @@ export const events = pgTable("events", {
   eventId: serial("event_id").primaryKey(),
   eventName: text("event_name").notNull(),
   description: text("description"),
-  comment: text("comment"),
+  posterUrl: text("poster_url"),
   rollNo: text("roll_no").notNull(),
   contact: text("contact").notNull(),
   organizerName: text("organizer_name"),
