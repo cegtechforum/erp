@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Trash2, PlusCircle } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import ItemSelectionDialog from "./selectDialog"; // Ensure correct path to your component
+import OptionSelectionDialog from "./selectOption"; // Ensure correct path to your component
 
 const AddRequestButton = ({ event }) => {
   const router = useRouter();
@@ -25,7 +25,7 @@ const AddRequestButton = ({ event }) => {
     itemName: "",
     count: "",
     approvedCount: 0,
-    category: "",
+    description: "",
   };
 
   const initialState = {
@@ -93,7 +93,7 @@ const AddRequestButton = ({ event }) => {
     e.preventDefault();
 
     const isValid = newItems.items.every(
-      (item) => item.itemName.trim() && item.count && item.category.trim(),
+      (item) => item.itemName.trim() && item.count && item.description.trim(),
     );
 
     if (!isValid) {
@@ -187,14 +187,14 @@ const AddRequestButton = ({ event }) => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor={`category-${index}`}>Category</Label>
+                <Label htmlFor={`description-${index}`}>Description</Label>
                 <Input
-                  id={`category-${index}`}
-                  value={item.category}
+                  id={`description-${index}`}
+                  value={item.description}
                   onChange={(e) =>
-                    handleChange(index, "category", e.target.value)
+                    handleChange(index, "description", e.target.value)
                   }
-                  placeholder="Enter category"
+                  placeholder="Enter description"
                   className="w-full"
                 />
               </div>
@@ -224,15 +224,15 @@ const AddRequestButton = ({ event }) => {
         </div>
       </DialogContent>
 
-      <ItemSelectionDialog
+      <OptionSelectionDialog
         open={isItemDialogOpen}
         onClose={() => {
           setIsItemDialogOpen(false);
           setIsDialogOpen(true); // Reopen the AddRequestDialog when ItemSelectionDialog is closed
         }}
-        items={items}
-        selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
+        options={items}
+        selectedOption={selectedItem}
+        setSelectedOption={setSelectedItem}
         handleListChange={handleListChange}
         index={selectedItemIndex} // Pass the selected index to the ItemSelectionDialog
       />

@@ -7,8 +7,10 @@ export async function sendEmail(dt, superUsers) {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD,
     },
+    
   });
 
+ 
   const rows = dt.items.map(item => `
     <tr>
       <td style="border: 1px solid #ddd; padding: 8px;">${item.itemName}</td>

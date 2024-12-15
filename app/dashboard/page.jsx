@@ -44,7 +44,7 @@ export default async function Dashboard() {
       <SidebarProvider>
         <AppSidebar isSuperUser={isSuperUser} domain={domain} email={email} />
         <main className="h-full w-full bg-gray-200">
-          <SidebarTrigger />
+          <SidebarTrigger  />
           <EventsList name="Dashboard" events={userEvents} />
         </main>
       </SidebarProvider>

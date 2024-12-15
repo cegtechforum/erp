@@ -5,6 +5,7 @@ import {
   LogOut,
   LayoutDashboard,
   Plus,
+  Presentation,
 } from "lucide-react";
 import Link from "next/link";
 import axios from "axios";
@@ -53,7 +54,6 @@ export function AppSidebar({ isSuperUser, domain, email }) {
           },
         ]
       : []),
-
     {
       title: "Logout",
       icon: LogOut,
