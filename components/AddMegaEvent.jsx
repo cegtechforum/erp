@@ -2,12 +2,7 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Box, Typography, TextField, Button } from "@mui/material";
 
 export default function AddMegaEventForm() {
   const [newMegaEvent, setNewMegaEvent] = useState({
@@ -29,8 +24,7 @@ export default function AddMegaEventForm() {
     }
 
     try {
-      // Replace with your actual API endpoint
-      const response = await fetch("/api/mega-events", {
+      const response = await fetch("/api/megaevents", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,14 +47,13 @@ export default function AddMegaEventForm() {
   return (
     <Box
       sx={{
-        p: 4,
-        width: "100%",
-        maxWidth: "600px",
-        marginX: "auto",
-        marginTop: "50px",
+        mt: "50px",
+        maxWidth: "900px", 
+        mx: "auto", // Centers the form horizontally
+        width: "100%", // Full width on small screens
       }}
     >
-      <Typography variant="h4" align="center" gutterBottom>
+      <Typography variant="h6" align="center" gutterBottom>
         Create Mega Event
       </Typography>
 
@@ -73,6 +66,9 @@ export default function AddMegaEventForm() {
             value={newMegaEvent.name}
             onChange={handleInputChange}
             variant="outlined"
+            sx={{
+              width: "100%", // Ensures full width
+            }}
           />
         </Box>
 
@@ -86,6 +82,9 @@ export default function AddMegaEventForm() {
             variant="outlined"
             multiline
             rows={4}
+            sx={{
+              width: "100%", // Ensures full width
+            }}
           />
         </Box>
 
@@ -93,7 +92,9 @@ export default function AddMegaEventForm() {
           type="submit"
           variant="contained"
           color="primary"
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%", // Full-width button
+          }}
         >
           Create Event
         </Button>
