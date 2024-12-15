@@ -21,7 +21,7 @@ export default function HomePage() {
         padding: { xs: "2rem 1rem", sm: "4rem" },
       }}
     >
-      {/* Moving Circles */}
+      
       {[1, 2, 3, 4, 5].map((circle, index) => (
         <Box
           key={index}

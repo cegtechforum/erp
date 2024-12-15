@@ -4,8 +4,10 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import toast from "react-hot-toast";
+import { getMegaEventsFromDb } from "@/app/_lib/dataFetching";
 
 export default async function EventFormPage() {
+  const megaEvents = await getMegaEventsFromDb();
   const token = (await cookies()).get("token")?.value;
   let isSuperUser = false;
   let domain = "";
@@ -34,7 +36,7 @@ export default async function EventFormPage() {
         <main className="h-full w-full overflow-hidden">
           <SidebarTrigger />
           <div className="flex min-h-screen flex-col items-center justify-center bg-gray-200 px-6">
-            <AddEventForm isSuperUser={isSuperUser} domain={domain} />
+            <AddEventForm isSuperUser={isSuperUser} domain={domain} megaEvents={megaEvents} />
           </div>
         </main>
       </SidebarProvider>

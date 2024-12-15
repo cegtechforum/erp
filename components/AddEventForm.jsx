@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import OptionSelectionDialog from "./selectOption"; // Adjust the import path as needed
-
 import {
   Select,
   SelectContent,
@@ -12,18 +11,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RxCrossCircled } from "react-icons/rx";
+import { domAnimation } from "framer-motion";
 
-export default function AddEventForm({ isSuperUser, domain }) {
+export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
+  
   const [items, setItems] = useState([]);
+  const [megaEventName,setMegaEventName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [customItem, setCustomItem] = useState(""); // For the "Others" option
   const [isDropdownVisible, setDropdownVisible] = useState(false); // Track if the item list is visible
   const dropdownRef = useRef(null);
-  const [selectedItem, setSelectedItem] = useState(""); // Track the selected item
-
+  const [selectedItem, setSelectedItem] = useState("");
+  
   const [eventDetails, setEventDetails] = useState({
     eventName: "",
     description: "",
+    megaeventId: "",
     rollNo: "",
     contact: "",
     organizerName: "",
@@ -41,7 +44,8 @@ export default function AddEventForm({ isSuperUser, domain }) {
     try {
       const response = await axios.get("/api/items");
       setItems(response.data.res);
-      console.log(response.data.res);
+      console.log("fgbnvhgnb",response.data.res);
+      console.log(domain,isSuperUser);
     } catch (err) {
       console.log(err);
     }
@@ -91,6 +95,7 @@ export default function AddEventForm({ isSuperUser, domain }) {
         setEventDetails({
           eventName: "",
           description: "",
+          megaeventId: "",
           rollNo: "",
           contact: "",
           organizerName: "",
@@ -112,6 +117,11 @@ export default function AddEventForm({ isSuperUser, domain }) {
   const isAddButtonDisabled = list.some(
     (item) => !item.itemName || !item.count || !item.description,
   );
+
+  const handleEventFamilyChange = (value) => {
+    setEventDetails((prev) => ({ ...prev, eventFamily: value.id }));
+    setMegaEventName(value.name);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
@@ -172,7 +182,29 @@ export default function AddEventForm({ isSuperUser, domain }) {
                 </SelectContent>
               </Select>
             </div>
-          ) : (
+          ): field === "megaeventId" ? (
+            <div className="flex flex-col">
+  <label htmlFor="eventFamily" className="w-full">
+    Event Family
+  </label>
+  <Select
+    onValueChange={handleEventFamilyChange}
+    value={megaEventName}
+  >
+    <SelectTrigger className="w-full border border-gray-300 bg-white">
+      <SelectValue placeholder="Select Event Family" />
+          </SelectTrigger>
+            <SelectContent className="bg-white">
+              {megaEvents.map((event) => (
+              <SelectItem key={event.id} value={event}>
+                {event.name}
+              </SelectItem>
+              ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          ): (
             <div key={field} className="flex flex-col">
               <label htmlFor={field}>
                 {field
