@@ -28,6 +28,8 @@ export default async function EventsPage() {
     }
   }
 
+    
+
   return (
     <div className="flex h-full min-h-screen">
       <SidebarProvider>
