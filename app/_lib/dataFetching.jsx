@@ -38,7 +38,7 @@ export async function getItemsByEventId(eventId){
 
 export async function getMegaEventsFromDb() {
   try {
-    console.log("Hiii");
+    console.log("Hello");
     const data = await db.select().from(megaevents);
     console.log(data);
     return data;
