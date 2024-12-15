@@ -1,6 +1,6 @@
 // app/_lib/getEventById.js
 import { db } from "@/app/_lib/db";
-import { events, lists } from "@/app/_db/schema";
+import { events, lists,megaevents } from "@/app/_db/schema";
 import { eq } from "drizzle-orm";
 
 export async function getEventById(eventId) {
@@ -31,6 +31,18 @@ export async function getItemsByEventId(eventId){
     const data = await db.select().from(lists).where(eq(lists.eventId, Number(eventId)));
     return data;
   }catch(error){
+    console.error("Database error:", error);
+    return [];
+  }
+}
+
+export async function getMegaEventsFromDb() {
+  try {
+    console.log("Hiii");
+    const data = await db.select().from(megaevents);
+    console.log(data);
+    return data;
+  } catch (error) {
     console.error("Database error:", error);
     return [];
   }
