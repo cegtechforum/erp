@@ -45,19 +45,19 @@ export default function Card({ event }) {
   };
 
   return (
-    <div className="relative w-72 transform rounded-lg bg-slate-100 p-4 shadow-md transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
+    <div className="relative w-72 transform rounded-lg bg-slate-50 p-4 shadow-md transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg">
       <div className="relative">
         <CardMedia
           component="img"
           height="140"
-          image="/assets/placeholder.jpg"
+          image={event.posterUrl || "/assets/placeholder.jpg"}
           alt={event.eventName}
           className="rounded-t-lg"
         />
         <Tooltip title={`Event ${event.eventName} Report`} arrow>
           <button
             onClick={handleXl}
-            className={`absolute top-1 right-1 flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-1 font-semibold text-black shadow-md transition hover:bg-orange-200`}
+            className={`absolute right-1 top-1 flex items-center justify-center gap-2 rounded-lg bg-white px-3 py-1 font-semibold text-black shadow-md transition hover:bg-green-500`}
             disabled={loading}
           >
             {loading ? (
@@ -73,7 +73,7 @@ export default function Card({ event }) {
           {event.eventName}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {event.description.substring(0, 60) + "..." }
+          {event.description.substring(0, 60) + "..."}
         </Typography>
       </CardContent>
       <CardActions className="flex items-center justify-around">
@@ -85,12 +85,12 @@ export default function Card({ event }) {
             event.status === "accepted"
               ? "bg-green-100 text-green-800"
               : event.status === "pending"
-              ? "bg-yellow-100 text-yellow-800"
-              : event.status === "rejected"
-              ? "bg-red-100 text-red-800"
-              : event.status === "returned"
-              ? "bg-blue-100 text-blue-800"
-              : "bg-gray-100 text-gray-800"
+                ? "bg-yellow-100 text-yellow-800"
+                : event.status === "rejected"
+                  ? "bg-red-100 text-red-800"
+                  : event.status === "returned"
+                    ? "bg-blue-100 text-blue-800"
+                    : "bg-gray-100 text-gray-800"
           }`}
         >
           {event.status}

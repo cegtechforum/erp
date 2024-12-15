@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import OptionSelectionDialog from "./selectOption"; // Adjust the import path as needed
@@ -13,12 +13,15 @@ import {
 import { RxCrossCircled } from "react-icons/rx";
 import ImageUploader from "./ImageUploader";
 
-export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
-  const [items, setItems] = useState([]);
+export default function AddEventForm({
+  isSuperUser,
+  domain,
+  megaEvents,
+  items,
+}) {
   const [megaEventName, setMegaEventName] = useState("");
   const [isDropdownVisible, setDropdownVisible] = useState(false); // Track if the item list is visible
   const [selectedItem, setSelectedItem] = useState("");
-  const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventDetails, setEventDetails] = useState({
     eventName: "",
     description: "",
@@ -32,7 +35,6 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
     startTime: "",
     endTime: "",
   });
-
   const [list, setList] = useState([
     {
       itemName: "",
@@ -40,22 +42,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
       description: "",
     },
   ]);
-  console.log(megaEvents);
-
-  async function getItems() {
-    try {
-      const response = await axios.get("/api/items");
-      setItems(response.data.res);
-      console.log("fgbnvhgnb", response.data.res);
-      console.log(domain, isSuperUser);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  useEffect(() => {
-    getItems();
-  }, []);
+  const imageUploaderRef = useRef(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -94,6 +81,9 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
 
       if (response.status === 200) {
         toast.success("Event created successfully!");
+        if (imageUploaderRef.current) {
+          imageUploaderRef.current.resetImage();
+        }
         setEventDetails({
           eventName: "",
           description: "",
@@ -108,12 +98,11 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
           endTime: "",
         });
         setList([{ itemName: "", count: "", description: "" }]);
-        setMegaEventName(value);
       } else {
         toast.error("Failed to create event.");
       }
     } catch (error) {
-      console.error("Error creating event:", error);
+      console.log("Error creating event:", error);
       toast.error("An error occurred while creating the event.");
     }
   };
@@ -125,11 +114,9 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
   const handleEventFamilyChange = (value) => {
     const selectedEvent = megaEvents.find((event) => event.name === value);
     if (selectedEvent) {
-      setSelectedEvent(selectedEvent);
       setEventDetails((prev) => ({ ...prev, megaeventId: selectedEvent.id }));
       setMegaEventName(value);
     } else {
-      setSelectedEvent(null);
       setEventDetails((prev) => ({ ...prev, megaeventId: "" }));
       setMegaEventName("");
     }
@@ -138,9 +125,9 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
       <h1 className="mb-4 text-center text-2xl font-bold">Create an Event</h1>
-      <ImageUploader setEventDetails={setEventDetails}  posterUrl={eventDetails.posterUrl}/>
+      <ImageUploader setEventDetails={setEventDetails} ref={imageUploaderRef} />
       <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
-        {Object.keys(eventDetails).map((field,index) =>
+        {Object.keys(eventDetails).map((field, index) =>
           field === "domain" ? (
             <div
               key={`${field}-${index}`}

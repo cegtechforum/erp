@@ -41,7 +41,7 @@ export default function EventDetailsContent({ event, items, isSuperUser }) {
           <CardMedia
             component="img"
             height="280"
-            image="/assets/thorfinn.jpg"
+            image={event.posterUrl || "/assets/thorfinn.jpg"}
             alt={event.eventName}
             className="object-cover"
           />
