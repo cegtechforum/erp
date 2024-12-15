@@ -1,4 +1,5 @@
 import AddEventForm from "@/components/AddEventForm";
+import TabPanel from "@/components/tabs";
 import AppSidebar from "@/components/AppSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { jwtVerify } from "jose";
@@ -26,17 +27,21 @@ export default async function EventFormPage() {
       domain = payload.domain;
     } catch (error) {
       console.error("Token verification failed:", error);
-      toast.error(error.message || "Error occured");
+      toast.error(error.message || "Error occurred");
     }
   }
+
+  
+
   return (
     <div className="flex h-full min-h-screen overflow-hidden">
       <SidebarProvider>
         <AppSidebar isSuperUser={isSuperUser} domain={domain} email={email} />
         <main className="h-full w-full overflow-hidden">
           <SidebarTrigger />
-          <div className="flex min-h-screen flex-col items-center justify-center bg-gray-200 px-6">
-            <AddEventForm isSuperUser={isSuperUser} domain={domain} megaEvents={megaEvents} />
+          <div className="flex flex-col items-center justify-center bg-gray-200 px-6">
+          <TabPanel isSuperUser={isSuperUser} domain={domain} megaEvents={megaEvents} />
+            
           </div>
         </main>
       </SidebarProvider>
