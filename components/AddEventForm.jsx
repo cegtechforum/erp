@@ -22,7 +22,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
   const [customItem, setCustomItem] = useState(""); // For the "Others" option
   const [isDropdownVisible, setDropdownVisible] = useState(false); // Track if the item list is visible
   const [selectedItem, setSelectedItem] = useState("");
-
+  const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventDetails, setEventDetails] = useState({
     eventName: "",
     description: "",
@@ -38,7 +38,11 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
   });
 
   const [list, setList] = useState([
-    { itemName: "", count: "", description: "" },
+    {
+      itemName: "",
+      count: "",
+      description: "",
+    },
   ]);
 
   async function getItems() {
@@ -123,8 +127,15 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
 
   const handleEventFamilyChange = (value) => {
     const selectedEvent = megaEvents.find((event) => event.name === value);
-    setEventDetails((prev) => ({ ...prev, megaeventId: selectedEvent.id }));
-    setMegaEventName(value); // Update the displayed name
+    if (selectedEvent) {
+      setSelectedEvent(selectedEvent);
+      setEventDetails((prev) => ({ ...prev, megaeventId: selectedEvent.id }));
+      setMegaEventName(value);
+    } else {
+      setSelectedEvent(null);
+      setEventDetails((prev) => ({ ...prev, megaeventId: "" }));
+      setMegaEventName("");
+    }
   };
 
   return (
@@ -200,7 +211,7 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
                 </SelectTrigger>
                 <SelectContent className="bg-white">
                   {megaEvents.map((event) => (
-                    <SelectItem key={event.id} value={event}>
+                    <SelectItem key={event.id} value={event.name}>
                       {event.name}
                     </SelectItem>
                   ))}
