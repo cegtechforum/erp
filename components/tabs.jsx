@@ -68,9 +68,9 @@ export default function FullWidthTabs({ isSuperUser, domain, megaEvents }) {
       sx={{
         bgcolor: 'white',
         color: 'black',
-        padding: { xs: 1, sm: 2 }, // Adjust padding for small devices
-        fontSize: { xs: '14px', sm: '16px' }, // Adjust font size for small devices
-        boxShadow: { xs: 'none', sm: '0px 2px 4px rgba(0,0,0,0.2)' }, // Modify shadow on smaller devices
+        padding: { xs: 1, sm: 2 }, 
+        fontSize: { xs: '14px', sm: '16px' },
+        boxShadow: { xs: 'none', sm: '0px 2px 4px rgba(0,0,0,0.2)' }, 
       }}
     >
       <Tabs

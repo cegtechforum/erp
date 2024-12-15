@@ -3,7 +3,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Box, Typography, TextField, Button } from "@mui/material";
-
+import axios from "axios";
 export default function AddMegaEventForm() {
   const [newMegaEvent, setNewMegaEvent] = useState({
     name: "",
@@ -15,34 +15,38 @@ export default function AddMegaEventForm() {
     setNewMegaEvent((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!newMegaEvent.name || !newMegaEvent.description) {
-      toast.error("Both fields are required.");
-      return;
-    }
+  if (!newMegaEvent.name || !newMegaEvent.description) {
+    toast.error("Both fields are required.");
+    return;
+  }
 
-    try {
-      const response = await fetch("/api/megaevents", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newMegaEvent),
-      });
+  try {
+    const response = await axios.post("/api/megaevents", newMegaEvent, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      if (!response.ok) {
-        throw new Error("Failed to create mega-event.");
-      }
-
+    if (response.status === 200) {
       toast.success("Mega-event created successfully!");
       setNewMegaEvent({ name: "", description: "" });
-    } catch (error) {
-      console.error("Error adding mega-event:", error);
+    } else {
+      throw new Error("Failed to create mega-event.");
+    }
+  } catch (error) {
+    console.error("Error adding mega-event:", error);
+
+    if (error.response?.status === 409) {
+      toast.error("A mega-event with this name already exists.");
+    } else {
       toast.error("Failed to create mega-event.");
     }
-  };
+  }
+};
 
   return (
     <Box
