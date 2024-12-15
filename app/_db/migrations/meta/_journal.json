@@ -50,6 +50,13 @@
       "when": 1734267410073,
       "tag": "0006_fantastic_proteus",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1734286612160,
+      "tag": "0007_wet_speed",
+      "breakpoints": true
     }
   ]
 }
