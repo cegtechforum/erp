@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Card from "./Card";
 import CircularProgress from "@mui/material/CircularProgress";
-import { ChevronDown, ChevronUp, Filter, X, Search } from "lucide-react";
+import { ChevronDown, ChevronUp, Filter, X, Search,Download } from "lucide-react";
 
 export default function EventsList({ events, name, isSuperUser }) {
   const [query, setQuery] = useState("");
@@ -78,12 +78,12 @@ export default function EventsList({ events, name, isSuperUser }) {
         />
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400" />
       </div>
-
-      <div className="my-4 w-4/5">
+      <div className="flex  my-4 w-4/5 gap-6">
         <button
           onClick={() => setIsFilterOpen(true)}
-          className="flex w-full items-center justify-between rounded-lg bg-gray-100 p-4 shadow-md transition-colors hover:bg-gray-200"
+          className="flex w-1/2 items-center justify-between rounded-lg bg-gray-100 p-4 shadow-md transition-colors hover:bg-gray-200"
         >
+  
           <div className="flex items-center gap-2">
             <Filter className="text-gray-600" />
             <span className="font-semibold text-gray-800">
@@ -94,6 +94,8 @@ export default function EventsList({ events, name, isSuperUser }) {
           </div>
           <ChevronDown className="text-gray-600" />
         </button>
+        <div className="flex w-1/2 rounded-sm bg-green-500 items-center justify-center text-black">
+         <Download /><span className="px-4">Generate excel</span></div>
       </div>
 
       {isFilterOpen && (
@@ -172,6 +174,8 @@ export default function EventsList({ events, name, isSuperUser }) {
           </div>
         </div>
       )}
+
+       
 
       {filteredEvents.length > 0 ? (
         <div className="flex w-4/5 flex-wrap items-center justify-center gap-8 p-2">
