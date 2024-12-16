@@ -63,7 +63,7 @@ export const lists = pgTable(
   (table) => ({
     primaryKey: primaryKey({ columns: [table.eventId, table.itemName] }),
   }),
-);
+)
 
 export const items = pgTable("items", {
   name: text("name").notNull().primaryKey(),

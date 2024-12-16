@@ -1,5 +1,5 @@
 import { events, lists } from "../../_db/schema";
-import { eq } from "drizzle-orm";
+import { eq,sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { db } from "@/app/_lib/db";
 import * as XLSX from "xlsx";
@@ -47,10 +47,16 @@ export async function PATCH(req) {
         status: 400,
       });
 
-    const res = await db
-      .update(events)
-      .set({ status })
-      .where(eq(events.eventId, eventId));
+      const updateData = { status };
+
+if (status === "accepted") {
+  updateData.acceptedTime = sql`CURRENT_TIMESTAMP`; // Set acceptedTime only if status is "accepted"
+}
+
+const res = await db
+  .update(events)
+  .set(updateData)
+  .where(eq(events.eventId, eventId));
 
     if (res.rowCount === 0) {
       return NextResponse.json({
