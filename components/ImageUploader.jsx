@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useState, useImperativeHandle, forwardRef } from "react";
 import { UploadButton } from "@uploadthing/react";
 import { X } from "lucide-react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 
-function ImageUploader({ setEventDetails, posterUrl }) {
-  const [imagePreview, setImagePreview] = useState(() => posterUrl === "" ? null : "");
+const ImageUploader = forwardRef(({ setEventDetails }, ref) => {
+  const [imagePreview, setImagePreview] = useState(null);
+
+  useImperativeHandle(ref, () => ({
+    resetImage: () => {
+      setImagePreview(null);
+    },
+  }));
 
   return (
     <div className="flex flex-col items-center space-y-4">
@@ -18,6 +24,7 @@ function ImageUploader({ setEventDetails, posterUrl }) {
             className="rounded-lg object-contain"
           />
           <button
+            type="button"
             onClick={() => setImagePreview(null)}
             className="absolute right-2 top-2 rounded-full bg-red-500 p-1 text-white"
           >
@@ -45,6 +52,8 @@ function ImageUploader({ setEventDetails, posterUrl }) {
       )}
     </div>
   );
-}
+});
+
+ImageUploader.displayName = "ImageUploader";
 
 export default ImageUploader;

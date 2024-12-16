@@ -1,17 +1,26 @@
 "use client";
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import * as React from "react";
+import PropTypes from "prop-types";
+import { useTheme } from "@mui/material/styles";
+import AppBar from "@mui/material/AppBar";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import AddMegaEvent from "@/components/AddMegaEvent";
 import AddEventForm from "@/components/AddEventForm";
 
 function TabPanel(props) {
-  const { children, value, index, isSuperUser, domain, megaEvents, ...other } = props;
+  const {
+    children,
+    value,
+    index,
+    isSuperUser,
+    domain,
+    megaEvents,
+    items,
+    ...other
+  } = props;
 
   return (
     <div
@@ -37,16 +46,22 @@ TabPanel.propTypes = {
   isSuperUser: PropTypes.bool.isRequired,
   domain: PropTypes.string.isRequired,
   megaEvents: PropTypes.array.isRequired,
+  items: PropTypes.array.isRequired,
 };
 
 function a11yProps(index) {
   return {
     id: `full-width-tab-${index}`,
-    'aria-controls': `full-width-tabpanel-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`,
   };
 }
 
-export default function FullWidthTabs({ isSuperUser, domain, megaEvents }) {
+export default function FullWidthTabs({
+  isSuperUser,
+  domain,
+  megaEvents,
+  items,
+}) {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
 
@@ -130,22 +145,19 @@ export default function FullWidthTabs({ isSuperUser, domain, megaEvents }) {
           isSuperUser={isSuperUser}
           domain={domain}
           megaEvents={megaEvents}
+          items={items}
         />
-      
-    </TabPanel>
-    <TabPanel
-      value={value}
-      index={1}
-      dir={theme.direction}
-      isSuperUser={isSuperUser}
-      domain={domain}
-      megaEvents={megaEvents}
-    >
-      
+      </TabPanel>
+      <TabPanel
+        value={value}
+        index={1}
+        dir={theme.direction}
+        isSuperUser={isSuperUser}
+        domain={domain}
+        megaEvents={megaEvents}
+      >
         <AddMegaEvent />
-      
-    </TabPanel>
-  </Box>
-  
+      </TabPanel>
+    </Box>
   );
 }

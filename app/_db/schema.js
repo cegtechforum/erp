@@ -27,7 +27,7 @@ export const users = pgTable("users", {
 
 export const megaevents = pgTable("megaevents", {
   id: serial("id").primaryKey(),
-  name: text("name").notNull(),
+  name: text("name").notNull().unique(),
   description: text("description").notNull(),
 });
 

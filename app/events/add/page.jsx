@@ -1,14 +1,15 @@
-import AddEventForm from "@/components/AddEventForm";
 import TabPanel from "@/components/tabs";
 import AppSidebar from "@/components/AppSidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import toast from "react-hot-toast";
-import { getMegaEventsFromDb } from "@/app/_lib/dataFetching";
+import { getAllItems, getMegaEventsFromDb } from "@/app/_lib/dataFetching";
 
 export default async function EventFormPage() {
   const megaEvents = await getMegaEventsFromDb();
+  const items = await getAllItems();
+  console.log(items);
   const token = (await cookies()).get("token")?.value;
   let isSuperUser = false;
   let domain = "";
@@ -30,8 +31,6 @@ export default async function EventFormPage() {
     }
   }
 
-  
-
   return (
     <div className="flex h-full min-h-screen overflow-hidden">
       <SidebarProvider>
@@ -39,7 +38,12 @@ export default async function EventFormPage() {
         <main className="h-full w-full overflow-hidden">
           <SidebarTrigger />
           <div className="flex flex-col items-center justify-center bg-white px-6">
-          <TabPanel isSuperUser={isSuperUser} domain={domain} megaEvents={megaEvents} />
+            <TabPanel
+              isSuperUser={isSuperUser}
+              domain={domain}
+              megaEvents={megaEvents}
+              items={items}
+            />
           </div>
         </main>
       </SidebarProvider>

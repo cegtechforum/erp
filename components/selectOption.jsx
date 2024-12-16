@@ -26,9 +26,7 @@ const OptionSelectionDialog = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [customItem, setCustomItem] = useState(""); // For custom item input
   const dropdownRef = useRef(null);
-  
 
-  
   return (
     <Dialog
       open={open}
@@ -80,7 +78,9 @@ const OptionSelectionDialog = ({
           onChange={(e) => {
             const selected = e.target.value;
             setSelectedOption(selected);
-            handleListChange(index, { target: { name: "itemName", value: selected } });
+            handleListChange(index, {
+              target: { name: "itemName", value: selected },
+            });
             if (selected === "others") {
               setCustomItem("");
             }
@@ -95,13 +95,15 @@ const OptionSelectionDialog = ({
             }}
           >
             {options
-              .filter((itm) => itm.name.toLowerCase().includes(searchTerm.toLowerCase()))
-              .map((itm) => (
+              .filter((option) =>
+                option.name.toLowerCase().includes(searchTerm.toLowerCase()),
+              )
+              .map((option) => (
                 <FormControlLabel
-                  key={itm.id || itm.name}
+                  key={option.itemName || option.name}
                   control={<Radio />}
-                  label={itm.name}
-                  value={itm.name}
+                  label={option.name}
+                  value={option.name}
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -121,7 +123,9 @@ const OptionSelectionDialog = ({
                   onChange={(e) => {
                     setSelectedOption(e.target.value);
                     setCustomItem(e.target.value);
-                    handleListChange(index, { target: { name: "itemName", value: e.target.value } });
+                    handleListChange(index, {
+                      target: { name: "itemName", value: e.target.value },
+                    });
                   }}
                   placeholder="Custom item"
                   margin="normal"
@@ -132,7 +136,8 @@ const OptionSelectionDialog = ({
                     },
                     "& .MuiInputLabel-root": {
                       fontSize: "14px",
-                      transition: "font-size 0.2s ease-in-out, transform 0.2s ease-in-out",
+                      transition:
+                        "font-size 0.2s ease-in-out, transform 0.2s ease-in-out",
                       transform: "translate(14px, 7px)", // Center the label when not focused
                     },
                     "& .MuiInputLabel-root.Mui-focused": {

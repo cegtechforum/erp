@@ -55,8 +55,6 @@ export default function EventsList({ events, name, isSuperUser, megaEvent }) {
       query.trim() === "" ||
       event.eventName.toLowerCase().includes(query.trim().toLowerCase());
 
-      console.log("event:",event);
-
     const matchesStatus =
       filters.status.length === 0 || filters.status.includes(event.status);
 
@@ -64,10 +62,7 @@ export default function EventsList({ events, name, isSuperUser, megaEvent }) {
       filters.domain.length === 0 || filters.domain.includes(event.domain);
 
     return matchesQuery && matchesStatus && matchesDomain;
-
   });
-  console.log("fvdfg"+filteredEvents);
-  // console.log("dfgn"+megaEvent[0].name);
 
   const handleFilterChange = (filterType, value) => {
     setFilters((prevFilters) => {
@@ -112,7 +107,7 @@ export default function EventsList({ events, name, isSuperUser, megaEvent }) {
         </button>
         <div className="flex w-1/2 items-center justify-center rounded-sm bg-green-500 text-black">
           <Download />
-          <span className="px-4">Generate excel</span>
+          <span className="px-4">Generate Excel</span>
         </div>
       </div>
 
@@ -209,7 +204,9 @@ export default function EventsList({ events, name, isSuperUser, megaEvent }) {
                   {filteredEvents.length > 0 ? (
                     <div className="flex w-full flex-wrap items-center justify-center gap-8 p-2">
                       {filteredEvents
-                        .filter((event) => event.megaeventId === megaEventItem.id)
+                        .filter(
+                          (event) => event.megaeventId === megaEventItem.id,
+                        )
                         .map((event) => (
                           <Card event={event} key={event.eventId} />
                         ))}
