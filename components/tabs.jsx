@@ -75,16 +75,47 @@ export default function FullWidthTabs({ isSuperUser, domain, megaEvents }) {
       }}
     >
       <Tabs
-        value={value}
-        onChange={handleChange}
-        indicatorColor="secondary"
-        textColor="inherit"
-        variant="fullWidth"
-        aria-label="full width tabs example"
-      >
-        <Tab label="Events" {...a11yProps(0)} />
-        <Tab label="Mega Event" {...a11yProps(1)} />
-      </Tabs>
+  value={value}
+  onChange={handleChange}
+  indicatorColor="secondary"
+  textColor="inherit"
+  variant="fullWidth"
+  aria-label="full width tabs example"
+  sx={{
+    '& .MuiTabs-indicator': {
+      height: 4, // Makes the bottom border bolder
+    },
+  }}
+>
+  <Tab
+    label={
+      <h5 className="mb-4 text-center text-xl  font-bold">Events</h5>
+
+    }
+    {...a11yProps(0)}
+    sx={{
+      '&.Mui-selected': {
+        borderBottom: '4px solid',
+        borderColor: 'secondary.main',
+      },
+    }}
+  />
+  {isSuperUser && (
+    <Tab
+      label={
+        <h5 className="mb-4 text-center text-xl font-bold">Mega Event</h5>
+      }
+      {...a11yProps(1)}
+      sx={{
+        '&.Mui-selected': {
+          borderBottom: '4px solid',
+          borderColor: 'secondary.main',
+        },
+      }}
+    />
+  )}
+</Tabs>
+
     </AppBar>
     <TabPanel
       value={value}

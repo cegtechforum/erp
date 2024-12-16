@@ -137,7 +137,6 @@ export default function AddEventForm({ isSuperUser, domain, megaEvents }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-6">
-      <h1 className="mb-4 text-center text-2xl font-bold">Create an Event</h1>
       <ImageUploader setEventDetails={setEventDetails}  posterUrl={eventDetails.posterUrl}/>
       <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
         {Object.keys(eventDetails).map((field,index) =>

@@ -57,10 +57,7 @@ const handleSubmit = async (e) => {
         width: "100%", // Full width on small screens
       }}
     >
-      <Typography variant="h6" align="center" gutterBottom>
-        Create Mega Event
-      </Typography>
-
+      
       <form onSubmit={handleSubmit}>
         <Box mb={3}>
           <TextField
