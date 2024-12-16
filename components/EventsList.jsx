@@ -8,17 +8,17 @@ import {
   Filter,
   X,
   Search,
-  Download,
+  DownloadIcon,
 } from "lucide-react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { megaevents } from "@/app/_db/schema";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-export default function EventsList({ events, name, isSuperUser, megaEvent }) {
+export default function EventsList({ events, name, isSuperUser, megaEvents }) {
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState({
     status: [],
@@ -26,7 +26,7 @@ export default function EventsList({ events, name, isSuperUser, megaEvent }) {
   });
   const [loading, setLoading] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-
+  console.log(isSuperUser);
   const domains = [
     { value: "creativity & initiatives", label: "Creativity & Initiatives" },
     { value: "contents", label: "Contents" },
@@ -73,6 +73,34 @@ export default function EventsList({ events, name, isSuperUser, megaEvent }) {
     });
   };
 
+  const handleXl = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.get("/api/events", {
+        responseType: "blob",
+      });
+
+      if (response.status === 200) {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "full_events_report.xlsx");
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        toast.success("Report Generated");
+      } else {
+        toast.error("Failed to generate the report");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const clearFilters = () => {
     setFilters({ status: [], domain: [] });
   };
@@ -90,10 +118,10 @@ export default function EventsList({ events, name, isSuperUser, megaEvent }) {
         />
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400" />
       </div>
-      <div className="my-4 flex w-4/5 gap-6">
+      <div className="my-4 flex w-4/5 justify-between gap-6">
         <button
           onClick={() => setIsFilterOpen(true)}
-          className="flex w-1/2 items-center justify-between rounded-lg bg-gray-100 p-4 shadow-md transition-colors hover:bg-gray-200"
+          className="flex w-60 items-center justify-between rounded-lg bg-gray-100 p-3 shadow-md transition-colors hover:bg-gray-200"
         >
           <div className="flex items-center gap-2">
             <Filter className="text-gray-600" />
@@ -105,10 +133,25 @@ export default function EventsList({ events, name, isSuperUser, megaEvent }) {
           </div>
           <ChevronDown className="text-gray-600" />
         </button>
-        <div className="flex w-1/2 items-center justify-center rounded-sm bg-green-500 text-black">
-          <Download />
-          <span className="px-4">Generate Excel</span>
-        </div>
+        {isSuperUser && (
+          <button
+            onClick={handleXl}
+            disabled={loading}
+            className="flex w-60 items-center justify-center rounded-sm bg-green-500 font-semibold text-green-100 hover:bg-green-600"
+          >
+            {loading ? (
+              <>
+                <CircularProgress size={20} sx={{ color: "#fff" }} />
+                <span className="ml-4 hidden md:block">Generating...</span>
+              </>
+            ) : (
+              <>
+                <DownloadIcon className={`block md:hidden`} />
+                <span className="hidden md:block">Generate Excel</span>
+              </>
+            )}
+          </button>
+        )}
       </div>
 
       {isFilterOpen && (
@@ -188,9 +231,9 @@ export default function EventsList({ events, name, isSuperUser, megaEvent }) {
         </div>
       )}
 
-      {name === "Events" && megaEvent.length > 0 ? (
+      {name === "Events" && megaEvents.length > 0 ? (
         <div className="w-4/5">
-          {megaEvent.map((megaEventItem) => (
+          {megaEvents.map((megaEventItem) => (
             <Accordion key={megaEventItem.id}>
               <AccordionSummary
                 expandIcon={<ArrowDownwardIcon />}

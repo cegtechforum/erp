@@ -3,20 +3,12 @@ import EventStatusUpdater from "@/components/EventStatusUpdater";
 import GoBackButton from "./GoBackButton";
 import AddRequestButton from "./AddRequestButton";
 
-const EventDetailRow = ({ label, value, approvedCount }) => {
+const EventDetailRow = ({ label, value}) => {
   return (
     <div className="flex items-center justify-between gap-4 capitalize">
       <Typography variant="body1" className="flex-1">
         <span className="font-black text-gray-700">{label}</span>
       </Typography>
-      {approvedCount !== undefined && (
-        <Typography
-          variant="body1"
-          className="flex flex-1 items-center justify-center text-center"
-        >
-          <span className="font-medium text-gray-500">{approvedCount}</span>
-        </Typography>
-      )}
       <Typography variant="body1" className="flex-1 text-right">
         <span className="font-medium text-gray-500">{value}</span>
       </Typography>
@@ -99,27 +91,34 @@ export default function EventDetailsContent({ event, items, isSuperUser }) {
               <>
                 <div className="space-y-4">
                   <div className="flex items-center gap-4 font-semibold capitalize text-gray-700">
-                    <Typography variant="h5" className="flex-1 text-left">
+                    <Typography variant="h5" className="flex-1 text-center">
                       <span className="font-semibold text-gray-800">Items</span>
+                    </Typography>
+                    <Typography variant="h5" className="flex-1 text-center">
+                      <span className="font-semibold text-gray-800">Description</span>
                     </Typography>
                     <Typography variant="h5" className="flex-1 text-center">
                       <span className="font-semibold text-gray-800">
                         Accepted
                       </span>
                     </Typography>
-                    <Typography variant="h5" className="flex-1 text-right">
+                    <Typography variant="h5" className="flex-1 text-center">
                       <span className="font-semibold text-gray-800">
                         Pending
                       </span>
                     </Typography>
                   </div>
                   {items.map((item, index) => (
-                    <EventDetailRow
-                      key={index}
-                      label={item.itemName}
-                      value={item.count}
-                      approvedCount={item.approvedCount}
-                    />
+                    <div className="flex items-center gap-4 font-semibold text-sm capitalize text-gray-700" key={index}>
+                      <span className="font-semibold text-gray-800 flex-1 text-center">{item.itemName}</span>
+                      <span className="font-semibold text-gray-800 flex-1 text-center">{item.description}</span>
+                      <span className="font-semibold text-center text-gray-800 flex-1">
+                       {item.approvedCount}
+                      </span>
+                      <span className="font-semibold text-center text-gray-800 flex-1">
+                        {item.count}
+                      </span>
+                  </div>
                   ))}
                 </div>
               </>
