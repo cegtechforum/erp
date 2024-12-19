@@ -1,6 +1,6 @@
 import ItemRow from "./ItemRow";
 
-const ItemTable = ({ items, query, isSuperUser, getItems }) => {
+const ItemTable = ({ items, query, getItems }) => {
   const filteredItems = items.filter((item) =>
     item.name.toLowerCase().includes(query.toLowerCase()),
   );
@@ -19,11 +19,9 @@ const ItemTable = ({ items, query, isSuperUser, getItems }) => {
             <th className="w-1/5 border border-slate-800 px-4 py-2 font-bold">
               Count
             </th>
-            {isSuperUser && (
-              <th className="w-1/3 border border-slate-800 px-4 py-2 font-bold">
-                Options
-              </th>
-            )}
+            <th className="w-1/3 border border-slate-800 px-4 py-2 font-bold">
+              Options
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -32,7 +30,6 @@ const ItemTable = ({ items, query, isSuperUser, getItems }) => {
               <ItemRow
                 key={index}
                 item={{ index, ...item }}
-                isSuperUser={isSuperUser}
                 getItems={getItems}
               />
             ))

@@ -9,6 +9,8 @@ export async function POST(req) {
   try {
     const dt = await req.json();
     console.log(dt);
+    console.log(process.env.EMAIL_USER);
+
 
     for (let i = 0; i < dt.items.length; i++) {
       const { itemName, count, eventId, approvedCount, ...rest } = dt.items[i];

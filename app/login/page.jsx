@@ -26,27 +26,42 @@ const LoginPage = () => {
       });
 
       if (response.data.status === 200) {
-        console.log("Login successful:", response.data);
-        toast.success("Login Successful");
         router.push("/dashboard");
+        toast.success("Login Successful");
+        
       } else {
         setErrorMessage(response.data.error);
       }
     } catch (error) {
-      console.error("An error occurred during login:", error);
-      setErrorMessage(error.message || "Error Occured");
+      setErrorMessage(error.message || "Error Occurred");
     } finally {
       setisLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100">
-      <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-md">
-        <Typography variant="h4" className="mb-4 text-center">
-          Login
-        </Typography>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-blue-500 to-purple-500 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg sm:p-10">
+        <div className="text-center">
+          <Typography
+            variant="h4"
+            className="font-pop mb-4 font-bold text-gray-800 sm:text-2xl"
+            sx={{
+              fontFamily: "'Poppins', sans-serif",
+            }}
+          >
+            Welcome Back!
+          </Typography>
+          <Typography
+            className="text-sm text-gray-500"
+            sx={{
+              fontFamily: "'Poppins', sans-serif",
+            }}
+          >
+            Log in to your account to continue
+          </Typography>
+        </div>
+        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
           <TextField
             label="Email"
             variant="outlined"
@@ -55,7 +70,7 @@ const LoginPage = () => {
             value={email}
             autoComplete="off"
             onChange={(e) => setEmail(e.target.value)}
-            className="bg-gray-50"
+            className="rounded-lg"
           />
           <TextField
             label="Password"
@@ -66,23 +81,26 @@ const LoginPage = () => {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="bg-gray-50"
+            className="rounded-lg"
           />
           {errorMessage && (
-            <Typography className="text-center text-red-500">
+            <Typography className="text-center text-sm text-red-500">
               {errorMessage}
             </Typography>
           )}
-          <Button
+          <button
             type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            className="mt-4"
             disabled={isDisabled || isLoading}
+            className={`font-pop mt-4 w-full rounded-lg py-2 font-bold text-white transition-all duration-300 ${
+              isDisabled
+                ? "cursor-not-allowed bg-gray-400 text-gray-100"
+                : isLoading
+                  ? "cursor-not-allowed bg-green-600"
+                  : "bg-gradient-to-r from-purple-600 to-blue-600 hover:from-blue-500 hover:to-purple-500"
+            }`}
           >
-            {isLoading ? "Loading..." : "Login"}
-          </Button>
+            {isLoading ? "Logging in..." : "Login"}
+          </button>
         </form>
       </div>
     </div>
