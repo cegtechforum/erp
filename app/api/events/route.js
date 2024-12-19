@@ -8,6 +8,7 @@ export async function POST(req) {
     const data = await req.json();
     const res = await db.insert(events).values(data.events).returning();
     const eid = res[0].eventId;
+    console.log(eid, " ", data.events.list);
 
     if (!eid)
       return NextResponse.json({
@@ -15,16 +16,31 @@ export async function POST(req) {
         status: 500,
       });
 
-    if (Array.isArray(data.list)) {
-      for (let i = 0; i < data.list.length; i++) {
+    if (Array.isArray(data.events.list)) {
+      for (let i = 0; i < data.events.list.length; i++) {
         db.insert(lists).values({
-          event_id: eid,
-          item_name: data.list[i].item_name,
-          count: data.list[i].count,
-          category: data.list[i].category,
+          eventId: eid,
+          item_name: data.events.list[i].item_name,
+          count: data.events.list[i].count,
+          category: data.events.list[i].category,
         });
       }
     }
+    // if (Array.isArray(data.events.list)) {
+    //   // Insert all items into the 'lists' table
+    //   const listInsertPromises = data.events.list.map((item) =>
+    //     db.insert(lists).values({
+    //       event_id,
+    //       item_name: item.item_name,
+    //       count: Number(item.count), // Ensure type consistency
+    //       category: item.category,
+    //     }),
+    //   );
+
+    //   // Await all insertions
+    //   await Promise.all(listInsertPromises);
+    // }
+
     return NextResponse.json({ message: "Event created", status: 200 });
   } catch (error) {
     console.error(error);
