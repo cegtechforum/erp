@@ -16,9 +16,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { EditIcon, SaveIcon } from "lucide-react";
-import { StopIcon } from "@radix-ui/react-icons";
-//import { Button } from "@/components/ui/button";
 
 const ItemRow = ({ item, getItems }) => {
   const [editName, setEditName] = useState(null);
@@ -65,25 +62,8 @@ const ItemRow = ({ item, getItems }) => {
     <div className="grid grid-cols-4 gap-4 border-t border-gray-200 px-6 py-4 text-center">
       <div>{item.index + 1}</div>
       <div>{item.name}</div>
-      <div >
-        {/* {editName === item.name ? (
-          <TextField
-            type="number"
-            min="0"
-            className="rounded border-gray-300 p-2 text-center"
-            placeholder="Enter count"
-            fullWidth
-              size="small"
-              margin="normal"
-            value={curCount}
-            onChange={(e) => setCurCount(e.target.value)}
-          />
-        ) : (
-          item.count
-        )} */}
-        {item.count}
-      </div>
-      <div className="flex flex-col items-center justify-center gap-2 ">
+      <div>{item.count}</div>
+      <div className="flex flex-col items-center justify-center gap-2">
         {editName === item.name ? (
           <>
             <TextField
@@ -114,7 +94,7 @@ const ItemRow = ({ item, getItems }) => {
             </div>
           </>
         ) : (
-          <div  className="flex flex-col items-center justify-center gap-2 md:flex-row">
+          <div className="flex flex-col items-center justify-center gap-2 md:flex-row">
             <button
               onClick={handleShowUpdate}
               className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 md:w-auto"

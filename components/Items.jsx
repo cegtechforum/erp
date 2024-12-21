@@ -6,9 +6,6 @@ import SearchBar from "./SearchBar";
 import ItemTable from "./ItemTable";
 import AddItemForm from "./AddItemForm";
 
-import { Button } from "@mui/material";
-import { StopIcon } from "@radix-ui/react-icons";
-
 export default function Items() {
   const [query, setQuery] = useState("");
   const [items, setItems] = useState([]);

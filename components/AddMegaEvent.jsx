@@ -2,12 +2,7 @@
 
 import { useState } from "react";
 import toast from "react-hot-toast";
-import {
-  Box,
-  Typography,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Box, Typography, TextField, Button } from "@mui/material";
 
 export default function AddMegaEventForm() {
   const [newMegaEvent, setNewMegaEvent] = useState({
@@ -29,7 +24,6 @@ export default function AddMegaEventForm() {
     }
 
     try {
-      // Replace with your actual API endpoint
       const response = await fetch("/api/mega-events", {
         method: "POST",
         headers: {
