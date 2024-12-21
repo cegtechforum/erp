@@ -3,6 +3,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Box, Typography, TextField, Button } from "@mui/material";
+import axios from "axios";
 
 export default function AddMegaEventForm() {
   const [newMegaEvent, setNewMegaEvent] = useState({
@@ -15,49 +16,49 @@ export default function AddMegaEventForm() {
     setNewMegaEvent((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!newMegaEvent.name || !newMegaEvent.description) {
-      toast.error("Both fields are required.");
-      return;
-    }
+  if (!newMegaEvent.name || !newMegaEvent.description) {
+    toast.error("Both fields are required.");
+    return;
+  }
 
-    try {
-      const response = await fetch("/api/mega-events", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newMegaEvent),
-      });
+  try {
+    const response = await axios.post("/api/megaevents", newMegaEvent, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      if (!response.ok) {
-        throw new Error("Failed to create mega-event.");
-      }
-
+    if (response.status === 200) {
       toast.success("Mega-event created successfully!");
       setNewMegaEvent({ name: "", description: "" });
-    } catch (error) {
-      console.error("Error adding mega-event:", error);
+    } else {
+      throw new Error("Failed to create mega-event.");
+    }
+  } catch (error) {
+    console.error("Error adding mega-event:", error);
+
+    if (error.response?.status === 409) {
+      toast.error("A mega-event with this name already exists.");
+    } else {
       toast.error("Failed to create mega-event.");
     }
-  };
+  }
+};
 
   return (
     <Box
       sx={{
-        p: 4,
-        width: "100%",
-        maxWidth: "600px",
-        marginX: "auto",
-        marginTop: "50px",
+        mt: "50px",
+        maxWidth: "900px", 
+        mx: "auto", // Centers the form horizontally
+        width: "100%", // Full width on small screens
       }}
     >
-      <Typography variant="h4" align="center" gutterBottom>
-        Create Mega Event
-      </Typography>
-
+      
       <form onSubmit={handleSubmit}>
         <Box mb={3}>
           <TextField
@@ -67,6 +68,9 @@ export default function AddMegaEventForm() {
             value={newMegaEvent.name}
             onChange={handleInputChange}
             variant="outlined"
+            sx={{
+              width: "100%", // Ensures full width
+            }}
           />
         </Box>
 
@@ -80,6 +84,9 @@ export default function AddMegaEventForm() {
             variant="outlined"
             multiline
             rows={4}
+            sx={{
+              width: "100%", // Ensures full width
+            }}
           />
         </Box>
 
@@ -87,7 +94,9 @@ export default function AddMegaEventForm() {
           type="submit"
           variant="contained"
           color="primary"
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%", // Full-width button
+          }}
         >
           Create Event
         </Button>

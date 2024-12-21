@@ -71,44 +71,76 @@ export default function FullWidthTabs({
 
   return (
     <Box
+    sx={{
+      bgcolor: 'white',
+      width: { xs: '100%', sm: 700, md: 900 },
+      minHeight:"100vh", 
+      mx: 'auto', // Center horizontally
+      p: { xs: 2, sm: 3 }, // Responsive padding
+    }}
+  >
+    <AppBar
+      position="static"
       sx={{
-        bgcolor: "white",
-        width: { xs: "100%", sm: 700, md: 900 },
-        minHeight: "100vh",
-        mx: "auto", // Center horizontally
-        p: { xs: 2, sm: 3 }, // Responsive padding
+        bgcolor: 'white',
+        color: 'black',
+        padding: { xs: 1, sm: 2 }, 
+        fontSize: { xs: '14px', sm: '16px' },
+        boxShadow: { xs: 'none', sm: '0px 2px 4px rgba(0,0,0,0.2)' }, 
       }}
     >
-      <AppBar
-        position="static"
-        sx={{
-          bgcolor: "white",
-          color: "black",
-          padding: { xs: 1, sm: 2 }, // Adjust padding for small devices
-          fontSize: { xs: "14px", sm: "16px" }, // Adjust font size for small devices
-          boxShadow: { xs: "none", sm: "0px 2px 4px rgba(0,0,0,0.2)" }, // Modify shadow on smaller devices
-        }}
-      >
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="secondary"
-          textColor="inherit"
-          variant="fullWidth"
-          aria-label="full width tabs example"
-        >
-          <Tab label="Events" {...a11yProps(0)} />
-          <Tab label="Mega Event" {...a11yProps(1)} />
-        </Tabs>
-      </AppBar>
-      <TabPanel
-        value={value}
-        index={0}
-        dir={theme.direction}
-        isSuperUser={isSuperUser}
-        domain={domain}
-        megaEvents={megaEvents}
-      >
+      <Tabs
+  value={value}
+  onChange={handleChange}
+  indicatorColor="secondary"
+  textColor="inherit"
+  variant="fullWidth"
+  aria-label="full width tabs example"
+  sx={{
+    '& .MuiTabs-indicator': {
+      height: 4, // Makes the bottom border bolder
+    },
+  }}
+>
+  <Tab
+    label={
+      <h5 className="mb-4 text-center text-xl  font-bold">Events</h5>
+
+    }
+    {...a11yProps(0)}
+    sx={{
+      '&.Mui-selected': {
+        borderBottom: '4px solid',
+        borderColor: 'secondary.main',
+      },
+    }}
+  />
+  {isSuperUser && (
+    <Tab
+      label={
+        <h5 className="mb-4 text-center text-xl font-bold">Mega Event</h5>
+      }
+      {...a11yProps(1)}
+      sx={{
+        '&.Mui-selected': {
+          borderBottom: '4px solid',
+          borderColor: 'secondary.main',
+        },
+      }}
+    />
+  )}
+</Tabs>
+
+    </AppBar>
+    <TabPanel
+      value={value}
+      index={0}
+      dir={theme.direction}
+      isSuperUser={isSuperUser}
+      domain={domain}
+      megaEvents={megaEvents}
+    >
+      
         <AddEventForm
           isSuperUser={isSuperUser}
           domain={domain}

@@ -154,6 +154,7 @@ export default function EventsList({ events, name, isSuperUser, megaEvents }) {
         )}
       </div>
 
+
       {isFilterOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-50">
           <div className="relative mt-16 max-h-[80vh] w-3/4 max-w-2xl overflow-y-auto rounded-lg bg-white p-6 shadow-lg md:mt-0">

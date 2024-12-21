@@ -55,3 +55,12 @@ Content-Type: application/json
 "eventName":"vyuha",
 "domain":"events"
 }
+###
+POST http://localhost:3000/api/megaevents HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "workshops",
+  "description": "A symposium on the latest tech trends and innovations."
+
+}

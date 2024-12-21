@@ -44,7 +44,7 @@ export default function HomePage() {
         gutterBottom
         sx={{
           opacity: 0,
-          animation: "fadeInText 2s forwards",
+          animation: "fadeInText 0.5s forwards",
           fontFamily: "'Poppins', sans-serif",
           color: "#ecf0f1",
           fontSize: { xs: "2rem", sm: "3rem" }, // Adjust font size for mobile
@@ -60,7 +60,7 @@ export default function HomePage() {
           lineHeight: 1.6,
           opacity: 0,
           fontFamily: "'Poppins', sans-serif",
-          animation: "fadeUpAndIn 3s forwards 1s",
+          animation: "fadeUpAndIn 0.6s forwards 0.2s",
           color: "#bdc3c7",
           fontSize: { xs: "1.5rem", sm: "2rem" }, // Adjust font size for mobile
         }}
@@ -79,7 +79,7 @@ export default function HomePage() {
             color: "#000",
             opacity: 0,
             fontFamily: "'Poppins', sans-serif",
-            animation: "fadeInText 2s forwards 2s",
+            animation: "fadeInText 0.7s forwards 0.4s",
             "&:hover": {
               transform: "scale(1.05)",
               backgroundColor: "#FF7F3E",
@@ -101,7 +101,7 @@ export default function HomePage() {
           width: "80%",
           maxWidth: 800,
           opacity: 0,
-          animation: "fadeInFeatures 3s forwards 3s", // Trigger animation after delay
+          animation: "fadeInFeatures 0.8s forwards 0.6s", // Trigger animation after delay
           marginBottom: { xs: "2rem", sm: "3rem" }, // Adjust bottom margin for mobile
         }}
       >
