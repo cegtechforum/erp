@@ -22,7 +22,6 @@ export default function EventsList({ events, name }) {
     event.eventName.toLowerCase().includes(query.toLowerCase()),
   );
 
-  // Handle form submission using Axios
   const handleSubmit = async (e) => {
     e.preventDefault();
 

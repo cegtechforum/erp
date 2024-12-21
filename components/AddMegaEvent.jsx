@@ -4,6 +4,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Box, Typography, TextField, Button } from "@mui/material";
 import axios from "axios";
+
 export default function AddMegaEventForm() {
   const [newMegaEvent, setNewMegaEvent] = useState({
     name: "",

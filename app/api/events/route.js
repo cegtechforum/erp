@@ -28,6 +28,21 @@ export async function POST(req) {
         });
       }
     }
+    // if (Array.isArray(data.events.list)) {
+    //   // Insert all items into the 'lists' table
+    //   const listInsertPromises = data.events.list.map((item) =>
+    //     db.insert(lists).values({
+    //       event_id,
+    //       item_name: item.item_name,
+    //       count: Number(item.count), // Ensure type consistency
+    //       category: item.category,
+    //     }),
+    //   );
+
+    //   // Await all insertions
+    //   await Promise.all(listInsertPromises);
+    // }
+
     return NextResponse.json({ message: "Event created", status: 200 });
   } catch (error) {
     console.error(error);

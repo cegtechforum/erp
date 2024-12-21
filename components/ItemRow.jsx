@@ -2,6 +2,9 @@ import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +16,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 
 const ItemRow = ({ item, getItems }) => {
   const [editName, setEditName] = useState(null);
@@ -57,13 +59,13 @@ const ItemRow = ({ item, getItems }) => {
   };
 
   return (
-    <tr className="border border-slate-800 text-center font-semibold capitalize">
-      <td className="border border-slate-800 px-4 py-2">{item.index + 1}</td>
-      <td className="border border-slate-800 px-4 py-2">{item.name}</td>
-      <td className="border border-slate-800 px-4 py-2">{item.count}</td>
-      <td className="flex flex-col items-center justify-center px-4 py-2 md:flex-row">
+    <div className="grid grid-cols-4 gap-4 border-t border-gray-200 px-6 py-4 text-center">
+      <div>{item.index + 1}</div>
+      <div>{item.name}</div>
+      <div>{item.count}</div>
+      <div className="flex flex-col items-center justify-center gap-2">
         {editName === item.name ? (
-          <div className="flex flex-col items-center md:flex-row">
+          <>
             <TextField
               type="number"
               label="count"
@@ -76,35 +78,35 @@ const ItemRow = ({ item, getItems }) => {
               value={curCount}
               onChange={(e) => setCurCount(e.target.value)}
             />
-            <button
-              className="m-1 w-full rounded-lg bg-green-700 p-2 text-white hover:bg-green-600 md:w-auto"
-              onClick={handleUpdate}
-            >
-              Save
-            </button>
-            <button
-              className="m-1 w-full rounded-lg bg-yellow-500 p-2 text-white hover:bg-yellow-400 md:w-auto"
-              onClick={handleShowUpdate}
-            >
-              Cancel
-            </button>
-          </div>
+            <div className="flex flex-col items-center justify-center gap-2 md:flex-row">
+              <button
+                onClick={handleUpdate}
+                className="rounded bg-green-500 px-4 py-2 text-white hover:bg-green-600 md:w-auto"
+              >
+                Save
+              </button>
+              <button
+                onClick={handleShowUpdate}
+                className="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-yellow-600 md:w-auto"
+              >
+                Cancel
+              </button>
+            </div>
+          </>
         ) : (
-          <>
+          <div className="flex flex-col items-center justify-center gap-2 md:flex-row">
             <button
-              className="m-1 w-full rounded-lg bg-green-700 p-2 text-white hover:bg-green-600 md:w-auto"
               onClick={handleShowUpdate}
+              className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 md:w-auto"
             >
               Update
             </button>
+
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="m-1 w-full rounded-lg bg-red-700 text-white hover:bg-red-600 md:w-auto"
-                >
+                <button className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600 md:w-auto">
                   Delete
-                </Button>
+                </button>
               </AlertDialogTrigger>
               <AlertDialogContent className="bg-white">
                 <AlertDialogHeader>
@@ -121,10 +123,10 @@ const ItemRow = ({ item, getItems }) => {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
-          </>
+          </div>
         )}
-      </td>
-    </tr>
+      </div>
+    </div>
   );
 };
 

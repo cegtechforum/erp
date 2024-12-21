@@ -24,7 +24,7 @@ const OptionSelectionDialog = ({
   index,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [customItem, setCustomItem] = useState(""); // For custom item input
+  const [customItem, setCustomItem] = useState("");
   const dropdownRef = useRef(null);
 
   return (

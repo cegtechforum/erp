@@ -3,6 +3,8 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+import { Button } from "@mui/material";
+import { StopIcon } from "@radix-ui/react-icons";
 const AddItemForm = ({ setAdd, getItems }) => {
   const [newItem, setNewItem] = useState({ name: "", count: "" });
 
@@ -51,10 +53,18 @@ const AddItemForm = ({ setAdd, getItems }) => {
         onChange={handleChange}
       />
       <button
-        className="my-4 w-full self-center rounded-lg bg-blue-700 p-2 text-white hover:bg-blue-600"
+        className="my-1 w-full self-center rounded-lg bg-blue-700 p-2 text-white hover:bg-blue-600"
         onClick={handleAdd}
       >
         Add
+      </button>
+      <button
+        className="my-2 w-full self-center rounded-lg bg-yellow-500 p-2 text-white hover:bg-yellow-600"
+        onClick={() => {
+          setAdd(false);
+        }}
+      >
+        Cancel
       </button>
     </div>
   );

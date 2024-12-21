@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Trash2, PlusCircle } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import OptionSelectionDialog from "./selectOption"; // Ensure correct path to your component
+import OptionSelectionDialog from "./selectOption";
 
 const AddRequestButton = ({ event }) => {
   const router = useRouter();
@@ -39,9 +39,8 @@ const AddRequestButton = ({ event }) => {
   const [isItemDialogOpen, setIsItemDialogOpen] = useState(false);
   const [items, setItems] = useState([]);
   const [selectedItemIndex, setSelectedItemIndex] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(""); // Track the selected item
+  const [selectedItem, setSelectedItem] = useState("");
 
-  // Fetch items on component mount
   async function getItems() {
     try {
       const response = await axios.get("/api/items");
