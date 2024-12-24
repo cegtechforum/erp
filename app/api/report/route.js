@@ -1,5 +1,5 @@
 import { db } from "@/app/_lib/db";
-import { lists, events, items } from "../../_db/schema";
+import { lists, events, items, itemsHistory } from "../../_db/schema";
 import { eq, and, sql } from "drizzle-orm";
 import * as XLSX from "xlsx";
 import { NextResponse } from "next/server";
@@ -22,12 +22,57 @@ export async function GET(request) {
       );
     }
 
+    const startOfMonth = new Date(year, month - 1, 1);
+    const endOfMonth = new Date(year, month, 0);
+
+    // Get historical snapshots
+    const monthlySnapshots = await db
+      .select()
+      .from(itemsHistory)
+      .where(
+        and(
+          sql`snapshot_date >= ${startOfMonth}`,
+          sql`snapshot_date <= ${endOfMonth}`,
+        ),
+      );
+
+    // Normalize snapshot dates
+    const normalizedStartOfMonth = new Date(
+      startOfMonth.toISOString().split("T")[0],
+    );
+    const normalizedEndOfMonth = new Date(
+      endOfMonth.toISOString().split("T")[0],
+    );
+
+    const startSnapshot = new Map(
+      monthlySnapshots
+        .filter(
+          (s) =>
+            new Date(s.snapshot_date).getTime() ===
+            normalizedStartOfMonth.getTime(),
+        )
+        .map((s) => [s.name, s.count]),
+    );
+
+    const endSnapshot = new Map(
+      monthlySnapshots
+        .filter(
+          (s) =>
+            new Date(s.snapshot_date).getTime() ===
+            normalizedEndOfMonth.getTime(),
+        )
+        .map((s) => [s.name, s.count]),
+    );
+
+    // Get event data
     const eventListsData = await db
       .select({
         eventId: events.eventId,
         eventName: events.eventName,
         itemName: lists.itemName,
+        requestedCount: lists.count,
         approvedCount: lists.approvedCount,
+        acceptedTime: events.acceptedTime,
       })
       .from(events)
       .innerJoin(lists, eq(events.eventId, lists.eventId))
@@ -39,70 +84,75 @@ export async function GET(request) {
         ),
       );
 
-    // if (eventListsData.length === 0) {
-    //   return NextResponse.json({ message: "No data found" }, { status: 404 });
-    // }
+    // Get current inventory
+    const currentItems = await db.select().from(items);
 
-    const itemsData = await db.select().from(items);
+    // Combine all unique items
+    const allItems = new Set([
+      ...Array.from(startSnapshot.keys()),
+      ...Array.from(endSnapshot.keys()),
+      ...eventListsData.map((d) => d.itemName),
+      ...currentItems.map((i) => i.name),
+    ]);
+
+    // Generate report data
     const eventNames = Array.from(
-      new Set(eventListsData.map((data) => data.eventName)),
+      new Set(eventListsData.map((d) => d.eventName)),
     );
 
-    const reportData = [];
-    const itemLookup = new Map();
+    const reportData = Array.from(allItems).map((itemName) => {
+      const row = {
+        ItemName: itemName,
+        StartCount: startSnapshot.get(itemName) || 0,
+        EndCount: endSnapshot.get(itemName) || 0,
+        CurrentCount: currentItems.find((i) => i.name === itemName)?.count || 0,
+        TotalRequested: 0,
+        TotalApproved: 0,
+      };
 
-    itemsData.forEach((item) => {
-      itemLookup.set(item.name, {
-        AvailableItem: item.count || 0,
-        TotalAccepted: 0,
+      // Initialize event-specific columns
+      eventNames.forEach((eventName) => {
+        row[`${eventName}_Requested`] = 0;
+        row[`${eventName}_Approved`] = 0;
       });
-    });
 
-    eventListsData.forEach((data) => {
-      const itemName = data.itemName;
-      const isKnownItem = itemLookup.has(itemName);
-      const displayName = isKnownItem ? itemName : `#${itemName}`;
-
-      if (!itemLookup.has(displayName)) {
-        itemLookup.set(displayName, {
-          AvailableItem: isKnownItem
-            ? itemLookup.get(itemName).AvailableItem
-            : 0,
-          TotalAccepted: 0,
-          ...Object.fromEntries(eventNames.map((name) => [name, 0])),
+      // Aggregate requests and approvals
+      eventListsData
+        .filter((d) => d.itemName === itemName)
+        .forEach((d) => {
+          row[`${d.eventName}_Requested`] += d.requestedCount || 0;
+          row[`${d.eventName}_Approved`] += d.approvedCount || 0;
+          row.TotalRequested += d.requestedCount || 0;
+          row.TotalApproved += d.approvedCount || 0;
         });
-      }
 
-      const rowData = itemLookup.get(displayName);
-      const approvedCount = data.approvedCount ?? 0;
-
-      rowData[data.eventName] = (rowData[data.eventName] || 0) + approvedCount;
-      rowData.TotalAccepted += approvedCount;
+      return row;
     });
 
-    const reportDataArray = Array.from(itemLookup.entries()).map(
-      ([ItemName, rowData]) => ({
-        ItemName,
-        ...rowData,
-      }),
-    );
-
+    // Generate Excel file
     const header = [
       "ItemName",
-      "AvailableItem",
-      "TotalAccepted",
-      ...eventNames,
+      "StartCount",
+      "EndCount",
+      "CurrentCount",
+      "TotalRequested",
+      "TotalApproved",
+      ...eventNames.flatMap((name) => [
+        `${name}_Requested`,
+        `${name}_Approved`,
+      ]),
     ];
-    const ws = XLSX.utils.json_to_sheet(reportDataArray, { header });
+
+    const ws = XLSX.utils.json_to_sheet(reportData, { header });
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, `Monthly Report ${month}-${year}`);
 
     const buffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" });
-
     const safeFilename = `monthly_item_report_${month}_${year}`.replace(
       /[^a-zA-Z0-9-_\.]/g,
       "_",
     );
+
     return new Response(buffer, {
       status: 200,
       headers: {
@@ -114,9 +164,7 @@ export async function GET(request) {
   } catch (error) {
     console.error("Error generating report:", error);
     return NextResponse.json(
-      {
-        error: "Failed to generate the monthly report. Please try again later.",
-      },
+      { error: "Failed to generate the monthly report." },
       { status: 500 },
     );
   }

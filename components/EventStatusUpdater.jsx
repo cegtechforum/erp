@@ -3,14 +3,15 @@ import { useState } from "react";
 import { Select, MenuItem, Typography } from "@mui/material";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function EventStatusUpdater({
   eventId,
   initialStatus,
   isSuperUser,
 }) {
+  const router = useRouter();
   const [status, setStatus] = useState(initialStatus);
-
   const handleStatusChange = async (newStatus) => {
     setStatus(newStatus);
 
@@ -22,6 +23,7 @@ export default function EventStatusUpdater({
 
       if (response.status === 200) {
         toast.success("Status updated successfully");
+        router.refresh();
       } else {
         toast.error(response.data.error || "Failed to update status");
       }

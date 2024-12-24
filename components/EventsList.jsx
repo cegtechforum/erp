@@ -18,6 +18,7 @@ import Typography from "@mui/material/Typography";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import axios from "axios";
 import toast from "react-hot-toast";
+import MonthlyReport from "./MonthlyReport";
 
 export default function EventsList({ events, name, isSuperUser, megaEvents }) {
   const [query, setQuery] = useState("");
@@ -108,6 +109,7 @@ export default function EventsList({ events, name, isSuperUser, megaEvents }) {
   return (
     <div className="flex flex-col items-center p-6">
       <h1 className="mb-6 text-center text-2xl font-bold text-black">{name}</h1>
+      {name === "Events" && <MonthlyReport />}
       <div className="relative w-4/5">
         <input
           type="text"

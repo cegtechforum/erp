@@ -63,7 +63,19 @@ export const lists = pgTable(
   (table) => ({
     primaryKey: primaryKey({ columns: [table.eventId, table.itemName] }),
   }),
-)
+);
+
+export const itemsHistory = pgTable(
+  "items_history",
+  {
+    name: text("name").notNull(),
+    count: integer("count").notNull(),
+    snapshotDate: date("snapshot_date").notNull(),
+  },
+  (table) => ({
+    primaryKey: primaryKey(table.name, table.snapshotDate),
+  }),
+);
 
 export const items = pgTable("items", {
   name: text("name").notNull().primaryKey(),
