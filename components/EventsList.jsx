@@ -10,6 +10,7 @@ import {
   Search,
   DownloadIcon,
 } from "lucide-react";
+
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -107,7 +108,6 @@ export default function EventsList({ events, name, isSuperUser, megaEvents }) {
   return (
     <div className="flex flex-col items-center p-6">
       <h1 className="mb-6 text-center text-2xl font-bold text-black">{name}</h1>
-
       <div className="relative w-4/5">
         <input
           type="text"
@@ -153,7 +153,6 @@ export default function EventsList({ events, name, isSuperUser, megaEvents }) {
           </button>
         )}
       </div>
-
 
       {isFilterOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black bg-opacity-50">

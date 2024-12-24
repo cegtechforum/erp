@@ -10,10 +10,15 @@ export async function GET(request) {
     const month = parseInt(url.searchParams.get("month"), 10);
     const year = parseInt(url.searchParams.get("year"), 10);
 
-    if (!month || !year) {
+    if (
+      !Number.isInteger(month) ||
+      month < 1 ||
+      month > 12 ||
+      !Number.isInteger(year)
+    ) {
       return NextResponse.json(
-        { error: "Month and Year are required." },
-        { status: 400 }
+        { error: "Invalid Month or Year provided." },
+        { status: 400 },
       );
     }
 
@@ -30,91 +35,89 @@ export async function GET(request) {
         and(
           eq(events.status, "accepted"),
           sql`EXTRACT(MONTH FROM ${events.acceptedTime}) = ${month}`,
-          sql`EXTRACT(YEAR FROM ${events.acceptedTime}) = ${year}`
-        )
+          sql`EXTRACT(YEAR FROM ${events.acceptedTime}) = ${year}`,
+        ),
       );
 
-    if (eventListsData.length === 0) {
-      return NextResponse.json(
-        { message: "No data found" },
-        { status: 404 }
-      );
-    }
+    // if (eventListsData.length === 0) {
+    //   return NextResponse.json({ message: "No data found" }, { status: 404 });
+    // }
 
     const itemsData = await db.select().from(items);
-
-    const eventNames = Array.from(new Set(eventListsData.map((data) => data.eventName)));
+    const eventNames = Array.from(
+      new Set(eventListsData.map((data) => data.eventName)),
+    );
 
     const reportData = [];
-    const processedItems = new Set();
-
-    eventListsData.forEach((data) => {
-      const itemInItemsTable = itemsData.some((item) => item.name === data.itemName);
-
-      let rowData = reportData.find((row) => row.ItemName === (itemInItemsTable ? data.itemName : `#${data.itemName}`));
-
-      if (!rowData) {
-        rowData = {
-          ItemName: itemInItemsTable ? data.itemName : `#${data.itemName}`,
-          AvailableItem: itemInItemsTable ? itemsData.find((item) => item.name === data.itemName)?.count || 0 : 0,
-          TotalAccepted: 0,
-        };
-
-        eventNames.forEach((eventName) => {
-          rowData[eventName] = 0;
-        });
-
-        reportData.push(rowData);
-      }
-
-      const totalApproved = data.approvedCount || 0;
-      rowData[data.eventName] = (rowData[data.eventName] || 0) + totalApproved;
-      rowData.TotalAccepted += totalApproved;
-    });
+    const itemLookup = new Map();
 
     itemsData.forEach((item) => {
-      if (!processedItems.has(item.name)) {
-        let rowData = reportData.find((row) => row.ItemName === item.name);
-
-        if (!rowData) {
-          rowData = {
-            ItemName: item.name,
-            AvailableItem: item.count || 0,
-            TotalAccepted: 0,
-          };
-
-          eventNames.forEach((eventName) => {
-            rowData[eventName] = 0;
-          });
-
-          reportData.push(rowData);
-        }
-
-        processedItems.add(item.name);
-      }
+      itemLookup.set(item.name, {
+        AvailableItem: item.count || 0,
+        TotalAccepted: 0,
+      });
     });
 
-    const header = ["ItemName", "AvailableItem", "TotalAccepted", ...eventNames];
+    eventListsData.forEach((data) => {
+      const itemName = data.itemName;
+      const isKnownItem = itemLookup.has(itemName);
+      const displayName = isKnownItem ? itemName : `#${itemName}`;
 
-    const ws = XLSX.utils.json_to_sheet(reportData, { header });
+      if (!itemLookup.has(displayName)) {
+        itemLookup.set(displayName, {
+          AvailableItem: isKnownItem
+            ? itemLookup.get(itemName).AvailableItem
+            : 0,
+          TotalAccepted: 0,
+          ...Object.fromEntries(eventNames.map((name) => [name, 0])),
+        });
+      }
 
+      const rowData = itemLookup.get(displayName);
+      const approvedCount = data.approvedCount ?? 0;
+
+      rowData[data.eventName] = (rowData[data.eventName] || 0) + approvedCount;
+      rowData.TotalAccepted += approvedCount;
+    });
+
+    const reportDataArray = Array.from(itemLookup.entries()).map(
+      ([ItemName, rowData]) => ({
+        ItemName,
+        ...rowData,
+      }),
+    );
+
+    const header = [
+      "ItemName",
+      "AvailableItem",
+      "TotalAccepted",
+      ...eventNames,
+    ];
+    const ws = XLSX.utils.json_to_sheet(reportDataArray, { header });
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, `Monthly Report ${month}-${year}`);
 
     const buffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" });
 
+    const safeFilename = `monthly_item_report_${month}_${year}`.replace(
+      /[^a-zA-Z0-9-_\.]/g,
+      "_",
+    );
     return new Response(buffer, {
       status: 200,
       headers: {
-        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": `attachment; filename="monthly_item_report_${month}_${year}.xlsx"`,
+        "Content-Type":
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "Content-Disposition": `attachment; filename="${safeFilename}.xlsx"`,
       },
     });
   } catch (error) {
     console.error("Error generating report:", error);
     return NextResponse.json(
-      { error: "Failed to generate the monthly report. Please try again later." },
-      { status: 500 }
+      {
+        error: "Failed to generate the monthly report. Please try again later.",
+      },
+      { status: 500 },
     );
   }
 }
