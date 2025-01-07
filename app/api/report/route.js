@@ -1,6 +1,6 @@
 import { db } from "@/app/_lib/db";
 import { lists, events, items, itemsHistory } from "../../_db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, sql, isNotNull } from "drizzle-orm";
 import * as XLSX from "xlsx";
 import { NextResponse } from "next/server";
 
@@ -78,7 +78,7 @@ export async function GET(request) {
       .innerJoin(lists, eq(events.eventId, lists.eventId))
       .where(
         and(
-          eq(events.status, "accepted"),
+          isNotNull(events.acceptedTime),
           sql`EXTRACT(MONTH FROM ${events.acceptedTime}) = ${month}`,
           sql`EXTRACT(YEAR FROM ${events.acceptedTime}) = ${year}`,
         ),
