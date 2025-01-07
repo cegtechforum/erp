@@ -24,6 +24,8 @@ const domains = [
   "xceed & karnival",
 ];
 
+const superUserDomains = ["logistics", "techops"];
+
 export async function POST(req) {
   try {
     const { email, password, domain } = await req.json();
@@ -56,6 +58,7 @@ export async function POST(req) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const isSuperUser = superUserDomains.includes(domain.toLowerCase());
 
     const newUser = await db
       .insert(users)
@@ -63,6 +66,7 @@ export async function POST(req) {
         email,
         password: hashedPassword,
         domain,
+        isSuperUser,
       })
       .returning();
 
