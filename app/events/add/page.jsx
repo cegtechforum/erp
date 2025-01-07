@@ -9,7 +9,6 @@ import { getAllItems, getMegaEventsFromDb } from "@/app/_lib/dataFetching";
 export default async function EventFormPage() {
   const megaEvents = await getMegaEventsFromDb();
   const items = await getAllItems();
-  console.log(items);
   const token = (await cookies()).get("token")?.value;
   let isSuperUser = false;
   let domain = "";

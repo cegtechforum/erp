@@ -31,7 +31,6 @@ const ItemRow = ({ item, getItems }) => {
         name: item.name,
         count: curCount,
       });
-      console.log(response);
       if (response.data.status !== 201) {
         throw new Error(response.data.error);
       }

@@ -28,7 +28,6 @@ export default function EventsList({ events, name, isSuperUser, megaEvents }) {
   });
   const [loading, setLoading] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  console.log(isSuperUser);
   const domains = [
     { value: "creativity & initiatives", label: "Creativity & Initiatives" },
     { value: "contents", label: "Contents" },

@@ -32,7 +32,6 @@ export default function EventStatusUpdater({
       toast.error("An error occurred while updating the status.");
     }
   };
-  console.log(isSuperUser);
   if (!isSuperUser) return <Typography variant="body1">{status}</Typography>;
 
   return (

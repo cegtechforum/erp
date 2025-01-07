@@ -7,7 +7,6 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   try {
     const { email, password, domain } = await req.json();
-    console.log(email, password, domain);
     const saltRounds = 10;
     const salt = await bcrypt.genSalt(saltRounds);
     const hashedPassword = await bcrypt.hash(password, salt);

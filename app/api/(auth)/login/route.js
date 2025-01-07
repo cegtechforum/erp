@@ -27,7 +27,6 @@ export async function POST(req) {
       });
     }
     const isValidPassword = await bcrypt.compare(password, user.password);
-    console.log(isValidPassword);
     if (!isValidPassword) {
       return NextResponse.json({
         error: "Wrong Password",
@@ -44,7 +43,7 @@ export async function POST(req) {
       status: 200,
     });
 
-    res.cookies.set("token", token, { httpOnly: true,maxAge: 60 * 60 * 24 });
+    res.cookies.set("token", token, { httpOnly: true, maxAge: 60 * 60 * 24 });
 
     return res;
   } catch (error) {

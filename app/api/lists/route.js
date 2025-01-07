@@ -1,16 +1,13 @@
-import { db } from '@/app/_lib/db';
-import { lists, users } from '../../_db/schema';
-import { NextResponse } from 'next/server';
-import { eq } from 'drizzle-orm';
-import { sendEmail } from './email';
-import {sql } from 'drizzle-orm/sql';
+import { db } from "@/app/_lib/db";
+import { lists, users } from "../../_db/schema";
+import { NextResponse } from "next/server";
+import { eq } from "drizzle-orm";
+import { sendEmail } from "./email";
+import { sql } from "drizzle-orm/sql";
 
 export async function POST(req) {
   try {
     const dt = await req.json();
-    console.log(dt);
-    console.log(process.env.EMAIL_USER);
-
 
     for (let i = 0; i < dt.items.length; i++) {
       const { itemName, count, eventId, approvedCount, ...rest } = dt.items[i];
@@ -18,7 +15,9 @@ export async function POST(req) {
       try {
         await db.insert(lists).values(dt.items[i]);
       } catch (err) {
-        if (err.message.includes("duplicate key value violates unique constraint")) {
+        if (
+          err.message.includes("duplicate key value violates unique constraint")
+        ) {
           await db.execute(sql`
             UPDATE lists
             SET count = count + ${count}
@@ -30,26 +29,38 @@ export async function POST(req) {
       }
     }
 
-    const superUsers = await db.select().from(users).where(eq(users.domain, 'logistics'));
-    console.log(superUsers);
+    const superUsers = await db
+      .select()
+      .from(users)
+      .where(eq(users.domain, "logistics"));
 
     await sendEmail(dt, superUsers);
 
     return NextResponse.json(
-      { msg: 'Requested items added/updated successfully and emails sent to super users.' },
-      { status: 200 }
+      {
+        msg: "Requested items added/updated successfully and emails sent to super users.",
+      },
+      { status: 200 },
     );
-
   } catch (err) {
-    if (err.message.includes('violates foreign key constraint')) {
-      return NextResponse.json({ msg: 'Event not found' }, { status: 404 });
-    } else if (err.message.includes("Invalid login: 535-5.7.8 Username and Password not accepted")) {
-      return NextResponse.json({ msg: 'An error in sending email to super users' }, { status: 401 });
-    } else if (err.message.includes("Error [NeonDbError]: Error connecting to database")) {
-      return NextResponse.json({ msg: ' Connection Error ' }, { status: 404 });
+    if (err.message.includes("violates foreign key constraint")) {
+      return NextResponse.json({ msg: "Event not found" }, { status: 404 });
+    } else if (
+      err.message.includes(
+        "Invalid login: 535-5.7.8 Username and Password not accepted",
+      )
+    ) {
+      return NextResponse.json(
+        { msg: "An error in sending email to super users" },
+        { status: 401 },
+      );
+    } else if (
+      err.message.includes("Error [NeonDbError]: Error connecting to database")
+    ) {
+      return NextResponse.json({ msg: " Connection Error " }, { status: 404 });
     } else {
-      console.error('Insert error:', err);
-      return NextResponse.json({ msg: 'Server error' }, { status: 500 });
+      console.error("Insert error:", err);
+      return NextResponse.json({ msg: "Server error" }, { status: 500 });
     }
   }
 }
