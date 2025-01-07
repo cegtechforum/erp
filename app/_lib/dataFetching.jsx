@@ -1,4 +1,3 @@
-// app/_lib/getEventById.js
 import { db } from "@/app/_lib/db";
 import { events, items, lists, megaevents } from "@/app/_db/schema";
 import { eq } from "drizzle-orm";
