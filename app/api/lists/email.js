@@ -1,22 +1,24 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 
 export async function sendEmail(dt, superUsers) {
   const transporter = nodemailer.createTransport({
-    service: 'Gmail',
+    service: "Gmail",
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD,
     },
-    
   });
 
- 
-  const rows = dt.items.map(item => `
+  const rows = dt.items
+    .map(
+      (item) => `
     <tr>
       <td style="border: 1px solid #ddd; padding: 8px;">${item.itemName}</td>
       <td style="border: 1px solid #ddd; padding: 8px;">${item.count}</td>
     </tr>
-  `).join('');
+  `,
+    )
+    .join("");
 
   const htmlContent = `
     <h1>Request for Logistics Items</h1>
@@ -37,7 +39,7 @@ export async function sendEmail(dt, superUsers) {
     </table>
 
     <p style="text-align: center; margin-top: 20px;">
-      <a href="http://localhost:3000/events/${dt.items[0].eventId}" target="_blank" 
+      <a href="https://erp.cegtechforum.in/events/${dt.items[0].eventId}" target="_blank" 
          style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
         Click to View More
       </a>
@@ -48,7 +50,7 @@ export async function sendEmail(dt, superUsers) {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: user.email,
-      subject: 'New Items Requested',
+      subject: "New Items Requested",
       html: htmlContent,
     });
   }
