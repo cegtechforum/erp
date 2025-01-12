@@ -25,7 +25,7 @@ export default function AddEventForm({
   const [eventDetails, setEventDetails] = useState({
     eventName: "",
     description: "",
-    megaeventId: "",
+    megaeventId: null,
     rollNo: "",
     contact: "",
     organizerName: "",
@@ -193,6 +193,9 @@ export default function AddEventForm({
                   <SelectValue placeholder="Select Event Family" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
+                <SelectItem value={null}>
+                      Select MegaEvents
+                    </SelectItem>
                   {megaEvents.map((event) => (
                     <SelectItem key={event.id} value={event.name}>
                       {event.name}
