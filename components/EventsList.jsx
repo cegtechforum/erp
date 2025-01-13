@@ -264,6 +264,31 @@ export default function EventsList({ events, name, isSuperUser, megaEvents }) {
               </AccordionDetails>
             </Accordion>
           ))}
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ArrowDownwardIcon />}
+              aria-controls="standalone-panel-content"
+              id="standalone-panel-header"
+          >
+              <Typography>Standalone Events</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                {filteredEvents.filter(event => event.megaeventId === null).length > 0 ? (
+                <div className="flex w-full flex-wrap items-center justify-center gap-8 p-2">
+                  {filteredEvents
+                  .filter(event => event.megaeventId === null)
+                  .map(event => (
+                    <Card event={event} key={event.eventId} />
+                ))}
+            </div>
+          ) : (
+                <Typography>No standalone events available.</Typography>
+              )}
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+  
         </div>
       ) : (
         <div>
