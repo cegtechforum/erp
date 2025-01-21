@@ -40,6 +40,7 @@ const AddRequestButton = ({ event }) => {
   const [items, setItems] = useState([]);
   const [selectedItemIndex, setSelectedItemIndex] = useState(null);
   const [selectedItem, setSelectedItem] = useState("");
+  const [isEmergency, setIsEmergency] = useState(false); // Checkbox state
 
   async function getItems() {
     try {
@@ -92,7 +93,7 @@ const AddRequestButton = ({ event }) => {
     e.preventDefault();
 
     const isValid = newItems.items.every(
-      (item) => item.itemName.trim() && item.count && item.description.trim(),
+      (item) => item.itemName.trim() && item.count && item.description.trim()
     );
 
     if (!isValid) {
@@ -105,6 +106,7 @@ const AddRequestButton = ({ event }) => {
         items: newItems.items,
         eventName: event.eventName,
         domain: event.domain,
+        emergency: isEmergency, // Send the emergency flag
       });
 
       toast.success("Request submitted successfully!");
@@ -114,7 +116,7 @@ const AddRequestButton = ({ event }) => {
     } catch (error) {
       toast.error(
         error.response?.data?.message ||
-          "Error occurred while submitting request",
+          "Error occurred while submitting request"
       );
     }
   };
@@ -199,6 +201,16 @@ const AddRequestButton = ({ event }) => {
               </div>
             </div>
           ))}
+
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="emergency"
+              checked={isEmergency}
+              onChange={(e) => setIsEmergency(e.target.checked)}
+            />
+            <Label htmlFor="emergency">Emergency Request</Label>
+          </div>
 
           <div className="flex items-center justify-between">
             <Button

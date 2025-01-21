@@ -5,9 +5,11 @@ import { eq } from "drizzle-orm";
 import { sendEmail } from "./email";
 import { sql } from "drizzle-orm/sql";
 
+
 export async function POST(req) {
   try {
     const dt = await req.json();
+    console.log(dt);
 
     for (let i = 0; i < dt.items.length; i++) {
       const { itemName, count, eventId, approvedCount, ...rest } = dt.items[i];
@@ -28,13 +30,13 @@ export async function POST(req) {
         }
       }
     }
-
+    
     const superUsers = await db
       .select()
       .from(users)
       .where(eq(users.domain, "logistics"));
-
-    await sendEmail(dt, superUsers);
+      
+    await sendEmail(dt, superUsers,dt.emergency);
 
     return NextResponse.json(
       {

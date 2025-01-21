@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-export async function sendEmail(dt, superUsers) {
+export async function sendEmail(dt, superUsers,emergency) {
   const transporter = nodemailer.createTransport({
     service: "Gmail",
     auth: {
@@ -21,7 +21,7 @@ export async function sendEmail(dt, superUsers) {
     .join("");
 
   const htmlContent = `
-    <h1>Request for Logistics Items</h1>
+    <h1>${emergency ? " <span style='color:red'> Emergency Request </span>" : "Request "} for Logistics Items</h1>
     <p>Dear Logistics Team,</p>
     <p>An urgent request has been made by a user from the <strong>${dt.domain}</strong> domain for the following items to support the upcoming event, "<strong>${dt.eventName}</strong>." Please review the list below and provide the necessary approvals:</p>
 
@@ -54,4 +54,6 @@ export async function sendEmail(dt, superUsers) {
       html: htmlContent,
     });
   }
+
+  
 }
